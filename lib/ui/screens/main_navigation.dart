@@ -3,6 +3,7 @@ import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/ui/screens/home_screen.dart';
 import 'package:ilac_takip/ui/screens/medications_screen.dart';
 import 'package:ilac_takip/ui/screens/logs_screen.dart';
+import 'package:ilac_takip/ui/screens/settings_screen.dart';
 
 /// Ana navigasyon ekranı
 class MainNavigation extends StatefulWidget {
@@ -19,6 +20,7 @@ class _MainNavigationState extends State<MainNavigation> {
     HomeScreen(),
     MedicationsScreen(),
     LogsScreen(),
+    SettingsScreen(),
   ];
 
   @override
@@ -47,7 +49,7 @@ class _MainNavigationState extends State<MainNavigation> {
               children: [
                 _buildNavItem(
                   index: 0,
-                  icon: Icons.home_rounded,
+                  icon: Icons.home_outlined,
                   activeIcon: Icons.home_rounded,
                   label: 'Ana Sayfa',
                 ),
@@ -62,6 +64,12 @@ class _MainNavigationState extends State<MainNavigation> {
                   icon: Icons.history_outlined,
                   activeIcon: Icons.history_rounded,
                   label: 'Geçmiş',
+                ),
+                _buildNavItem(
+                  index: 3,
+                  icon: Icons.settings_outlined,
+                  activeIcon: Icons.settings_rounded,
+                  label: 'Ayarlar',
                 ),
               ],
             ),
@@ -85,8 +93,8 @@ class _MainNavigationState extends State<MainNavigation> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 20 : 16,
-          vertical: 10,
+          horizontal: isSelected ? 14 : 12,
+          vertical: 8,
         ),
         decoration: BoxDecoration(
           color: isSelected
@@ -100,14 +108,14 @@ class _MainNavigationState extends State<MainNavigation> {
             Icon(
               isSelected ? activeIcon : icon,
               color: isSelected ? AppTheme.primaryColor : AppTheme.textSecondary,
-              size: 24,
+              size: 22,
             ),
             if (isSelected) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: 6),
               Text(
                 label,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: FontWeight.w600,
                   color: AppTheme.primaryColor,
                 ),
