@@ -5,6 +5,7 @@ import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/providers/locale_provider.dart';
 import 'package:ilac_takip/providers/theme_provider.dart';
 import 'package:ilac_takip/services/notification_service.dart';
+import 'package:ilac_takip/ui/screens/main_navigation.dart';
 
 /// Ayarlar ekranı
 class SettingsScreen extends StatefulWidget {
@@ -330,6 +331,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  void _resetAndShowTutorial() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (_) => const MainNavigation(showCoachMarks: true),
+      ),
+      (route) => false,
+    );
+  }
+
   String _currentThemeName(ThemeProvider themeProvider) {
     if (themeProvider.isLight) return l10n.lightTheme;
     if (themeProvider.isDark) return l10n.darkTheme;
@@ -451,6 +461,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: _buildSection(
                 title: l10n.support,
                 children: [
+                  _buildNavigationTile(
+                    title: l10n.showTutorial,
+                    subtitle: l10n.showTutorialDesc,
+                    icon: Icons.school_rounded,
+                    onTap: _resetAndShowTutorial,
+                  ),
                   _buildActionTile(
                     title: l10n.sendFeedback,
                     icon: Icons.feedback_outlined,

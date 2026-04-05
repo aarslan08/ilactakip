@@ -12,7 +12,18 @@ import 'package:ilac_takip/ui/screens/statistics_screen.dart';
 
 /// Ana ekran - Bugünkü dozlar
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final GlobalKey? statsCardKey;
+  final GlobalKey? dosesCardKey;
+  final GlobalKey? quickActionKey;
+  final GlobalKey? scheduleKey;
+
+  const HomeScreen({
+    super.key,
+    this.statsCardKey,
+    this.dosesCardKey,
+    this.quickActionKey,
+    this.scheduleKey,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -178,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: StatsCard(
+              key: widget.dosesCardKey,
               title: l10n.todaysDoses,
               value: '$takenDoses/$totalDoses',
               icon: Icons.check_circle_outline_rounded,
@@ -187,6 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: StatsCard(
+              key: widget.statsCardKey,
               title: l10n.adherenceRate,
               value: '%$adherencePercent',
               icon: Icons.trending_up_rounded,
@@ -214,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: GestureDetector(
         onTap: () => _navigateToSwipeDose(),
         child: Container(
+          key: widget.quickActionKey,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
@@ -362,6 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSectionHeader() {
     return Padding(
+      key: widget.scheduleKey,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
       child: Row(
         children: [

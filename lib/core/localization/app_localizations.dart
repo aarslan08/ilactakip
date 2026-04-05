@@ -149,6 +149,39 @@ class AppLocalizations {
       'systemThemeDesc': 'Follow system setting',
       'themeChanged': 'Theme changed',
 
+      // Onboarding
+      'onboardingTitle1': 'Track Your Medications',
+      'onboardingDesc1': 'Add your medications, manage doses and monitor stock levels easily.',
+      'onboardingTitle2': 'Dose Reminders',
+      'onboardingDesc2': 'Get timely notifications and mark your doses with a simple swipe.',
+      'onboardingTitle3': 'See Your Statistics',
+      'onboardingDesc3': 'Track weekly and monthly adherence charts to stay on top of your health.',
+      'onboardingGetStarted': 'Get Started',
+      'onboardingSkip': 'Skip',
+      'onboardingNext': 'Next',
+
+      // Coach Marks
+      'coachAdherenceTitle': 'Adherence Rate',
+      'coachAdherenceDesc': 'See your daily adherence rate here. Tap for detailed statistics.',
+      'coachDosesTitle': 'Today\'s Doses',
+      'coachDosesDesc': 'Track how many doses you\'ve taken today out of total.',
+      'coachQuickActionTitle': 'Quick Dose',
+      'coachQuickActionDesc': 'Tap to quickly swipe through your pending doses.',
+      'coachScheduleTitle': 'Dose Schedule',
+      'coachScheduleDesc': 'Your daily dose cards. Tap Take or Skip for each one.',
+      'coachMedicationsTitle': 'My Medications',
+      'coachMedicationsDesc': 'Manage your medications, add new ones or update stock.',
+      'coachHistoryTitle': 'History',
+      'coachHistoryDesc': 'Review your past dose history day by day.',
+      'coachSettingsTitle': 'Settings',
+      'coachSettingsDesc': 'Change language, theme and notification preferences.',
+      'coachGotIt': 'Got it',
+      'coachNextStep': 'Next',
+      'coachStepOf': 'of',
+      'showTutorial': 'Show Tutorial',
+      'showTutorialDesc': 'Watch the app guide again',
+      'tutorialReset': 'Tutorial will show on next launch',
+
       // Statistics
       'statisticsTitle': 'Statistics',
       'weeklyView': 'Weekly',
@@ -337,6 +370,39 @@ class AppLocalizations {
       'darkThemeDesc': 'Her zaman koyu tema kullan',
       'systemThemeDesc': 'Sistem ayarını takip et',
       'themeChanged': 'Tema değiştirildi',
+
+      // Onboarding
+      'onboardingTitle1': 'İlaçlarını Takip Et',
+      'onboardingDesc1': 'İlaçlarını ekle, dozlarını yönet ve stok durumunu kolayca izle.',
+      'onboardingTitle2': 'Doz Hatırlatıcı',
+      'onboardingDesc2': 'Zamanında bildirim al, basit bir kaydırma ile dozunu işaretle.',
+      'onboardingTitle3': 'İstatistiklerini Gör',
+      'onboardingDesc3': 'Haftalık ve aylık uyum grafiklerini takip ederek sağlığını kontrol altında tut.',
+      'onboardingGetStarted': 'Başlayalım',
+      'onboardingSkip': 'Atla',
+      'onboardingNext': 'İleri',
+
+      // Coach Marks
+      'coachAdherenceTitle': 'Uyum Oranı',
+      'coachAdherenceDesc': 'Günlük uyum oranınızı burada görün. Detaylı istatistikler için dokunun.',
+      'coachDosesTitle': 'Bugünkü Dozlar',
+      'coachDosesDesc': 'Bugün toplam dozlarınızdan kaçını aldığınızı buradan takip edin.',
+      'coachQuickActionTitle': 'Hızlı Doz Al',
+      'coachQuickActionDesc': 'Bekleyen dozlarınızı hızlıca kaydırmak için bu butona dokunun.',
+      'coachScheduleTitle': 'Doz Programı',
+      'coachScheduleDesc': 'Günlük doz kartlarınız. Her biri için Al veya Atla seçin.',
+      'coachMedicationsTitle': 'İlaçlarım',
+      'coachMedicationsDesc': 'İlaçlarınızı yönetin, yeni ilaç ekleyin veya stok güncelleyin.',
+      'coachHistoryTitle': 'Geçmiş',
+      'coachHistoryDesc': 'Geçmiş doz kayıtlarınızı günlük olarak inceleyin.',
+      'coachSettingsTitle': 'Ayarlar',
+      'coachSettingsDesc': 'Dil, tema ve bildirim tercihlerinizi buradan değiştirin.',
+      'coachGotIt': 'Anladım',
+      'coachNextStep': 'İleri',
+      'coachStepOf': '/',
+      'showTutorial': 'Rehberi Göster',
+      'showTutorialDesc': 'Uygulama rehberini tekrar izle',
+      'tutorialReset': 'Rehber bir sonraki açılışta gösterilecek',
 
       // İstatistikler
       'statisticsTitle': 'İstatistikler',
@@ -531,6 +597,39 @@ class AppLocalizations {
   String get darkThemeDesc => translate('darkThemeDesc');
   String get systemThemeDesc => translate('systemThemeDesc');
   String get themeChanged => translate('themeChanged');
+
+  // Onboarding
+  String get onboardingTitle1 => translate('onboardingTitle1');
+  String get onboardingDesc1 => translate('onboardingDesc1');
+  String get onboardingTitle2 => translate('onboardingTitle2');
+  String get onboardingDesc2 => translate('onboardingDesc2');
+  String get onboardingTitle3 => translate('onboardingTitle3');
+  String get onboardingDesc3 => translate('onboardingDesc3');
+  String get onboardingGetStarted => translate('onboardingGetStarted');
+  String get onboardingSkip => translate('onboardingSkip');
+  String get onboardingNext => translate('onboardingNext');
+
+  // Coach Marks
+  String get coachAdherenceTitle => translate('coachAdherenceTitle');
+  String get coachAdherenceDesc => translate('coachAdherenceDesc');
+  String get coachDosesTitle => translate('coachDosesTitle');
+  String get coachDosesDesc => translate('coachDosesDesc');
+  String get coachQuickActionTitle => translate('coachQuickActionTitle');
+  String get coachQuickActionDesc => translate('coachQuickActionDesc');
+  String get coachScheduleTitle => translate('coachScheduleTitle');
+  String get coachScheduleDesc => translate('coachScheduleDesc');
+  String get coachMedicationsTitle => translate('coachMedicationsTitle');
+  String get coachMedicationsDesc => translate('coachMedicationsDesc');
+  String get coachHistoryTitle => translate('coachHistoryTitle');
+  String get coachHistoryDesc => translate('coachHistoryDesc');
+  String get coachSettingsTitle => translate('coachSettingsTitle');
+  String get coachSettingsDesc => translate('coachSettingsDesc');
+  String get coachGotIt => translate('coachGotIt');
+  String get coachNextStep => translate('coachNextStep');
+  String get coachStepOf => translate('coachStepOf');
+  String get showTutorial => translate('showTutorial');
+  String get showTutorialDesc => translate('showTutorialDesc');
+  String get tutorialReset => translate('tutorialReset');
 
   // Statistics
   String get statisticsTitle => translate('statisticsTitle');
