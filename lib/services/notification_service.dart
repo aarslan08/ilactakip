@@ -11,6 +11,7 @@ class NotificationService {
   static NotificationService? _instance;
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
   bool _isInitialized = false;
+  static String _currentLocale = 'tr';
 
   NotificationService._() : _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -18,6 +19,12 @@ class NotificationService {
     _instance ??= NotificationService._();
     return _instance!;
   }
+
+  static void setLocale(String locale) {
+    _currentLocale = locale;
+  }
+
+  static bool get _isEnglish => _currentLocale == 'en';
 
   FlutterLocalNotificationsPlugin get plugin => _notificationsPlugin;
 
@@ -96,14 +103,16 @@ class NotificationService {
     final now = DateTime.now();
     if (scheduledTime.isBefore(now)) return;
 
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'dose_reminders',
-      'Doz Hatırlatıcıları',
-      channelDescription: 'İlaç dozlarınız için hatırlatmalar',
+      _isEnglish ? 'Dose Reminders' : 'Doz Hatırlatıcıları',
+      channelDescription: _isEnglish 
+          ? 'Reminders for your medication doses' 
+          : 'İlaç dozlarınız için hatırlatmalar',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFF2E7D6B),
+      color: const Color(0xFF2E7D6B),
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -112,15 +121,20 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
+    final title = _isEnglish ? '💊 Medication Time' : '💊 İlaç Zamanı';
+    final body = _isEnglish 
+        ? '${medication.name} - You need to take ${medication.dosage.pillsPerDose} pills'
+        : '${medication.name} - ${medication.dosage.pillsPerDose} adet almanız gerekiyor';
+
     await _notificationsPlugin.zonedSchedule(
       notificationId,
-      '💊 İlaç Zamanı',
-      '${medication.name} - ${medication.dosage.pillsPerDose} adet almanız gerekiyor',
+      title,
+      body,
       tz.TZDateTime.from(scheduledTime, tz.local),
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -137,14 +151,16 @@ class NotificationService {
   Future<void> showLowStockNotification({
     required Medication medication,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'low_stock',
-      'Düşük Stok Uyarıları',
-      channelDescription: 'İlaç stoğu azaldığında uyarılar',
+      _isEnglish ? 'Low Stock Alerts' : 'Düşük Stok Uyarıları',
+      channelDescription: _isEnglish 
+          ? 'Alerts when medication stock is low' 
+          : 'İlaç stoğu azaldığında uyarılar',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFFFF6B6B),
+      color: const Color(0xFFFF6B6B),
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -153,15 +169,20 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
+    final title = _isEnglish ? '⚠️ Low Stock Warning' : '⚠️ Düşük Stok Uyarısı';
+    final body = _isEnglish 
+        ? 'Only ${medication.currentStock} units left for ${medication.name}. Time to refill!'
+        : '${medication.name} için sadece ${medication.currentStock} adet kaldı. Yenileme zamanı!';
+
     await _notificationsPlugin.show(
       AppConstants.lowStockNotificationId + medication.id.hashCode,
-      '⚠️ Düşük Stok Uyarısı',
-      '${medication.name} için sadece ${medication.currentStock} adet kaldı. Yenileme zamanı!',
+      title,
+      body,
       notificationDetails,
       payload: 'medication:${medication.id}',
     );
@@ -175,14 +196,16 @@ class NotificationService {
   Future<void> showRunoutWarningNotification({
     required Medication medication,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'runout_warning',
-      'Bitme Uyarıları',
-      channelDescription: 'İlaç bitmeden önce uyarılar',
+      _isEnglish ? 'Runout Warnings' : 'Bitme Uyarıları',
+      channelDescription: _isEnglish 
+          ? 'Warnings before medication runs out' 
+          : 'İlaç bitmeden önce uyarılar',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFFFFB347),
+      color: const Color(0xFFFFB347),
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -191,15 +214,20 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
+    final title = _isEnglish ? '📅 Medication Running Out' : '📅 İlaç Bitme Uyarısı';
+    final body = _isEnglish 
+        ? '${medication.name} will run out in approximately ${medication.estimatedDaysLeft} days. Plan your refill!'
+        : '${medication.name} tahminen ${medication.estimatedDaysLeft} gün içinde bitecek. Yenilemeyi planlayın!';
+
     await _notificationsPlugin.show(
       AppConstants.runoutWarningNotificationId + medication.id.hashCode,
-      '📅 İlaç Bitme Uyarısı',
-      '${medication.name} tahminen ${medication.estimatedDaysLeft} gün içinde bitecek. Yenilemeyi planlayın!',
+      title,
+      body,
       notificationDetails,
       payload: 'medication:${medication.id}',
     );
@@ -214,14 +242,16 @@ class NotificationService {
     required Medication medication,
     required String scheduledTime,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'missed_dose',
-      'Kaçırılmış Dozlar',
-      channelDescription: 'Kaçırılmış dozlar için bildirimler',
+      _isEnglish ? 'Missed Doses' : 'Kaçırılmış Dozlar',
+      channelDescription: _isEnglish 
+          ? 'Notifications for missed doses' 
+          : 'Kaçırılmış dozlar için bildirimler',
       importance: Importance.high,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
-      color: Color(0xFFE53935),
+      color: const Color(0xFFE53935),
     );
 
     const iosDetails = DarwinNotificationDetails(
@@ -230,15 +260,20 @@ class NotificationService {
       presentSound: true,
     );
 
-    const notificationDetails = NotificationDetails(
+    final notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
 
+    final title = _isEnglish ? '❌ Missed Dose' : '❌ Kaçırılmış Doz';
+    final body = _isEnglish 
+        ? '${medication.name} - You missed your $scheduledTime dose'
+        : '${medication.name} - $scheduledTime dozunu almadınız';
+
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch.remainder(100000),
-      '❌ Kaçırılmış Doz',
-      '${medication.name} - $scheduledTime dozunu almadınız',
+      title,
+      body,
       notificationDetails,
       payload: 'medication:${medication.id}',
     );

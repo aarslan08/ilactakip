@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/home_screen.dart';
 import 'package:ilac_takip/ui/screens/medications_screen.dart';
 import 'package:ilac_takip/ui/screens/logs_screen.dart';
@@ -25,6 +26,8 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -51,25 +54,25 @@ class _MainNavigationState extends State<MainNavigation> {
                   index: 0,
                   icon: Icons.home_outlined,
                   activeIcon: Icons.home_rounded,
-                  label: 'Ana Sayfa',
+                  label: l10n.home,
                 ),
                 _buildNavItem(
                   index: 1,
                   icon: Icons.medication_outlined,
                   activeIcon: Icons.medication_rounded,
-                  label: 'İlaçlarım',
+                  label: l10n.myMedications,
                 ),
                 _buildNavItem(
                   index: 2,
                   icon: Icons.history_outlined,
                   activeIcon: Icons.history_rounded,
-                  label: 'Geçmiş',
+                  label: l10n.history,
                 ),
                 _buildNavItem(
                   index: 3,
                   icon: Icons.settings_outlined,
                   activeIcon: Icons.settings_rounded,
-                  label: 'Ayarlar',
+                  label: l10n.settings,
                 ),
               ],
             ),

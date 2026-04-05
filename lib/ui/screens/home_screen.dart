@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/widgets/widgets.dart';
 import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
 import 'package:ilac_takip/ui/screens/medication_detail_screen.dart';
@@ -86,12 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   Widget _buildEmptyState() {
     return EmptyState(
       icon: Icons.medication_liquid_outlined,
-      title: 'İlaç Takibine Başlayın',
-      subtitle: 'İlk ilacınızı ekleyerek düzenli ilaç takibine başlayın. Dozlarınızı asla kaçırmayın!',
-      buttonText: 'İlaç Ekle',
+      title: l10n.noMedications,
+      subtitle: l10n.addFirstMedication,
+      buttonText: l10n.addMedication,
       onButtonPressed: () => _navigateToAddMedication(),
     );
   }
@@ -120,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 4),
                     Text(
                       AppDateUtils.isToday(now)
-                          ? 'Bugün'
+                          ? l10n.today
                           : AppDateUtils.formatDate(now),
                       style: const TextStyle(
                         fontSize: 28,
@@ -174,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Expanded(
             child: StatsCard(
-              title: 'Bugünkü Dozlar',
+              title: l10n.todaysDoses,
               value: '$takenDoses/$totalDoses',
               icon: Icons.check_circle_outline_rounded,
               color: AppTheme.primaryColor,
@@ -183,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: StatsCard(
-              title: 'Uyum Oranı',
+              title: l10n.adherenceRate,
               value: '%$adherencePercent',
               icon: Icons.trending_up_rounded,
               color: adherencePercent >= 80
@@ -241,9 +244,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'İlaç Zamanı!',
-                      style: TextStyle(
+                    Text(
+                      l10n.medicationTime,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -251,7 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$pendingCount bekleyen doz var',
+                      '$pendingCount ${l10n.pendingDoses}',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white.withValues(alpha: 0.9),
@@ -269,9 +272,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  'Başla',
-                  style: TextStyle(
+                child: Text(
+                  l10n.start,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.primaryColor,
@@ -323,9 +326,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Düşük Stok Uyarısı',
-                    style: TextStyle(
+                  Text(
+                    l10n.lowStockWarning,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
@@ -333,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${provider.lowStockMedications.length} ilacın stoğu azaldı',
+                    '${provider.lowStockMedications.length} ${l10n.medicationsLowStock}',
                     style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textSecondary,
@@ -357,9 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 12),
       child: Row(
         children: [
-          const Text(
-            'Bugünkü Program',
-            style: TextStyle(
+          Text(
+            l10n.todaysSchedule,
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
@@ -370,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               // Tümünü gör
             },
-            child: const Text('Tümü'),
+            child: Text(l10n.viewAll),
           ),
         ],
       ),
@@ -384,17 +387,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return SliverToBoxAdapter(
         child: Container(
           padding: const EdgeInsets.all(32),
-          child: const Column(
+          child: Column(
             children: [
-              Icon(
+              const Icon(
                 Icons.check_circle_rounded,
                 size: 64,
                 color: AppTheme.successColor,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'Bugün için planlanmış doz yok',
-                style: TextStyle(
+                l10n.noDosesScheduled,
+                style: const TextStyle(
                   fontSize: 16,
                   color: AppTheme.textSecondary,
                 ),
@@ -425,17 +428,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return FloatingActionButton.extended(
       onPressed: () => _navigateToAddMedication(),
       icon: const Icon(Icons.add_rounded),
-      label: const Text('İlaç Ekle'),
+      label: Text(l10n.addMedication),
       backgroundColor: AppTheme.primaryColor,
     );
   }
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 6) return 'İyi Geceler 🌙';
-    if (hour < 12) return 'Günaydın ☀️';
-    if (hour < 18) return 'İyi Günler 🌤️';
-    return 'İyi Akşamlar 🌆';
+    if (hour < 6) return l10n.goodNight;
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 18) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   void _handleTakeDose(scheduledDose) async {
@@ -449,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const Icon(Icons.check_circle, color: Colors.white),
               const SizedBox(width: 8),
-              Text('${scheduledDose.medication.name} alındı olarak işaretlendi'),
+              Text('${scheduledDose.medication.name} ${l10n.markedAsTaken}'),
             ],
           ),
           backgroundColor: AppTheme.successColor,
@@ -471,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               const Icon(Icons.skip_next, color: Colors.white),
               const SizedBox(width: 8),
-              Text('${scheduledDose.medication.name} atlandı'),
+              Text('${scheduledDose.medication.name} ${l10n.wasSkipped}'),
             ],
           ),
           backgroundColor: AppTheme.textSecondary,

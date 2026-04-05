@@ -4,11 +4,18 @@ import 'package:intl/intl.dart';
 class AppDateUtils {
   AppDateUtils._();
 
+  static String _currentLocale = 'tr_TR';
+
   static final DateFormat _timeFormat = DateFormat('HH:mm');
-  static final DateFormat _dateFormat = DateFormat('dd MMM yyyy', 'tr_TR');
-  static final DateFormat _dateTimeFormat = DateFormat('dd MMM yyyy HH:mm', 'tr_TR');
-  static final DateFormat _dayMonthFormat = DateFormat('dd MMM', 'tr_TR');
-  static final DateFormat _weekdayFormat = DateFormat('EEEE', 'tr_TR');
+
+  static void setLocale(String locale) {
+    _currentLocale = locale;
+  }
+
+  static DateFormat get _dateFormat => DateFormat('dd MMM yyyy', _currentLocale);
+  static DateFormat get _dateTimeFormat => DateFormat('dd MMM yyyy HH:mm', _currentLocale);
+  static DateFormat get _dayMonthFormat => DateFormat('dd MMM', _currentLocale);
+  static DateFormat get _weekdayFormat => DateFormat('EEEE', _currentLocale);
 
   /// Saat formatı (HH:mm)
   static String formatTime(DateTime dateTime) {
@@ -99,17 +106,24 @@ class AppDateUtils {
   static String timeAgo(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
+    final isEnglish = _currentLocale.startsWith('en');
 
     if (difference.inSeconds < 60) {
-      return 'Az önce';
+      return isEnglish ? 'Just now' : 'Az önce';
     } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} dakika önce';
+      return isEnglish 
+          ? '${difference.inMinutes} minutes ago'
+          : '${difference.inMinutes} dakika önce';
     } else if (difference.inHours < 24) {
-      return '${difference.inHours} saat önce';
+      return isEnglish
+          ? '${difference.inHours} hours ago'
+          : '${difference.inHours} saat önce';
     } else if (difference.inDays == 1) {
-      return 'Dün';
+      return isEnglish ? 'Yesterday' : 'Dün';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} gün önce';
+      return isEnglish
+          ? '${difference.inDays} days ago'
+          : '${difference.inDays} gün önce';
     } else {
       return formatDate(dateTime);
     }

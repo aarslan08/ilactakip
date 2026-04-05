@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/widgets/widgets.dart';
 import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
 import 'package:ilac_takip/ui/screens/medication_detail_screen.dart';
@@ -12,10 +13,12 @@ class MedicationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('İlaçlarım'),
+        title: Text(l10n.myMedications),
         actions: [
           IconButton(
             icon: const Icon(Icons.search_rounded),
@@ -38,9 +41,9 @@ class MedicationsScreen extends StatelessWidget {
           if (!provider.hasMedications) {
             return EmptyState(
               icon: Icons.medication_outlined,
-              title: 'Henüz İlaç Yok',
-              subtitle: 'İlaç ekleyerek takibe başlayın.',
-              buttonText: 'İlaç Ekle',
+              title: l10n.noMedications,
+              subtitle: l10n.addFirstMedication,
+              buttonText: l10n.addMedication,
               onButtonPressed: () => _navigateToAddMedication(context),
             );
           }

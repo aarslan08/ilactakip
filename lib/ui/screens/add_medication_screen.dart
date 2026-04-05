@@ -5,6 +5,7 @@ import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 
 /// İlaç ekleme/düzenleme ekranı
 class AddMedicationScreen extends StatefulWidget {
@@ -21,6 +22,7 @@ class AddMedicationScreen extends StatefulWidget {
 
 class _AddMedicationScreenState extends State<AddMedicationScreen> {
   final _formKey = GlobalKey<FormState>();
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
   
   late TextEditingController _nameController;
   late TextEditingController _stockController;
@@ -82,12 +84,12 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(_isEditing ? 'İlacı Düzenle' : 'Yeni İlaç Ekle'),
+        title: Text(_isEditing ? l10n.editMedication : l10n.addMedication),
         actions: [
           if (_isEditing)
             TextButton(
               onPressed: _isLoading ? null : _handleSave,
-              child: const Text('Kaydet'),
+              child: Text(l10n.save),
             ),
         ],
       ),
@@ -97,7 +99,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             // İlaç adı
-            _buildSectionTitle('İlaç Bilgileri'),
+            _buildSectionTitle(l10n.medicationInfo),
             const SizedBox(height: 12),
             _buildNameField(),
             const SizedBox(height: 16),
@@ -107,7 +109,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             const SizedBox(height: 24),
             
             // Dozaj bilgileri
-            _buildSectionTitle('Dozaj Bilgileri'),
+            _buildSectionTitle(l10n.dosageInfo),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -127,7 +129,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             const SizedBox(height: 24),
             
             // Hatırlatma ayarları
-            _buildSectionTitle('Hatırlatma Ayarları'),
+            _buildSectionTitle(l10n.reminderSettings),
             const SizedBox(height: 12),
             _buildReminderSwitch(),
             const SizedBox(height: 16),
@@ -135,7 +137,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             const SizedBox(height: 24),
             
             // Ek bilgiler
-            _buildSectionTitle('Ek Bilgiler'),
+            _buildSectionTitle(l10n.additionalInfo),
             const SizedBox(height: 12),
             _buildExpirationDateField(),
             const SizedBox(height: 16),
@@ -165,15 +167,15 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildNameField() {
     return TextFormField(
       controller: _nameController,
-      decoration: const InputDecoration(
-        labelText: 'İlaç Adı',
-        hintText: 'Örn: Paracetamol 500mg',
-        prefixIcon: Icon(Icons.medication_rounded),
+      decoration: InputDecoration(
+        labelText: l10n.medicationName,
+        hintText: l10n.medicationNameHint,
+        prefixIcon: const Icon(Icons.medication_rounded),
       ),
       textCapitalization: TextCapitalization.words,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'İlaç adı gerekli';
+          return l10n.required;
         }
         return null;
       },
@@ -183,21 +185,21 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildStockField() {
     return TextFormField(
       controller: _stockController,
-      decoration: const InputDecoration(
-        labelText: 'Mevcut Stok',
-        hintText: 'Adet sayısı',
-        prefixIcon: Icon(Icons.inventory_2_rounded),
-        suffixText: 'adet',
+      decoration: InputDecoration(
+        labelText: l10n.currentStock,
+        hintText: l10n.stockHint,
+        prefixIcon: const Icon(Icons.inventory_2_rounded),
+        suffixText: l10n.units,
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Stok miktarı gerekli';
+          return l10n.required;
         }
         final stock = int.tryParse(value);
         if (stock == null || stock < 0) {
-          return 'Geçerli bir sayı girin';
+          return l10n.validNumber;
         }
         return null;
       },
@@ -207,20 +209,20 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildPillsPerDoseField() {
     return TextFormField(
       controller: _pillsPerDoseController,
-      decoration: const InputDecoration(
-        labelText: 'Doz Başına',
+      decoration: InputDecoration(
+        labelText: l10n.pillsPerDose,
         hintText: '1',
-        suffixText: 'adet',
+        suffixText: l10n.units,
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Gerekli';
+          return l10n.required;
         }
         final pills = int.tryParse(value);
         if (pills == null || pills < 1) {
-          return 'En az 1';
+          return l10n.atLeast1;
         }
         return null;
       },
@@ -230,20 +232,20 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildDosesPerDayField() {
     return TextFormField(
       controller: _dosesPerDayController,
-      decoration: const InputDecoration(
-        labelText: 'Günlük Doz',
+      decoration: InputDecoration(
+        labelText: l10n.dosesPerDay,
         hintText: '1',
-        suffixText: 'kez',
+        suffixText: l10n.times,
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Gerekli';
+          return l10n.required;
         }
         final doses = int.tryParse(value);
         if (doses == null || doses < 1) {
-          return 'En az 1';
+          return l10n.atLeast1;
         }
         return null;
       },
@@ -265,9 +267,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             children: [
               const Icon(Icons.schedule_rounded, color: AppTheme.primaryColor),
               const SizedBox(width: 8),
-              const Text(
-                'Doz Saatleri',
-                style: TextStyle(
+              Text(
+                l10n.doseTimes,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppTheme.textPrimary,
@@ -277,7 +279,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               TextButton.icon(
                 onPressed: _showTimePickerDialog,
                 icon: const Icon(Icons.add_rounded, size: 18),
-                label: const Text('Saat Ekle'),
+                label: Text(l10n.addTime),
               ),
             ],
           ),
@@ -305,11 +307,11 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               }).toList(),
             ),
           ] else
-            const Padding(
-              padding: EdgeInsets.only(top: 8),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
               child: Text(
-                'Saat eklenmedi (opsiyonel)',
-                style: TextStyle(
+                l10n.noTimeAdded,
+                style: const TextStyle(
                   fontSize: 13,
                   color: AppTheme.textSecondary,
                 ),
@@ -331,13 +333,13 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.restaurant_rounded, color: AppTheme.primaryColor),
-              SizedBox(width: 8),
+              const Icon(Icons.restaurant_rounded, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
               Text(
-                'Ne Zaman Alınmalı?',
-                style: TextStyle(
+                l10n.whenToTake,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppTheme.textPrimary,
@@ -377,7 +379,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          type.displayName,
+                          _getIntakeTypeName(type),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: isSelected
@@ -401,6 +403,17 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     );
   }
 
+  String _getIntakeTypeName(IntakeType type) {
+    switch (type) {
+      case IntakeType.empty:
+        return l10n.onEmptyStomach;
+      case IntakeType.full:
+        return l10n.onFullStomach;
+      case IntakeType.either:
+        return l10n.anytime;
+    }
+  }
+
   Widget _buildReminderSwitch() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -413,21 +426,21 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
         children: [
           const Icon(Icons.notifications_active_rounded, color: AppTheme.primaryColor),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Doz Hatırlatıcıları',
-                  style: TextStyle(
+                  l10n.doseReminders,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
-                  'Zamanı gelince bildirim al',
-                  style: TextStyle(
+                  l10n.getNotified,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: AppTheme.textSecondary,
                   ),
@@ -468,16 +481,16 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Düşük Stok Uyarısı',
-                      style: TextStyle(
+                    Text(
+                      l10n.lowStockAlert,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textPrimary,
                       ),
                     ),
                     Text(
-                      '$_lowStockThreshold adet kaldığında uyar',
+                      '$_lowStockThreshold ${l10n.alertWhenLow}',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.textSecondary,
@@ -522,16 +535,16 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Bitme Uyarısı',
-                      style: TextStyle(
+                    Text(
+                      l10n.runoutWarning,
+                      style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textPrimary,
                       ),
                     ),
                     Text(
-                      '$_firstRunoutWarningDays gün kala uyar',
+                      '$_firstRunoutWarningDays ${l10n.daysBeforeRunout}',
                       style: const TextStyle(
                         fontSize: 13,
                         color: AppTheme.textSecondary,
@@ -589,9 +602,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Son Kullanma Tarihi',
-                    style: TextStyle(
+                  Text(
+                    l10n.expirationDate,
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
@@ -600,7 +613,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                   Text(
                     _expirationDate != null
                         ? AppDateUtils.formatDate(_expirationDate!)
-                        : 'Tarih seç (opsiyonel)',
+                        : l10n.selectDate,
                     style: TextStyle(
                       fontSize: 13,
                       color: _expirationDate != null
@@ -627,10 +640,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildNotesField() {
     return TextFormField(
       controller: _notesController,
-      decoration: const InputDecoration(
-        labelText: 'Notlar (opsiyonel)',
-        hintText: 'Ek bilgiler...',
-        prefixIcon: Icon(Icons.note_rounded),
+      decoration: InputDecoration(
+        labelText: l10n.notes,
+        hintText: l10n.notesHint,
+        prefixIcon: const Icon(Icons.note_rounded),
         alignLabelWithHint: true,
       ),
       maxLines: 3,
@@ -655,7 +668,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                   color: Colors.white,
                 ),
               )
-            : Text(_isEditing ? 'Değişiklikleri Kaydet' : 'İlaç Ekle'),
+            : Text(_isEditing ? l10n.saveChanges : l10n.addMedication),
       ),
     );
   }
@@ -771,7 +784,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              _isEditing ? 'İlaç güncellendi' : 'İlaç eklendi',
+              _isEditing ? l10n.medicationUpdated : l10n.medicationAdded,
             ),
             backgroundColor: AppTheme.successColor,
             behavior: SnackBarBehavior.floating,
@@ -782,7 +795,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Hata: $e'),
+            content: Text('${l10n.error}: $e'),
             backgroundColor: AppTheme.errorColor,
             behavior: SnackBarBehavior.floating,
           ),

@@ -5,6 +5,7 @@ import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/models/dose_log.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
 
 /// İlaç detay ekranı
@@ -24,6 +25,8 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
   List<DoseLog> _doseLogs = [];
   double _adherenceRate = 0.0;
   bool _isLoadingLogs = true;
+  
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -53,8 +56,8 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
 
         if (medication == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('İlaç Detayı')),
-            body: const Center(child: Text('İlaç bulunamadı')),
+            appBar: AppBar(title: Text(l10n.medicationDetails)),
+            body: Center(child: Text(l10n.unknownMedication)),
           );
         }
 
@@ -178,9 +181,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             children: [
               Expanded(
                 child: _buildStockItem(
-                  'Mevcut Stok',
+                  l10n.currentStock,
                   '${medication.currentStock}',
-                  'adet',
+                  l10n.units,
                   Icons.inventory_2_rounded,
                   medication.isLowStock ? AppTheme.warningColor : AppTheme.primaryColor,
                 ),
@@ -192,11 +195,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               ),
               Expanded(
                 child: _buildStockItem(
-                  'Tahmini Süre',
+                  l10n.estimatedDays,
                   medication.estimatedDaysLeft >= 999
                       ? '∞'
                       : '${medication.estimatedDaysLeft}',
-                  'gün',
+                  l10n.daysSupply,
                   Icons.calendar_today_rounded,
                   medication.shouldShowRunoutWarning
                       ? AppTheme.accentColor
@@ -213,7 +216,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () => _showStockDialog(medication, false),
                   icon: const Icon(Icons.remove_rounded),
-                  label: const Text('Azalt'),
+                  label: Text(l10n.delete),
                 ),
               ),
               const SizedBox(width: 12),
@@ -221,7 +224,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                 child: ElevatedButton.icon(
                   onPressed: () => _showStockDialog(medication, true),
                   icon: const Icon(Icons.add_rounded),
-                  label: const Text('Ekle'),
+                  label: Text(l10n.add),
                 ),
               ),
             ],
@@ -292,9 +295,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Dozaj Bilgileri',
-            style: TextStyle(
+          Text(
+            l10n.dosageInfo,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
@@ -303,20 +306,20 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
           const SizedBox(height: 16),
           _buildInfoRow(
             Icons.medication_outlined,
-            'Doz Başına',
-            '${medication.dosage.pillsPerDose} adet',
+            l10n.pillsPerDose,
+            '${medication.dosage.pillsPerDose} ${l10n.units}',
           ),
           const Divider(height: 24),
           _buildInfoRow(
             Icons.repeat_rounded,
-            'Günlük Doz',
-            '${medication.dosage.dosesPerDay} kez',
+            l10n.dosesPerDay,
+            '${medication.dosage.dosesPerDay} ${l10n.times}',
           ),
           if (medication.dosage.scheduleTimes.isNotEmpty) ...[
             const Divider(height: 24),
             _buildInfoRow(
               Icons.schedule_rounded,
-              'Saatler',
+              l10n.doseTimes,
               medication.dosage.scheduleTimes.join(' • '),
             ),
           ],
@@ -324,7 +327,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             const Divider(height: 24),
             _buildInfoRow(
               Icons.event_rounded,
-              'Son Kullanma',
+              l10n.expirationDate,
               AppDateUtils.formatDate(medication.expirationDate!),
             ),
           ],
@@ -332,7 +335,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             const Divider(height: 24),
             _buildInfoRow(
               Icons.note_rounded,
-              'Notlar',
+              l10n.notes,
               medication.notes!,
             ),
           ],
@@ -387,9 +390,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         children: [
           Row(
             children: [
-              const Text(
-                'Uyum Oranı',
-                style: TextStyle(
+              Text(
+                l10n.adherenceRate,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.textPrimary,
@@ -448,9 +451,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         children: [
           Row(
             children: [
-              const Text(
-                'Son Kayıtlar',
-                style: TextStyle(
+              Text(
+                l10n.doseHistory,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.textPrimary,
@@ -461,7 +464,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                 onPressed: () {
                   // Tüm geçmişi gör
                 },
-                child: const Text('Tümü'),
+                child: Text(l10n.viewAll),
               ),
             ],
           ),
@@ -469,11 +472,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
           if (_isLoadingLogs)
             const Center(child: CircularProgressIndicator())
           else if (_doseLogs.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(16),
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Text(
-                'Henüz kayıt yok',
-                style: TextStyle(color: AppTheme.textSecondary),
+                l10n.noHistory,
+                style: const TextStyle(color: AppTheme.textSecondary),
               ),
             )
           else
@@ -507,7 +510,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  log.status.label,
+                  _getStatusLabel(log.status),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -538,6 +541,17 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     );
   }
 
+  String _getStatusLabel(DoseStatus status) {
+    switch (status) {
+      case DoseStatus.taken:
+        return l10n.takenStatus;
+      case DoseStatus.missed:
+        return l10n.missedStatus;
+      case DoseStatus.skipped:
+        return l10n.skippedStatus;
+    }
+  }
+
   Widget _buildActions(Medication medication, MedicationProvider provider) {
     return Column(
       children: [
@@ -546,7 +560,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
           child: OutlinedButton.icon(
             onPressed: () => _navigateToEdit(medication),
             icon: const Icon(Icons.edit_rounded),
-            label: const Text('İlacı Düzenle'),
+            label: Text(l10n.editMedication),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
             ),
@@ -558,9 +572,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
           child: TextButton.icon(
             onPressed: () => _showDeleteDialog(medication, provider),
             icon: const Icon(Icons.delete_outline_rounded, color: AppTheme.errorColor),
-            label: const Text(
-              'İlacı Sil',
-              style: TextStyle(color: AppTheme.errorColor),
+            label: Text(
+              l10n.deleteMedication,
+              style: const TextStyle(color: AppTheme.errorColor),
             ),
           ),
         ),
@@ -608,21 +622,21 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(isAdd ? 'Stok Ekle' : 'Stok Azalt'),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(isAdd ? l10n.add : l10n.delete),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Miktar',
-            hintText: 'Adet sayısı girin',
+          decoration: InputDecoration(
+            labelText: l10n.stockHint,
+            hintText: l10n.stockHint,
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -637,10 +651,10 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                   newStock,
                 );
                 
-                if (context.mounted) Navigator.pop(context);
+                if (dialogContext.mounted) Navigator.pop(dialogContext);
               }
             },
-            child: const Text('Kaydet'),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -650,28 +664,29 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
   void _showDeleteDialog(Medication medication, MedicationProvider provider) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('İlacı Sil'),
-        content: Text(
-          '${medication.name} silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
-        ),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.deleteMedication),
+        content: Text(l10n.deleteMedicationConfirm),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('İptal'),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(l10n.cancel),
           ),
           ElevatedButton(
             onPressed: () async {
+              final navigator = Navigator.of(context);
               await provider.deleteMedication(medication.id);
-              if (context.mounted) {
-                Navigator.pop(context); // Dialog
-                Navigator.pop(context); // Detail screen
+              if (dialogContext.mounted) {
+                Navigator.pop(dialogContext); // Dialog
+              }
+              if (mounted) {
+                navigator.pop(); // Detail screen
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorColor,
             ),
-            child: const Text('Sil'),
+            child: Text(l10n.delete),
           ),
         ],
       ),

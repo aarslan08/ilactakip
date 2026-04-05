@@ -148,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   Text(
                     subtitle,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       color: AppTheme.textSecondary,
                     ),

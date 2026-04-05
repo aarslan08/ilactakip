@@ -142,6 +142,41 @@ class AppLocalizations {
       'doseHistory': 'Dose History',
       'noHistory': 'No History Yet',
       'historyWillAppear': 'Your medication history will appear here',
+      'takenAt': 'Taken at',
+      'unknownMedication': 'Unknown Medication',
+      'todayLabel': 'Today',
+      'yesterdayLabel': 'Yesterday',
+      
+      // Progress
+      'todaysProgress': 'Today\'s Progress',
+      'allDosesTaken': 'You\'ve taken all your medications today.\nStay healthy!',
+      'pills': 'pills',
+      'remaining': 'remaining',
+      'overdue': 'Overdue!',
+      
+      // Medication Detail
+      'medicationDetails': 'Medication Details',
+      'deleteMedication': 'Delete Medication',
+      'deleteMedicationConfirm': 'Are you sure you want to delete this medication? This action cannot be undone.',
+      'stockStatus': 'Stock Status',
+      'daysSupply': 'days supply',
+      'schedule': 'Schedule',
+      'noSchedule': 'No scheduled times',
+      'daily': 'Daily',
+      'timesPerDay': 'times per day',
+      'intakeInstructions': 'Intake Instructions',
+      'notificationSettings': 'Notification Settings',
+      'enabled': 'Enabled',
+      'disabled': 'Disabled',
+      'expiresOn': 'Expires on',
+      'notSet': 'Not set',
+      
+      // Medication Card
+      'pillsPerDayFormat': 'pills × daily doses',
+      'lowStock': 'Low',
+      'daysRemaining': 'days',
+      'dose': 'dose',
+      'doses': 'doses',
     },
     'tr': {
       // Genel
@@ -272,6 +307,41 @@ class AppLocalizations {
       'doseHistory': 'Doz Geçmişi',
       'noHistory': 'Henüz Geçmiş Yok',
       'historyWillAppear': 'İlaç geçmişiniz burada görünecek',
+      'takenAt': 'Alındı',
+      'unknownMedication': 'Bilinmeyen İlaç',
+      'todayLabel': 'Bugün',
+      'yesterdayLabel': 'Dün',
+      
+      // İlerleme
+      'todaysProgress': 'Bugünkü İlerlemen',
+      'allDosesTaken': 'Bugünkü tüm ilaçlarını aldın.\nSağlıklı günler!',
+      'pills': 'adet',
+      'remaining': 'kaldı',
+      'overdue': 'Gecikti!',
+      
+      // İlaç Detayı
+      'medicationDetails': 'İlaç Detayları',
+      'deleteMedication': 'İlacı Sil',
+      'deleteMedicationConfirm': 'Bu ilacı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+      'stockStatus': 'Stok Durumu',
+      'daysSupply': 'günlük stok',
+      'schedule': 'Program',
+      'noSchedule': 'Planlanmış saat yok',
+      'daily': 'Günlük',
+      'timesPerDay': 'kez',
+      'intakeInstructions': 'Kullanım Talimatları',
+      'notificationSettings': 'Bildirim Ayarları',
+      'enabled': 'Açık',
+      'disabled': 'Kapalı',
+      'expiresOn': 'Son kullanma tarihi',
+      'notSet': 'Belirtilmemiş',
+      
+      // İlaç Kartı
+      'pillsPerDayFormat': 'adet × günde doz',
+      'lowStock': 'Düşük',
+      'daysRemaining': 'gün',
+      'dose': 'doz',
+      'doses': 'doz',
     },
   };
 
@@ -407,6 +477,40 @@ class AppLocalizations {
   String get doseHistory => translate('doseHistory');
   String get noHistory => translate('noHistory');
   String get historyWillAppear => translate('historyWillAppear');
+  String get takenAt => translate('takenAt');
+  String get unknownMedication => translate('unknownMedication');
+  String get todayLabel => translate('todayLabel');
+  String get yesterdayLabel => translate('yesterdayLabel');
+
+  // Progress
+  String get todaysProgress => translate('todaysProgress');
+  String get allDosesTaken => translate('allDosesTaken');
+  String get pills => translate('pills');
+  String get remaining => translate('remaining');
+  String get overdue => translate('overdue');
+
+  // Medication Detail
+  String get medicationDetails => translate('medicationDetails');
+  String get deleteMedication => translate('deleteMedication');
+  String get deleteMedicationConfirm => translate('deleteMedicationConfirm');
+  String get stockStatus => translate('stockStatus');
+  String get daysSupply => translate('daysSupply');
+  String get schedule => translate('schedule');
+  String get noSchedule => translate('noSchedule');
+  String get daily => translate('daily');
+  String get timesPerDay => translate('timesPerDay');
+  String get intakeInstructions => translate('intakeInstructions');
+  String get notificationSettings => translate('notificationSettings');
+  String get enabled => translate('enabled');
+  String get disabled => translate('disabled');
+  String get expiresOn => translate('expiresOn');
+  String get notSet => translate('notSet');
+
+  // Medication Card
+  String get lowStock => translate('lowStock');
+  String get daysRemaining => translate('daysRemaining');
+  String get dose => translate('dose');
+  String get doses => translate('doses');
 }
 
 class _AppLocalizationsDelegate

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ilac_takip/core/utils/date_utils.dart';
+import 'package:ilac_takip/services/notification_service.dart';
 
 class LocaleProvider extends ChangeNotifier {
   static const String _localeKey = 'selected_locale';
@@ -16,6 +18,7 @@ class LocaleProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     final languageCode = prefs.getString(_localeKey) ?? 'tr';
     _locale = Locale(languageCode);
+    _updateDateUtilsLocale();
     notifyListeners();
   }
   
@@ -23,10 +26,17 @@ class LocaleProvider extends ChangeNotifier {
     if (_locale == locale) return;
     
     _locale = locale;
+    _updateDateUtilsLocale();
     notifyListeners();
     
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_localeKey, locale.languageCode);
+  }
+
+  void _updateDateUtilsLocale() {
+    final localeString = _locale.languageCode == 'en' ? 'en_US' : 'tr_TR';
+    AppDateUtils.setLocale(localeString);
+    NotificationService.setLocale(_locale.languageCode);
   }
   
   void setTurkish() => setLocale(const Locale('tr'));

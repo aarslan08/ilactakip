@@ -5,6 +5,7 @@ import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/scheduled_dose.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 
 /// Tinder tarzı ilaç alma ekranı
 class SwipeDoseScreen extends StatefulWidget {
@@ -36,12 +37,14 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
     super.dispose();
   }
 
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('İlaç Zamanı'),
+        title: Text(l10n.medicationTime),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -97,9 +100,9 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Bugünkü İlerlemen',
-                style: TextStyle(
+              Text(
+                l10n.todaysProgress,
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.textSecondary,
                 ),
@@ -147,7 +150,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
               ),
               const SizedBox(width: 4),
               Text(
-                'Atla',
+                l10n.skip,
                 style: TextStyle(
                   color: AppTheme.errorColor.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
@@ -159,7 +162,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
           Row(
             children: [
               Text(
-                'Aldım',
+                l10n.taken,
                 style: TextStyle(
                   color: AppTheme.successColor.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
@@ -248,11 +251,11 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       if (_dragOffset.dx > 0) {
         overlayColor = AppTheme.successColor;
         overlayIcon = Icons.check_rounded;
-        overlayText = 'ALDIM';
+        overlayText = l10n.taken.toUpperCase();
       } else {
         overlayColor = AppTheme.errorColor;
         overlayIcon = Icons.close_rounded;
-        overlayText = 'ATLA';
+        overlayText = l10n.skip.toUpperCase();
       }
     }
 
@@ -374,7 +377,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            medication.intakeType.displayName,
+                            _getIntakeTypeName(medication.intakeType),
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -395,11 +398,11 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                     children: [
                       _buildInfoChip(
                         icon: Icons.medication_outlined,
-                        label: '${medication.dosage.pillsPerDose} adet',
+                        label: '${medication.dosage.pillsPerDose} ${l10n.pills}',
                       ),
                       _buildInfoChip(
                         icon: Icons.inventory_2_outlined,
-                        label: '${medication.currentStock} kaldı',
+                        label: '${medication.currentStock} ${l10n.remaining}',
                         isWarning: medication.isLowStock,
                       ),
                     ],
@@ -417,18 +420,18 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                         color: AppTheme.warningColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.warning_amber_rounded,
                             color: AppTheme.warningColor,
                             size: 16,
                           ),
-                          SizedBox(width: 4),
+                          const SizedBox(width: 4),
                           Text(
-                            'Gecikti!',
-                            style: TextStyle(
+                            l10n.overdue,
+                            style: const TextStyle(
                               fontSize: 13,
                               color: AppTheme.warningColor,
                               fontWeight: FontWeight.bold,
@@ -523,6 +526,17 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
     }
   }
 
+  String _getIntakeTypeName(IntakeType type) {
+    switch (type) {
+      case IntakeType.empty:
+        return l10n.onEmptyStomach;
+      case IntakeType.full:
+        return l10n.onFullStomach;
+      case IntakeType.either:
+        return l10n.anytime;
+    }
+  }
+
   Widget _buildBottomButtons(ScheduledDose dose) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -604,18 +618,18 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'Harika! 🎉',
-              style: TextStyle(
+            Text(
+              '${l10n.allDone} 🎉',
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Bugünkü tüm ilaçlarını aldın.\nSağlıklı günler!',
-              style: TextStyle(
+            Text(
+              l10n.allDosesTaken,
+              style: const TextStyle(
                 fontSize: 16,
                 color: AppTheme.textSecondary,
                 height: 1.5,
@@ -626,7 +640,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             ElevatedButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back_rounded),
-              label: const Text('Ana Sayfaya Dön'),
+              label: Text(l10n.backToHome),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -665,7 +679,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
 
     if (success && mounted) {
       _showFeedback(
-        message: '${dose.medication.name} alındı olarak işaretlendi',
+        message: '${dose.medication.name} ${l10n.markedAsTaken}',
         color: AppTheme.successColor,
         icon: Icons.check_circle_rounded,
       );
@@ -680,7 +694,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
 
     if (mounted) {
       _showFeedback(
-        message: '${dose.medication.name} atlandı',
+        message: '${dose.medication.name} ${l10n.wasSkipped}',
         color: AppTheme.textSecondary,
         icon: Icons.skip_next_rounded,
       );

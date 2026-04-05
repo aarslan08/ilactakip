@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ilac_takip/models/scheduled_dose.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 
 /// Tek bir doz kartı widget'ı
 class DoseCard extends StatelessWidget {
@@ -20,6 +21,7 @@ class DoseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -44,17 +46,17 @@ class DoseCard extends StatelessWidget {
           child: Row(
             children: [
               // Sol taraf - Saat
-              _buildTimeSection(),
+              _buildTimeSection(l10n),
               const SizedBox(width: 10),
               
               // Orta - İlaç bilgisi
-              Expanded(child: _buildInfoSection()),
+              Expanded(child: _buildInfoSection(l10n)),
               
               const SizedBox(width: 8),
               
               // Sağ taraf - Aksiyon butonları
-              if (scheduledDose.isPending) _buildActionButtons(),
-              if (!scheduledDose.isPending) _buildStatusBadge(),
+              if (scheduledDose.isPending) _buildActionButtons(l10n),
+              if (!scheduledDose.isPending) _buildStatusBadge(l10n),
             ],
           ),
         ),
@@ -62,7 +64,7 @@ class DoseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTimeSection() {
+  Widget _buildTimeSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -81,9 +83,9 @@ class DoseCard extends StatelessWidget {
             ),
           ),
           if (scheduledDose.isPastDue && scheduledDose.isPending)
-            const Text(
-              'Gecikti',
-              style: TextStyle(
+            Text(
+              l10n.overdue,
+              style: const TextStyle(
                 fontSize: 9,
                 color: AppTheme.errorColor,
                 fontWeight: FontWeight.w600,
@@ -94,7 +96,7 @@ class DoseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection() {
+  Widget _buildInfoSection(AppLocalizations l10n) {
     final medication = scheduledDose.medication;
     
     return Column(
@@ -127,7 +129,7 @@ class DoseCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  medication.intakeType.shortName,
+                  _getIntakeTypeShortName(medication.intakeType, l10n),
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
@@ -142,7 +144,7 @@ class DoseCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${medication.dosage.pillsPerDose} adet • ${medication.currentStock} kaldı',
+          '${medication.dosage.pillsPerDose} ${l10n.pills} • ${medication.currentStock} ${l10n.remaining}',
           style: TextStyle(
             fontSize: 12,
             color: medication.isLowStock
@@ -159,7 +161,18 @@ class DoseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  String _getIntakeTypeShortName(IntakeType type, AppLocalizations l10n) {
+    switch (type) {
+      case IntakeType.empty:
+        return l10n.empty;
+      case IntakeType.full:
+        return l10n.full;
+      case IntakeType.either:
+        return l10n.anytime;
+    }
+  }
+
+  Widget _buildActionButtons(AppLocalizations l10n) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -189,18 +202,18 @@ class DoseCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.check_rounded,
                     color: Colors.white,
                     size: 16,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
-                    'Aldım',
-                    style: TextStyle(
+                    l10n.taken,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
@@ -215,7 +228,7 @@ class DoseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge() {
+  Widget _buildStatusBadge(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
@@ -232,7 +245,7 @@ class DoseCard extends StatelessWidget {
           ),
           const SizedBox(width: 3),
           Text(
-            scheduledDose.statusText,
+            _getStatusText(l10n),
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -242,6 +255,13 @@ class DoseCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _getStatusText(AppLocalizations l10n) {
+    if (scheduledDose.isTaken) return l10n.takenStatus;
+    if (scheduledDose.isMissed) return l10n.missedStatus;
+    if (scheduledDose.isSkipped) return l10n.skippedStatus;
+    return l10n.pendingStatus;
   }
 
   Color _getBackgroundColor() {

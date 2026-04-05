@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 
 /// İlaç kartı widget'ı
 class MedicationCard extends StatelessWidget {
@@ -19,6 +20,8 @@ class MedicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -46,7 +49,7 @@ class MedicationCard extends StatelessWidget {
                   const SizedBox(width: 16),
                   
                   // İlaç bilgileri
-                  Expanded(child: _buildInfo()),
+                  Expanded(child: _buildInfo(l10n)),
                   
                   // Ok ikonu
                   const Icon(
@@ -58,7 +61,7 @@ class MedicationCard extends StatelessWidget {
             ),
             
             // Alt kısım - Stok ve uyarılar
-            _buildBottomSection(),
+            _buildBottomSection(l10n),
           ],
         ),
       ),
@@ -88,7 +91,9 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo() {
+  Widget _buildInfo(AppLocalizations l10n) {
+    final dosesText = medication.dosage.dosesPerDay == 1 ? l10n.dose : l10n.doses;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,7 +109,7 @@ class MedicationCard extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${medication.dosage.pillsPerDose} adet × günde ${medication.dosage.dosesPerDay} doz',
+          '${medication.dosage.pillsPerDose} ${l10n.pills} × ${l10n.daily} ${medication.dosage.dosesPerDay} $dosesText',
           style: const TextStyle(
             fontSize: 13,
             color: AppTheme.textSecondary,
@@ -125,7 +130,7 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomSection() {
+  Widget _buildBottomSection(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
@@ -138,16 +143,16 @@ class MedicationCard extends StatelessWidget {
       child: Row(
         children: [
           // Stok bilgisi
-          _buildStockInfo(),
+          _buildStockInfo(l10n),
           const Spacer(),
           // Kalan gün bilgisi
-          _buildDaysLeftInfo(),
+          _buildDaysLeftInfo(l10n),
         ],
       ),
     );
   }
 
-  Widget _buildStockInfo() {
+  Widget _buildStockInfo(AppLocalizations l10n) {
     return Row(
       children: [
         Icon(
@@ -157,7 +162,7 @@ class MedicationCard extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          '${medication.currentStock} adet',
+          '${medication.currentStock} ${l10n.units}',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -172,9 +177,9 @@ class MedicationCard extends StatelessWidget {
               color: AppTheme.warningColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Text(
-              'Düşük',
-              style: TextStyle(
+            child: Text(
+              l10n.lowStock,
+              style: const TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.warningColor,
@@ -186,7 +191,7 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDaysLeftInfo() {
+  Widget _buildDaysLeftInfo(AppLocalizations l10n) {
     final daysLeft = medication.estimatedDaysLeft;
     final isLow = daysLeft <= medication.firstRunoutWarningDays;
     
@@ -199,7 +204,7 @@ class MedicationCard extends StatelessWidget {
         ),
         const SizedBox(width: 6),
         Text(
-          daysLeft >= 999 ? '∞' : '~$daysLeft gün',
+          daysLeft >= 999 ? '∞' : '~$daysLeft ${l10n.daysRemaining}',
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,

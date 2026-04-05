@@ -4,18 +4,26 @@ import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/dose_log.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
+import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/widgets/widgets.dart';
 
 /// Geçmiş kayıtlar ekranı
-class LogsScreen extends StatelessWidget {
+class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key});
+
+  @override
+  State<LogsScreen> createState() => _LogsScreenState();
+}
+
+class _LogsScreenState extends State<LogsScreen> {
+  AppLocalizations get l10n => AppLocalizations.of(context)!;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Geçmiş'),
+        title: Text(l10n.history),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded),
@@ -30,10 +38,10 @@ class LogsScreen extends StatelessWidget {
           final logs = provider.recentLogs;
 
           if (logs.isEmpty) {
-            return const EmptyState(
+            return EmptyState(
               icon: Icons.history_rounded,
-              title: 'Geçmiş Kayıt Yok',
-              subtitle: 'Doz aldığınızda veya atladığınızda burada görünecek.',
+              title: l10n.noHistory,
+              subtitle: l10n.historyWillAppear,
             );
           }
 
@@ -65,8 +73,8 @@ class LogsScreen extends StatelessWidget {
   }
 
   String _getDateKey(DateTime date) {
-    if (AppDateUtils.isToday(date)) return 'Bugün';
-    if (AppDateUtils.isYesterday(date)) return 'Dün';
+    if (AppDateUtils.isToday(date)) return l10n.todayLabel;
+    if (AppDateUtils.isYesterday(date)) return l10n.yesterdayLabel;
     return AppDateUtils.formatDate(date);
   }
 
@@ -200,7 +208,7 @@ class LogsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  medication?.name ?? 'Bilinmeyen İlaç',
+                  medication?.name ?? l10n.unknownMedication,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -211,7 +219,7 @@ class LogsScreen extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      log.status.label,
+                      _getStatusLabel(log.status),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -221,7 +229,7 @@ class LogsScreen extends StatelessWidget {
                     if (log.pillsTaken > 0) ...[
                       const Text(' • ', style: TextStyle(color: AppTheme.textLight)),
                       Text(
-                        '${log.pillsTaken} adet',
+                        '${log.pillsTaken} ${l10n.pills}',
                         style: const TextStyle(
                           fontSize: 13,
                           color: AppTheme.textSecondary,
@@ -249,7 +257,7 @@ class LogsScreen extends StatelessWidget {
                 ),
               if (log.takenTime != null)
                 Text(
-                  'Alındı: ${AppDateUtils.formatTime(log.takenTime!)}',
+                  '${l10n.takenAt}: ${AppDateUtils.formatTime(log.takenTime!)}',
                   style: const TextStyle(
                     fontSize: 11,
                     color: AppTheme.textSecondary,
@@ -281,6 +289,17 @@ class LogsScreen extends StatelessWidget {
         return Icons.cancel_rounded;
       case DoseStatus.skipped:
         return Icons.skip_next_rounded;
+    }
+  }
+
+  String _getStatusLabel(DoseStatus status) {
+    switch (status) {
+      case DoseStatus.taken:
+        return l10n.takenStatus;
+      case DoseStatus.missed:
+        return l10n.missedStatus;
+      case DoseStatus.skipped:
+        return l10n.skippedStatus;
     }
   }
 }
