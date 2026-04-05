@@ -16,7 +16,7 @@ class MedicationsScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: context.scaffoldBg,
       appBar: AppBar(
         title: Text(l10n.myMedications),
         actions: [

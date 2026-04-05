@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/providers/locale_provider.dart';
+import 'package:ilac_takip/providers/theme_provider.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 
 /// Ayarlar ekranı
@@ -31,14 +32,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void _showLanguageDialog() {
     final localeProvider = context.read<LocaleProvider>();
+    final theme = Theme.of(context);
     
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -50,7 +52,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: theme.dividerColor,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -58,10 +60,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             const SizedBox(height: 20),
             Text(
               l10n.selectLanguage,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
             const SizedBox(height: 20),
@@ -93,44 +95,114 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildLanguageOption({
+  void _showThemeDialog() {
+    final themeProvider = context.read<ThemeProvider>();
+    final theme = Theme.of(context);
+    
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: theme.dividerColor,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              l10n.selectTheme,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: theme.textTheme.bodyLarge?.color,
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildThemeOption(
+              icon: Icons.light_mode_rounded,
+              title: l10n.lightTheme,
+              subtitle: l10n.lightThemeDesc,
+              isSelected: themeProvider.isLight,
+              onTap: () {
+                themeProvider.setLight();
+                Navigator.pop(context);
+                _showThemeChangedSnackbar();
+              },
+            ),
+            const SizedBox(height: 12),
+            _buildThemeOption(
+              icon: Icons.dark_mode_rounded,
+              title: l10n.darkTheme,
+              subtitle: l10n.darkThemeDesc,
+              isSelected: themeProvider.isDark,
+              onTap: () {
+                themeProvider.setDark();
+                Navigator.pop(context);
+                _showThemeChangedSnackbar();
+              },
+            ),
+            const SizedBox(height: 12),
+            _buildThemeOption(
+              icon: Icons.settings_brightness_rounded,
+              title: l10n.systemTheme,
+              subtitle: l10n.systemThemeDesc,
+              isSelected: themeProvider.isSystem,
+              onTap: () {
+                themeProvider.setSystem();
+                Navigator.pop(context);
+                _showThemeChangedSnackbar();
+              },
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectionOption({
     required String title,
     required String subtitle,
+    required Widget leading,
     required bool isSelected,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? AppTheme.primaryColor.withValues(alpha: 0.1)
-              : Colors.grey.shade50,
+              ? AppTheme.primaryColor.withValues(alpha: isDark ? 0.2 : 0.1)
+              : isDark ? const Color(0xFF2A2A2A) : Colors.grey.shade50,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? AppTheme.primaryColor : Colors.grey.shade200,
+            color: isSelected
+                ? AppTheme.primaryColor
+                : isDark ? const Color(0xFF404040) : Colors.grey.shade200,
             width: isSelected ? 2 : 1,
           ),
         ),
         child: Row(
           children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppTheme.primaryColor
-                    : Colors.grey.shade200,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  title == 'Türkçe' ? '🇹🇷' : '🇬🇧',
-                  style: const TextStyle(fontSize: 22),
-                ),
-              ),
-            ),
+            leading,
             const SizedBox(width: 14),
             Expanded(
               child: Column(
@@ -143,14 +215,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       fontWeight: FontWeight.w600,
                       color: isSelected
                           ? AppTheme.primaryColor
-                          : AppTheme.textPrimary,
+                          : theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppTheme.textSecondary,
+                      color: theme.textTheme.bodyMedium?.color,
                     ),
                   ),
                 ],
@@ -168,14 +240,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildLanguageOption({
+    required String title,
+    required String subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return _buildSelectionOption(
+      title: title,
+      subtitle: subtitle,
+      isSelected: isSelected,
+      onTap: onTap,
+      leading: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppTheme.primaryColor
+              : isDark ? const Color(0xFF404040) : Colors.grey.shade200,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: Text(
+            title == 'Türkçe' ? '🇹🇷' : '🇬🇧',
+            style: const TextStyle(fontSize: 22),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeOption({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    return _buildSelectionOption(
+      title: title,
+      subtitle: subtitle,
+      isSelected: isSelected,
+      onTap: onTap,
+      leading: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppTheme.primaryColor
+              : isDark ? const Color(0xFF404040) : Colors.grey.shade200,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          color: isSelected ? Colors.white : (isDark ? Colors.white70 : Colors.grey.shade600),
+          size: 22,
+        ),
+      ),
+    );
+  }
+
   void _showLanguageChangedSnackbar() {
+    _showSuccessSnackbar(l10n.languageChanged);
+  }
+
+  void _showThemeChangedSnackbar() {
+    _showSuccessSnackbar(l10n.themeChanged);
+  }
+
+  void _showSuccessSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
             const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
-            Text(l10n.languageChanged),
+            Text(message),
           ],
         ),
         backgroundColor: AppTheme.successColor,
@@ -186,12 +330,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  String _currentThemeName(ThemeProvider themeProvider) {
+    if (themeProvider.isLight) return l10n.lightTheme;
+    if (themeProvider.isDark) return l10n.darkTheme;
+    return l10n.systemTheme;
+  }
+
   @override
   Widget build(BuildContext context) {
     final localeProvider = context.watch<LocaleProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
+    final theme = Theme.of(context);
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -204,18 +356,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Text(
                       l10n.settingsTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       l10n.managePreferences,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: AppTheme.textSecondary,
+                        color: theme.textTheme.bodyMedium?.color,
                       ),
                     ),
                   ],
@@ -239,6 +391,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         NotificationService.instance.requestPermissions();
                       }
                     },
+                  ),
+                ],
+              ),
+            ),
+
+            // Tema Ayarları
+            SliverToBoxAdapter(
+              child: _buildSection(
+                title: l10n.theme,
+                children: [
+                  _buildThemeTile(
+                    currentTheme: _currentThemeName(themeProvider),
+                    onTap: _showThemeDialog,
                   ),
                 ],
               ),
@@ -313,6 +478,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required String title,
     required List<Widget> children,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
       child: Column(
@@ -320,20 +488,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textSecondary,
+              color: theme.textTheme.bodyMedium?.color,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? AppTheme.darkCardColor : Colors.white,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
+                  color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -355,6 +523,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -362,12 +533,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              color: AppTheme.primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: AppTheme.primaryColor,
+              color: isDark ? AppTheme.primaryLight : AppTheme.primaryColor,
               size: 22,
             ),
           ),
@@ -378,18 +549,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppTheme.textSecondary,
+                    color: theme.textTheme.bodyMedium?.color,
                   ),
                 ),
               ],
@@ -405,10 +576,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildLanguageTile({
-    required String currentLanguage,
+  Widget _buildNavigationTile({
+    required String title,
+    required String subtitle,
+    required IconData icon,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -421,12 +597,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  color: AppTheme.primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.language_rounded,
-                  color: AppTheme.primaryColor,
+                child: Icon(
+                  icon,
+                  color: isDark ? AppTheme.primaryLight : AppTheme.primaryColor,
                   size: 22,
                 ),
               ),
@@ -436,27 +612,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.selectLanguage,
-                      style: const TextStyle(
+                      title,
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      currentLanguage,
-                      style: const TextStyle(
+                      subtitle,
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.textSecondary,
+                        color: theme.textTheme.bodyMedium?.color,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
-                color: AppTheme.textLight,
+                color: theme.textTheme.bodySmall?.color,
               ),
             ],
           ),
@@ -465,11 +641,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildLanguageTile({
+    required String currentLanguage,
+    required VoidCallback onTap,
+  }) {
+    return _buildNavigationTile(
+      title: l10n.selectLanguage,
+      subtitle: currentLanguage,
+      icon: Icons.language_rounded,
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildThemeTile({
+    required String currentTheme,
+    required VoidCallback onTap,
+  }) {
+    return _buildNavigationTile(
+      title: l10n.selectTheme,
+      subtitle: currentTheme,
+      icon: Icons.palette_rounded,
+      onTap: onTap,
+    );
+  }
+
   Widget _buildInfoTile({
     required String title,
     required String subtitle,
     required IconData icon,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -477,12 +680,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppTheme.primaryColor.withValues(alpha: 0.1),
+              color: AppTheme.primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: AppTheme.primaryColor,
+              color: isDark ? AppTheme.primaryLight : AppTheme.primaryColor,
               size: 22,
             ),
           ),
@@ -490,18 +693,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+                color: theme.textTheme.bodyLarge?.color,
               ),
             ),
           ),
           Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: AppTheme.textSecondary,
+              color: theme.textTheme.bodyMedium?.color,
             ),
           ),
         ],
@@ -514,6 +717,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -526,12 +732,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  color: AppTheme.primaryColor.withValues(alpha: isDark ? 0.2 : 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
-                  color: AppTheme.primaryColor,
+                  color: isDark ? AppTheme.primaryLight : AppTheme.primaryColor,
                   size: 22,
                 ),
               ),
@@ -539,16 +745,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
-                color: AppTheme.textLight,
+                color: theme.textTheme.bodySmall?.color,
               ),
             ],
           ),

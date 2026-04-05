@@ -56,13 +56,14 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
 
         if (medication == null) {
           return Scaffold(
+            backgroundColor: context.scaffoldBg,
             appBar: AppBar(title: Text(l10n.medicationDetails)),
             body: Center(child: Text(l10n.unknownMedication)),
           );
         }
 
         return Scaffold(
-          backgroundColor: AppTheme.backgroundColor,
+          backgroundColor: context.scaffoldBg,
           body: CustomScrollView(
             slivers: [
               // App Bar
@@ -165,11 +166,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -191,7 +192,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               Container(
                 width: 1,
                 height: 60,
-                color: Colors.grey.shade200,
+                color: context.dividerClr,
               ),
               Expanded(
                 child: _buildStockItem(
@@ -258,9 +259,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               ),
               TextSpan(
                 text: ' $unit',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppTheme.textSecondary,
+                  color: context.textSecondaryClr,
                 ),
               ),
             ],
@@ -269,9 +270,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: AppTheme.textSecondary,
+            color: context.textSecondaryClr,
           ),
         ),
       ],
@@ -282,11 +283,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -297,10 +298,10 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         children: [
           Text(
             l10n.dosageInfo,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
+              color: context.textPrimaryClr,
             ),
           ),
           const SizedBox(height: 16),
@@ -309,14 +310,14 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             l10n.pillsPerDose,
             '${medication.dosage.pillsPerDose} ${l10n.units}',
           ),
-          const Divider(height: 24),
+          Divider(height: 24, color: context.dividerClr),
           _buildInfoRow(
             Icons.repeat_rounded,
             l10n.dosesPerDay,
             '${medication.dosage.dosesPerDay} ${l10n.times}',
           ),
           if (medication.dosage.scheduleTimes.isNotEmpty) ...[
-            const Divider(height: 24),
+            Divider(height: 24, color: context.dividerClr),
             _buildInfoRow(
               Icons.schedule_rounded,
               l10n.doseTimes,
@@ -324,7 +325,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             ),
           ],
           if (medication.expirationDate != null) ...[
-            const Divider(height: 24),
+            Divider(height: 24, color: context.dividerClr),
             _buildInfoRow(
               Icons.event_rounded,
               l10n.expirationDate,
@@ -332,7 +333,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             ),
           ],
           if (medication.notes != null && medication.notes!.isNotEmpty) ...[
-            const Divider(height: 24),
+            Divider(height: 24, color: context.dividerClr),
             _buildInfoRow(
               Icons.note_rounded,
               l10n.notes,
@@ -351,18 +352,18 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         const SizedBox(width: 12),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
-            color: AppTheme.textSecondary,
+            color: context.textSecondaryClr,
           ),
         ),
         const Spacer(),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: context.textPrimaryClr,
           ),
         ),
       ],
@@ -375,11 +376,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -392,10 +393,10 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             children: [
               Text(
                 l10n.adherenceRate,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
               ),
               const Spacer(),
@@ -415,16 +416,16 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             child: LinearProgressIndicator(
               value: _adherenceRate,
               minHeight: 10,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: context.dividerClr,
               valueColor: AlwaysStoppedAnimation(_getAdherenceColor(percentage)),
             ),
           ),
           const SizedBox(height: 12),
           Text(
             _getAdherenceMessage(percentage),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppTheme.textSecondary,
+              color: context.textSecondaryClr,
             ),
           ),
         ],
@@ -436,11 +437,11 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -453,10 +454,10 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             children: [
               Text(
                 l10n.doseHistory,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
               ),
               const Spacer(),
@@ -476,7 +477,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               padding: const EdgeInsets.all(16),
               child: Text(
                 l10n.noHistory,
-                style: const TextStyle(color: AppTheme.textSecondary),
+                style: TextStyle(color: context.textSecondaryClr),
               ),
             )
           else
@@ -511,17 +512,17 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               children: [
                 Text(
                   _getStatusLabel(log.status),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: context.textPrimaryClr,
                   ),
                 ),
                 Text(
                   AppDateUtils.timeAgo(log.createdAt),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppTheme.textSecondary,
+                    color: context.textSecondaryClr,
                   ),
                 ),
               ],
@@ -531,9 +532,9 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
             log.scheduledTime != null
                 ? AppDateUtils.formatTime(log.scheduledTime!)
                 : '',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 13,
-              color: AppTheme.textSecondary,
+              color: context.textSecondaryClr,
             ),
           ),
         ],

@@ -42,7 +42,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: context.scaffoldBg,
       appBar: AppBar(
         title: Text(l10n.medicationTime),
         centerTitle: true,
@@ -102,9 +102,9 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             children: [
               Text(
                 l10n.todaysProgress,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppTheme.textSecondary,
+                  color: context.textSecondaryClr,
                 ),
               ),
               Text(
@@ -122,7 +122,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: context.dividerClr,
               valueColor: AlwaysStoppedAnimation<Color>(
                 progress == 1.0 ? AppTheme.successColor : AppTheme.primaryColor,
               ),
@@ -263,11 +263,11 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       width: screenWidth * 0.85,
       height: cardHeight,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -309,10 +309,10 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                   // İlaç adı
                   Text(
                     medication.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
+                      color: context.textPrimaryClr,
                     ),
                     textAlign: TextAlign.center,
                     maxLines: 2,
@@ -397,10 +397,12 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                     runSpacing: 8,
                     children: [
                       _buildInfoChip(
+                        context,
                         icon: Icons.medication_outlined,
                         label: '${medication.dosage.pillsPerDose} ${l10n.pills}',
                       ),
                       _buildInfoChip(
+                        context,
                         icon: Icons.inventory_2_outlined,
                         label: '${medication.currentStock} ${l10n.remaining}',
                         isWarning: medication.isLowStock,
@@ -480,7 +482,8 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
     );
   }
 
-  Widget _buildInfoChip({
+  Widget _buildInfoChip(
+    BuildContext context, {
     required IconData icon,
     required String label,
     bool isWarning = false,
@@ -490,7 +493,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       decoration: BoxDecoration(
         color: isWarning
             ? AppTheme.warningColor.withValues(alpha: 0.1)
-            : Colors.grey.shade100,
+            : context.subtleBg,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -499,14 +502,14 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
           Icon(
             icon,
             size: 16,
-            color: isWarning ? AppTheme.warningColor : AppTheme.textSecondary,
+            color: isWarning ? AppTheme.warningColor : context.textSecondaryClr,
           ),
           const SizedBox(width: 6),
           Text(
             label,
             style: TextStyle(
               fontSize: 13,
-              color: isWarning ? AppTheme.warningColor : AppTheme.textSecondary,
+              color: isWarning ? AppTheme.warningColor : context.textSecondaryClr,
               fontWeight: isWarning ? FontWeight.w600 : FontWeight.normal,
             ),
           ),
@@ -620,18 +623,18 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             const SizedBox(height: 32),
             Text(
               '${l10n.allDone} 🎉',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
+                color: context.textPrimaryClr,
               ),
             ),
             const SizedBox(height: 16),
             Text(
               l10n.allDosesTaken,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: AppTheme.textSecondary,
+                color: context.textSecondaryClr,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,

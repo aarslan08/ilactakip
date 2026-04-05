@@ -138,6 +138,17 @@ class AppLocalizations {
       'rateApp': 'Rate App',
       'languageChanged': 'Language changed',
 
+      // Theme
+      'theme': 'Theme',
+      'selectTheme': 'Select Theme',
+      'lightTheme': 'Light',
+      'darkTheme': 'Dark',
+      'systemTheme': 'System',
+      'lightThemeDesc': 'Always use light theme',
+      'darkThemeDesc': 'Always use dark theme',
+      'systemThemeDesc': 'Follow system setting',
+      'themeChanged': 'Theme changed',
+
       // History / Logs
       'doseHistory': 'Dose History',
       'noHistory': 'No History Yet',
@@ -302,6 +313,17 @@ class AppLocalizations {
       'sendFeedback': 'Geri Bildirim Gönder',
       'rateApp': 'Uygulamayı Değerlendir',
       'languageChanged': 'Dil değiştirildi',
+
+      // Tema
+      'theme': 'Tema',
+      'selectTheme': 'Tema Seçin',
+      'lightTheme': 'Açık',
+      'darkTheme': 'Koyu',
+      'systemTheme': 'Sistem',
+      'lightThemeDesc': 'Her zaman açık tema kullan',
+      'darkThemeDesc': 'Her zaman koyu tema kullan',
+      'systemThemeDesc': 'Sistem ayarını takip et',
+      'themeChanged': 'Tema değiştirildi',
 
       // Geçmiş / Loglar
       'doseHistory': 'Doz Geçmişi',
@@ -472,6 +494,17 @@ class AppLocalizations {
   String get sendFeedback => translate('sendFeedback');
   String get rateApp => translate('rateApp');
   String get languageChanged => translate('languageChanged');
+
+  // Theme
+  String get theme => translate('theme');
+  String get selectTheme => translate('selectTheme');
+  String get lightTheme => translate('lightTheme');
+  String get darkTheme => translate('darkTheme');
+  String get systemTheme => translate('systemTheme');
+  String get lightThemeDesc => translate('lightThemeDesc');
+  String get darkThemeDesc => translate('darkThemeDesc');
+  String get systemThemeDesc => translate('systemThemeDesc');
+  String get themeChanged => translate('themeChanged');
 
   // History
   String get doseHistory => translate('doseHistory');

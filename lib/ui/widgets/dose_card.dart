@@ -27,15 +27,15 @@ class DoseCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: _getBackgroundColor(),
+          color: _getBackgroundColor(context),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: _getBorderColor(),
+            color: _getBorderColor(context),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withValues(alpha: context.shadowAlpha),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -50,12 +50,12 @@ class DoseCard extends StatelessWidget {
               const SizedBox(width: 10),
               
               // Orta - İlaç bilgisi
-              Expanded(child: _buildInfoSection(l10n)),
+              Expanded(child: _buildInfoSection(context, l10n)),
               
               const SizedBox(width: 8),
               
               // Sağ taraf - Aksiyon butonları
-              if (scheduledDose.isPending) _buildActionButtons(l10n),
+              if (scheduledDose.isPending) _buildActionButtons(context, l10n),
               if (!scheduledDose.isPending) _buildStatusBadge(l10n),
             ],
           ),
@@ -96,7 +96,7 @@ class DoseCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(AppLocalizations l10n) {
+  Widget _buildInfoSection(BuildContext context, AppLocalizations l10n) {
     final medication = scheduledDose.medication;
     
     return Column(
@@ -108,10 +108,10 @@ class DoseCard extends StatelessWidget {
             Flexible(
               child: Text(
                 medication.name,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -149,7 +149,7 @@ class DoseCard extends StatelessWidget {
             fontSize: 12,
             color: medication.isLowStock
                 ? AppTheme.warningColor
-                : AppTheme.textSecondary,
+                : context.textSecondaryClr,
             fontWeight: medication.isLowStock
                 ? FontWeight.w600
                 : FontWeight.normal,
@@ -172,7 +172,7 @@ class DoseCard extends StatelessWidget {
     }
   }
 
-  Widget _buildActionButtons(AppLocalizations l10n) {
+  Widget _buildActionButtons(BuildContext context, AppLocalizations l10n) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -184,9 +184,9 @@ class DoseCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: Container(
               padding: const EdgeInsets.all(6),
-              child: const Icon(
+              child: Icon(
                 Icons.skip_next_rounded,
-                color: AppTheme.textSecondary,
+                color: context.textSecondaryClr,
                 size: 22,
               ),
             ),
@@ -264,20 +264,20 @@ class DoseCard extends StatelessWidget {
     return l10n.pendingStatus;
   }
 
-  Color _getBackgroundColor() {
+  Color _getBackgroundColor(BuildContext context) {
     if (scheduledDose.isTaken) return AppTheme.takenColor.withValues(alpha: 0.05);
     if (scheduledDose.isMissed) return AppTheme.missedColor.withValues(alpha: 0.05);
     if (scheduledDose.isSkipped) return AppTheme.skippedColor.withValues(alpha: 0.05);
     if (scheduledDose.isPastDue) return AppTheme.warningColor.withValues(alpha: 0.05);
-    return Colors.white;
+    return context.cardBg;
   }
 
-  Color _getBorderColor() {
+  Color _getBorderColor(BuildContext context) {
     if (scheduledDose.isTaken) return AppTheme.takenColor.withValues(alpha: 0.3);
     if (scheduledDose.isMissed) return AppTheme.missedColor.withValues(alpha: 0.3);
     if (scheduledDose.isSkipped) return AppTheme.skippedColor.withValues(alpha: 0.3);
     if (scheduledDose.isPastDue) return AppTheme.warningColor.withValues(alpha: 0.5);
-    return Colors.grey.shade200;
+    return context.dividerClr;
   }
 
   Color _getTimeBackgroundColor() {

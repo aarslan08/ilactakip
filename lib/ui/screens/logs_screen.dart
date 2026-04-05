@@ -21,7 +21,7 @@ class _LogsScreenState extends State<LogsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: context.scaffoldBg,
       appBar: AppBar(
         title: Text(l10n.history),
         actions: [
@@ -98,10 +98,10 @@ class _LogsScreenState extends State<LogsScreen> {
             children: [
               Text(
                 dateTitle,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
               ),
               const SizedBox(width: 12),
@@ -164,21 +164,25 @@ class _LogsScreenState extends State<LogsScreen> {
         ),
         
         // Log kartları
-        ...logs.map((log) => _buildLogCard(log, provider)),
+        ...logs.map((log) => _buildLogCard(context, log, provider)),
         
         const SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _buildLogCard(DoseLog log, MedicationProvider provider) {
+  Widget _buildLogCard(
+    BuildContext context,
+    DoseLog log,
+    MedicationProvider provider,
+  ) {
     final medication = provider.getMedicationById(log.medicationId);
     
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: _getStatusColor(log.status).withValues(alpha: 0.2),
@@ -209,10 +213,10 @@ class _LogsScreenState extends State<LogsScreen> {
               children: [
                 Text(
                   medication?.name ?? l10n.unknownMedication,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: context.textPrimaryClr,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -227,12 +231,15 @@ class _LogsScreenState extends State<LogsScreen> {
                       ),
                     ),
                     if (log.pillsTaken > 0) ...[
-                      const Text(' • ', style: TextStyle(color: AppTheme.textLight)),
+                      Text(
+                        ' • ',
+                        style: TextStyle(color: context.textLightClr),
+                      ),
                       Text(
                         '${log.pillsTaken} ${l10n.pills}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
-                          color: AppTheme.textSecondary,
+                          color: context.textSecondaryClr,
                         ),
                       ),
                     ],
@@ -249,18 +256,18 @@ class _LogsScreenState extends State<LogsScreen> {
               if (log.scheduledTime != null)
                 Text(
                   AppDateUtils.formatTime(log.scheduledTime!),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: context.textPrimaryClr,
                   ),
                 ),
               if (log.takenTime != null)
                 Text(
                   '${l10n.takenAt}: ${AppDateUtils.formatTime(log.takenTime!)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
-                    color: AppTheme.textSecondary,
+                    color: context.textSecondaryClr,
                   ),
                 ),
             ],

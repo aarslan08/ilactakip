@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: context.scaffoldBg,
       body: SafeArea(
         child: Consumer<MedicationProvider>(
           builder: (context, provider, child) {
@@ -115,9 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       _getGreeting(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: AppTheme.textSecondary,
+                        color: context.textSecondaryClr,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -125,17 +125,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       AppDateUtils.isToday(now)
                           ? l10n.today
                           : AppDateUtils.formatDate(now),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
+                        color: context.textPrimaryClr,
                       ),
                     ),
                     Text(
                       AppDateUtils.formatWeekday(now),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
-                        color: AppTheme.textSecondary,
+                        color: context.textSecondaryClr,
                       ),
                     ),
                   ],
@@ -328,18 +328,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     l10n.lowStockWarning,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
+                      color: context.textPrimaryClr,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     '${provider.lowStockMedications.length} ${l10n.medicationsLowStock}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: AppTheme.textSecondary,
+                      color: context.textSecondaryClr,
                     ),
                   ),
                 ],
@@ -362,10 +362,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             l10n.todaysSchedule,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
+              color: context.textPrimaryClr,
             ),
           ),
           const Spacer(),
@@ -397,9 +397,9 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               Text(
                 l10n.noDosesScheduled,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  color: AppTheme.textSecondary,
+                  color: context.textSecondaryClr,
                 ),
               ),
             ],
@@ -477,7 +477,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Text('${scheduledDose.medication.name} ${l10n.wasSkipped}'),
             ],
           ),
-          backgroundColor: AppTheme.textSecondary,
+          backgroundColor: context.textSecondaryClr,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),

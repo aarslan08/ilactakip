@@ -52,10 +52,10 @@ class EmptyState extends StatelessWidget {
             // Başlık
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textPrimary,
+                color: context.textPrimaryClr,
               ),
               textAlign: TextAlign.center,
             ),
@@ -65,9 +65,9 @@ class EmptyState extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 subtitle!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
-                  color: AppTheme.textSecondary,
+                  color: context.textSecondaryClr,
                   height: 1.5,
                 ),
                 textAlign: TextAlign.center,

@@ -35,10 +35,10 @@ class _MainNavigationState extends State<MainNavigation> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: Colors.black.withValues(alpha: context.shadowAlpha),
               blurRadius: 20,
               offset: const Offset(0, -4),
             ),
@@ -51,24 +51,28 @@ class _MainNavigationState extends State<MainNavigation> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(
+                  context,
                   index: 0,
                   icon: Icons.home_outlined,
                   activeIcon: Icons.home_rounded,
                   label: l10n.home,
                 ),
                 _buildNavItem(
+                  context,
                   index: 1,
                   icon: Icons.medication_outlined,
                   activeIcon: Icons.medication_rounded,
                   label: l10n.myMedications,
                 ),
                 _buildNavItem(
+                  context,
                   index: 2,
                   icon: Icons.history_outlined,
                   activeIcon: Icons.history_rounded,
                   label: l10n.history,
                 ),
                 _buildNavItem(
+                  context,
                   index: 3,
                   icon: Icons.settings_outlined,
                   activeIcon: Icons.settings_rounded,
@@ -82,7 +86,8 @@ class _MainNavigationState extends State<MainNavigation> {
     );
   }
 
-  Widget _buildNavItem({
+  Widget _buildNavItem(
+    BuildContext context, {
     required int index,
     required IconData icon,
     required IconData activeIcon,
@@ -110,7 +115,7 @@ class _MainNavigationState extends State<MainNavigation> {
           children: [
             Icon(
               isSelected ? activeIcon : icon,
-              color: isSelected ? AppTheme.primaryColor : AppTheme.textSecondary,
+              color: isSelected ? AppTheme.primaryColor : context.textSecondaryClr,
               size: 22,
             ),
             if (isSelected) ...[

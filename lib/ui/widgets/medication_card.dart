@@ -27,11 +27,11 @@ class MedicationCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: Colors.black.withValues(alpha: context.shadowAlpha),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -49,19 +49,19 @@ class MedicationCard extends StatelessWidget {
                   const SizedBox(width: 16),
                   
                   // İlaç bilgileri
-                  Expanded(child: _buildInfo(l10n)),
+                  Expanded(child: _buildInfo(context, l10n)),
                   
                   // Ok ikonu
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
-                    color: AppTheme.textLight,
+                    color: context.textLightClr,
                   ),
                 ],
               ),
             ),
             
             // Alt kısım - Stok ve uyarılar
-            _buildBottomSection(l10n),
+            _buildBottomSection(context, l10n),
           ],
         ),
       ),
@@ -91,7 +91,7 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildInfo(AppLocalizations l10n) {
+  Widget _buildInfo(BuildContext context, AppLocalizations l10n) {
     final dosesText = medication.dosage.dosesPerDay == 1 ? l10n.dose : l10n.doses;
     
     return Column(
@@ -99,10 +99,10 @@ class MedicationCard extends StatelessWidget {
       children: [
         Text(
           medication.name,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w600,
-            color: AppTheme.textPrimary,
+            color: context.textPrimaryClr,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
@@ -110,9 +110,9 @@ class MedicationCard extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           '${medication.dosage.pillsPerDose} ${l10n.pills} × ${l10n.daily} ${medication.dosage.dosesPerDay} $dosesText',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
-            color: AppTheme.textSecondary,
+            color: context.textSecondaryClr,
           ),
         ),
         if (medication.dosage.scheduleTimes.isNotEmpty) ...[
@@ -130,11 +130,11 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomSection(AppLocalizations l10n) {
+  Widget _buildBottomSection(BuildContext context, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: _getBottomSectionColor(),
+        color: _getBottomSectionColor(context),
         borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(16),
           bottomRight: Radius.circular(16),
@@ -143,22 +143,22 @@ class MedicationCard extends StatelessWidget {
       child: Row(
         children: [
           // Stok bilgisi
-          _buildStockInfo(l10n),
+          _buildStockInfo(context, l10n),
           const Spacer(),
           // Kalan gün bilgisi
-          _buildDaysLeftInfo(l10n),
+          _buildDaysLeftInfo(context, l10n),
         ],
       ),
     );
   }
 
-  Widget _buildStockInfo(AppLocalizations l10n) {
+  Widget _buildStockInfo(BuildContext context, AppLocalizations l10n) {
     return Row(
       children: [
         Icon(
           Icons.inventory_2_outlined,
           size: 18,
-          color: medication.isLowStock ? AppTheme.warningColor : AppTheme.textSecondary,
+          color: medication.isLowStock ? AppTheme.warningColor : context.textSecondaryClr,
         ),
         const SizedBox(width: 6),
         Text(
@@ -166,7 +166,7 @@ class MedicationCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: medication.isLowStock ? AppTheme.warningColor : AppTheme.textPrimary,
+            color: medication.isLowStock ? AppTheme.warningColor : context.textPrimaryClr,
           ),
         ),
         if (medication.isLowStock) ...[
@@ -191,7 +191,7 @@ class MedicationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDaysLeftInfo(AppLocalizations l10n) {
+  Widget _buildDaysLeftInfo(BuildContext context, AppLocalizations l10n) {
     final daysLeft = medication.estimatedDaysLeft;
     final isLow = daysLeft <= medication.firstRunoutWarningDays;
     
@@ -200,7 +200,7 @@ class MedicationCard extends StatelessWidget {
         Icon(
           Icons.calendar_today_outlined,
           size: 16,
-          color: isLow ? AppTheme.accentColor : AppTheme.textSecondary,
+          color: isLow ? AppTheme.accentColor : context.textSecondaryClr,
         ),
         const SizedBox(width: 6),
         Text(
@@ -208,17 +208,17 @@ class MedicationCard extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: isLow ? AppTheme.accentColor : AppTheme.textSecondary,
+            color: isLow ? AppTheme.accentColor : context.textSecondaryClr,
           ),
         ),
       ],
     );
   }
 
-  Color _getBottomSectionColor() {
+  Color _getBottomSectionColor(BuildContext context) {
     if (medication.isOutOfStock) return AppTheme.errorColor.withValues(alpha: 0.08);
     if (medication.isCriticalStock) return AppTheme.accentColor.withValues(alpha: 0.08);
     if (medication.isLowStock) return AppTheme.warningColor.withValues(alpha: 0.08);
-    return AppTheme.backgroundColor;
+    return context.scaffoldBg;
   }
 }

@@ -82,7 +82,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: context.scaffoldBg,
       appBar: AppBar(
         title: Text(_isEditing ? l10n.editMedication : l10n.addMedication),
         actions: [
@@ -156,10 +156,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   Widget _buildSectionTitle(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: AppTheme.textPrimary,
+        color: context.textPrimaryClr,
       ),
     );
   }
@@ -256,9 +256,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.dividerClr),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,10 +269,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               const SizedBox(width: 8),
               Text(
                 l10n.doseTimes,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
               ),
               const Spacer(),
@@ -297,7 +297,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                       _scheduleTimes.remove(time);
                     });
                   },
-                  backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  backgroundColor: AppTheme.primaryColor.withValues(
+                    alpha: context.primaryAlpha,
+                  ),
                   deleteIconColor: AppTheme.primaryColor,
                   labelStyle: const TextStyle(
                     color: AppTheme.primaryColor,
@@ -311,9 +313,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 l10n.noTimeAdded,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: AppTheme.textSecondary,
+                  color: context.textSecondaryClr,
                 ),
               ),
             ),
@@ -326,9 +328,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.dividerClr),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,10 +341,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               const SizedBox(width: 8),
               Text(
                 l10n.whenToTake,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+                  color: context.textPrimaryClr,
                 ),
               ),
             ],
@@ -361,13 +363,15 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppTheme.primaryColor.withValues(alpha: 0.1)
-                          : Colors.grey.shade50,
+                          ? AppTheme.primaryColor.withValues(
+                              alpha: context.primaryAlpha,
+                            )
+                          : context.subtleBg,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? AppTheme.primaryColor
-                            : Colors.grey.shade300,
+                            : context.dividerClr,
                         width: isSelected ? 2 : 1,
                       ),
                     ),
@@ -387,7 +391,7 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                                 : FontWeight.normal,
                             color: isSelected
                                 ? AppTheme.primaryColor
-                                : AppTheme.textSecondary,
+                                : context.textSecondaryClr,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -418,9 +422,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.dividerClr),
       ),
       child: Row(
         children: [
@@ -432,17 +436,17 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               children: [
                 Text(
                   l10n.doseReminders,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                    color: context.textPrimaryClr,
                   ),
                 ),
                 Text(
                   l10n.getNotified,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: AppTheme.textSecondary,
+                    color: context.textSecondaryClr,
                   ),
                 ),
               ],
@@ -466,9 +470,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.cardBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.dividerClr),
       ),
       child: Column(
         children: [
@@ -483,17 +487,17 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                   children: [
                     Text(
                       l10n.lowStockAlert,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: context.textPrimaryClr,
                       ),
                     ),
                     Text(
                       '$_lowStockThreshold ${l10n.alertWhenLow}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.textSecondary,
+                        color: context.textSecondaryClr,
                       ),
                     ),
                   ],
@@ -537,17 +541,17 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                   children: [
                     Text(
                       l10n.runoutWarning,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
+                        color: context.textPrimaryClr,
                       ),
                     ),
                     Text(
                       '$_firstRunoutWarningDays ${l10n.daysBeforeRunout}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
-                        color: AppTheme.textSecondary,
+                        color: context.textSecondaryClr,
                       ),
                     ),
                   ],
@@ -590,9 +594,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.cardBg,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(color: context.dividerClr),
         ),
         child: Row(
           children: [
@@ -604,10 +608,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 children: [
                   Text(
                     l10n.expirationDate,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary,
+                      color: context.textPrimaryClr,
                     ),
                   ),
                   Text(
@@ -617,8 +621,8 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                     style: TextStyle(
                       fontSize: 13,
                       color: _expirationDate != null
-                          ? AppTheme.textPrimary
-                          : AppTheme.textSecondary,
+                          ? context.textPrimaryClr
+                          : context.textSecondaryClr,
                     ),
                   ),
                 ],
@@ -628,9 +632,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
               IconButton(
                 icon: const Icon(Icons.clear_rounded),
                 onPressed: () => setState(() => _expirationDate = null),
-                color: AppTheme.textSecondary,
+                color: context.textSecondaryClr,
               ),
-            const Icon(Icons.chevron_right_rounded, color: AppTheme.textLight),
+            Icon(Icons.chevron_right_rounded, color: context.textLightClr),
           ],
         ),
       ),
@@ -677,16 +681,6 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppTheme.primaryColor,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
 
     if (picked != null) {
@@ -708,16 +702,6 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       initialDate: _expirationDate ?? DateTime.now().add(const Duration(days: 365)),
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppTheme.primaryColor,
-            ),
-          ),
-          child: child!,
-        );
-      },
     );
 
     if (picked != null) {
