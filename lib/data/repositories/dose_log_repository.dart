@@ -275,6 +275,59 @@ class DoseLogRepository {
     }
   }
 
+  /// Tarih aralığındaki tüm doz kayıtlarını getir
+  Future<List<DoseLog>> getDoseLogsByDateRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    try {
+      final db = await _databaseHelper.database;
+      final startStr = DateTime(start.year, start.month, start.day).toIso8601String();
+      final endStr = DateTime(end.year, end.month, end.day, 23, 59, 59).toIso8601String();
+
+      final maps = await db.query(
+        'dose_logs',
+        where: 'createdAt >= ? AND createdAt <= ?',
+        whereArgs: [startStr, endStr],
+        orderBy: 'createdAt ASC',
+      );
+
+      return maps.map((map) => DoseLog.fromMap(map)).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting dose logs by date range: $e');
+      }
+      rethrow;
+    }
+  }
+
+  /// Tarih aralığında gün bazlı uyum verisi: {tarih: {taken, total}}
+  Future<Map<DateTime, ({int taken, int total})>> getDailyAdherenceForRange(
+    DateTime start,
+    DateTime end,
+  ) async {
+    try {
+      final logs = await getDoseLogsByDateRange(start, end);
+      final Map<DateTime, ({int taken, int total})> result = {};
+
+      for (final log in logs) {
+        final day = DateTime(log.createdAt.year, log.createdAt.month, log.createdAt.day);
+        final current = result[day] ?? (taken: 0, total: 0);
+        result[day] = (
+          taken: current.taken + (log.isTaken ? 1 : 0),
+          total: current.total + 1,
+        );
+      }
+
+      return result;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting daily adherence for range: $e');
+      }
+      rethrow;
+    }
+  }
+
   /// Toplam doz kaydı sayısını getir
   Future<int> getDoseLogCount() async {
     try {

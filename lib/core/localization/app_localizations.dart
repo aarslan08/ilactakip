@@ -149,6 +149,19 @@ class AppLocalizations {
       'systemThemeDesc': 'Follow system setting',
       'themeChanged': 'Theme changed',
 
+      // Statistics
+      'statisticsTitle': 'Statistics',
+      'weeklyView': 'Weekly',
+      'monthlyView': 'Monthly',
+      'adherenceByMedication': 'By Medication',
+      'totalDosesTaken': 'Taken',
+      'totalDosesMissed': 'Missed',
+      'totalDosesSkipped': 'Skipped',
+      'overallAdherence': 'Overall Adherence',
+      'noDataYet': 'No data available yet',
+      'tapForDetails': 'Tap for details',
+      'dosesCount': 'doses',
+
       // History / Logs
       'doseHistory': 'Dose History',
       'noHistory': 'No History Yet',
@@ -324,6 +337,19 @@ class AppLocalizations {
       'darkThemeDesc': 'Her zaman koyu tema kullan',
       'systemThemeDesc': 'Sistem ayarını takip et',
       'themeChanged': 'Tema değiştirildi',
+
+      // İstatistikler
+      'statisticsTitle': 'İstatistikler',
+      'weeklyView': 'Haftalık',
+      'monthlyView': 'Aylık',
+      'adherenceByMedication': 'İlaç Bazlı',
+      'totalDosesTaken': 'Alınan',
+      'totalDosesMissed': 'Kaçırılan',
+      'totalDosesSkipped': 'Atlanan',
+      'overallAdherence': 'Genel Uyum',
+      'noDataYet': 'Henüz veri yok',
+      'tapForDetails': 'Detaylar için dokunun',
+      'dosesCount': 'doz',
 
       // Geçmiş / Loglar
       'doseHistory': 'Doz Geçmişi',
@@ -505,6 +531,19 @@ class AppLocalizations {
   String get darkThemeDesc => translate('darkThemeDesc');
   String get systemThemeDesc => translate('systemThemeDesc');
   String get themeChanged => translate('themeChanged');
+
+  // Statistics
+  String get statisticsTitle => translate('statisticsTitle');
+  String get weeklyView => translate('weeklyView');
+  String get monthlyView => translate('monthlyView');
+  String get adherenceByMedication => translate('adherenceByMedication');
+  String get totalDosesTaken => translate('totalDosesTaken');
+  String get totalDosesMissed => translate('totalDosesMissed');
+  String get totalDosesSkipped => translate('totalDosesSkipped');
+  String get overallAdherence => translate('overallAdherence');
+  String get noDataYet => translate('noDataYet');
+  String get tapForDetails => translate('tapForDetails');
+  String get dosesCount => translate('dosesCount');
 
   // History
   String get doseHistory => translate('doseHistory');

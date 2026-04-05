@@ -8,6 +8,7 @@ import 'package:ilac_takip/ui/widgets/widgets.dart';
 import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
 import 'package:ilac_takip/ui/screens/medication_detail_screen.dart';
 import 'package:ilac_takip/ui/screens/swipe_dose_screen.dart';
+import 'package:ilac_takip/ui/screens/statistics_screen.dart';
 
 /// Ana ekran - Bugünkü dozlar
 class HomeScreen extends StatefulWidget {
@@ -194,6 +195,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   : adherencePercent >= 50
                       ? AppTheme.warningColor
                       : AppTheme.errorColor,
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+              ),
             ),
           ),
         ],

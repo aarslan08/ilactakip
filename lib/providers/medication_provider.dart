@@ -293,6 +293,115 @@ class MedicationProvider extends ChangeNotifier {
     }
   }
 
+  /// Tarih aralığında gün bazlı uyum oranları (grafik verisi)
+  Future<Map<DateTime, double>> getAdherenceForRange(DateTime start, DateTime end) async {
+    try {
+      final dailyData = await _doseLogRepository.getDailyAdherenceForRange(start, end);
+      final Map<DateTime, double> result = {};
+
+      for (final entry in dailyData.entries) {
+        result[entry.key] = entry.value.total > 0
+            ? entry.value.taken / entry.value.total
+            : 0.0;
+      }
+
+      return result;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting adherence for range: $e');
+      }
+      return {};
+    }
+  }
+
+  /// Son 7 gün uyum oranları
+  Future<Map<DateTime, double>> getWeeklyAdherence() async {
+    final end = DateTime.now();
+    final start = end.subtract(const Duration(days: 6));
+    return getAdherenceForRange(start, end);
+  }
+
+  /// Son 30 gün uyum oranları
+  Future<Map<DateTime, double>> getMonthlyAdherence() async {
+    final end = DateTime.now();
+    final start = end.subtract(const Duration(days: 29));
+    return getAdherenceForRange(start, end);
+  }
+
+  /// İlaç bazlı uyum kırılımı (belirli tarih aralığı)
+  Future<List<({Medication medication, double adherenceRate, int taken, int total})>>
+      getMedicationAdherenceBreakdown({int days = 7}) async {
+    try {
+      final end = DateTime.now();
+      final start = end.subtract(Duration(days: days - 1));
+      final logs = await _doseLogRepository.getDoseLogsByDateRange(start, end);
+
+      final Map<String, ({int taken, int total})> perMed = {};
+      for (final log in logs) {
+        final current = perMed[log.medicationId] ?? (taken: 0, total: 0);
+        perMed[log.medicationId] = (
+          taken: current.taken + (log.isTaken ? 1 : 0),
+          total: current.total + 1,
+        );
+      }
+
+      final List<({Medication medication, double adherenceRate, int taken, int total})> result = [];
+      for (final med in _medications) {
+        final data = perMed[med.id];
+        if (data != null && data.total > 0) {
+          result.add((
+            medication: med,
+            adherenceRate: data.taken / data.total,
+            taken: data.taken,
+            total: data.total,
+          ));
+        } else {
+          result.add((
+            medication: med,
+            adherenceRate: 0.0,
+            taken: 0,
+            total: 0,
+          ));
+        }
+      }
+
+      result.sort((a, b) => b.adherenceRate.compareTo(a.adherenceRate));
+      return result;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting medication adherence breakdown: $e');
+      }
+      return [];
+    }
+  }
+
+  /// Tarih aralığı özet istatistikleri
+  Future<({int totalTaken, int totalMissed, int totalSkipped, double overallRate})>
+      getRangeSummary({int days = 7}) async {
+    try {
+      final end = DateTime.now();
+      final start = end.subtract(Duration(days: days - 1));
+      final logs = await _doseLogRepository.getDoseLogsByDateRange(start, end);
+
+      final taken = logs.where((l) => l.isTaken).length;
+      final missed = logs.where((l) => l.isMissed).length;
+      final skipped = logs.where((l) => l.status == DoseStatus.skipped).length;
+      final total = logs.length;
+
+      return (
+        totalTaken: taken,
+        totalMissed: missed,
+        totalSkipped: skipped,
+        overallRate: total > 0 ? taken / total : 0.0,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting range summary: $e');
+      }
+      return (totalTaken: 0, totalMissed: 0, totalSkipped: 0, overallRate: 0.0);
+    }
+  }
+
   /// Kaçırılmış dozları kontrol et
   Future<void> checkMissedDoses() async {
     try {
