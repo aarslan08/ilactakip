@@ -30,13 +30,217 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _reminderShown = false;
+
   @override
   void initState() {
     super.initState();
-    // Verileri yükle
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MedicationProvider>().loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final provider = context.read<MedicationProvider>();
+      await provider.loadData();
+      if (mounted) _checkPendingDoses(provider);
     });
+  }
+
+  void _checkPendingDoses(MedicationProvider provider) {
+    if (_reminderShown) return;
+
+    final pastDue = provider.todayScheduledDoses.where((d) => d.isPastDue).toList();
+    final pending = provider.pendingDoses;
+
+    if (pastDue.isNotEmpty || pending.length >= 2) {
+      _reminderShown = true;
+      _showPendingDosesSheet(pastDue.length, pending.length);
+    }
+  }
+
+  void _showPendingDosesSheet(int pastDueCount, int pendingCount) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isDismissible: true,
+      builder: (ctx) => Container(
+        decoration: BoxDecoration(
+          color: isDark ? AppTheme.darkCardColor : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: context.dividerClr,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: pastDueCount > 0
+                      ? [AppTheme.errorColor.withValues(alpha: 0.12), AppTheme.warningColor.withValues(alpha: 0.08)]
+                      : [AppTheme.primaryColor.withValues(alpha: 0.12), AppTheme.primaryLight.withValues(alpha: 0.08)],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: pastDueCount > 0
+                          ? AppTheme.errorColor.withValues(alpha: 0.15)
+                          : AppTheme.primaryColor.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      pastDueCount > 0 ? Icons.alarm_rounded : Icons.medication_rounded,
+                      color: pastDueCount > 0 ? AppTheme.errorColor : AppTheme.primaryColor,
+                      size: 28,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.pendingDosesReminder,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: context.textPrimaryClr,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.pendingDosesReminderDesc,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: context.textSecondaryClr,
+                            height: 1.3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Doz sayıları
+            Row(
+              children: [
+                if (pastDueCount > 0)
+                  Expanded(
+                    child: _buildDoseCountChip(
+                      count: pastDueCount,
+                      label: l10n.pastDueDoses,
+                      color: AppTheme.errorColor,
+                      icon: Icons.warning_rounded,
+                    ),
+                  ),
+                if (pastDueCount > 0 && pendingCount - pastDueCount > 0)
+                  const SizedBox(width: 10),
+                if (pendingCount - pastDueCount > 0)
+                  Expanded(
+                    child: _buildDoseCountChip(
+                      count: pendingCount - pastDueCount,
+                      label: l10n.pendingDoses,
+                      color: AppTheme.warningColor,
+                      icon: Icons.schedule_rounded,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 24),
+            // Butonlar
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: context.textSecondaryClr,
+                      side: BorderSide(color: context.dividerClr),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    child: Text(
+                      l10n.later,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pop(ctx);
+                      _navigateToSwipeDose();
+                    },
+                    icon: const Icon(Icons.swipe_rounded, size: 20),
+                    label: Text(
+                      l10n.takeNow,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: pastDueCount > 0 ? AppTheme.errorColor : AppTheme.primaryColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      elevation: 0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoseCountChip({
+    required int count,
+    required String label,
+    required Color color,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            '$count $label',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override

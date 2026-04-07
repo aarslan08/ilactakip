@@ -52,6 +52,11 @@ class AppLocalizations {
       'medicationTime': 'Medication Time!',
       'pendingDoses': 'pending doses',
       'start': 'Start',
+      'pendingDosesReminder': 'You Have Pending Doses',
+      'pendingDosesReminderDesc': 'There are doses waiting to be taken. Would you like to handle them now?',
+      'pastDueDoses': 'overdue',
+      'takeNow': 'Take Now',
+      'later': 'Later',
 
       // Swipe Screen
       'swipeLeft': 'Skip',
@@ -215,6 +220,7 @@ class AppLocalizations {
       'medicationDetails': 'Medication Details',
       'deleteMedication': 'Delete Medication',
       'deleteMedicationConfirm': 'Are you sure you want to delete this medication? This action cannot be undone.',
+      'deleted': 'deleted',
       'stockStatus': 'Stock Status',
       'daysSupply': 'days supply',
       'schedule': 'Schedule',
@@ -274,6 +280,11 @@ class AppLocalizations {
       'medicationTime': 'İlaç Zamanı!',
       'pendingDoses': 'bekleyen doz var',
       'start': 'Başla',
+      'pendingDosesReminder': 'Bekleyen Dozlarınız Var',
+      'pendingDosesReminderDesc': 'Alınması gereken dozlarınız bulunuyor. Şimdi halletmek ister misiniz?',
+      'pastDueDoses': 'gecikmiş',
+      'takeNow': 'Şimdi Al',
+      'later': 'Sonra',
 
       // Swipe Ekranı
       'swipeLeft': 'Atla',
@@ -437,6 +448,7 @@ class AppLocalizations {
       'medicationDetails': 'İlaç Detayları',
       'deleteMedication': 'İlacı Sil',
       'deleteMedicationConfirm': 'Bu ilacı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+      'deleted': 'silindi',
       'stockStatus': 'Stok Durumu',
       'daysSupply': 'günlük stok',
       'schedule': 'Program',
@@ -501,6 +513,11 @@ class AppLocalizations {
   String get medicationTime => translate('medicationTime');
   String get pendingDoses => translate('pendingDoses');
   String get start => translate('start');
+  String get pendingDosesReminder => translate('pendingDosesReminder');
+  String get pendingDosesReminderDesc => translate('pendingDosesReminderDesc');
+  String get pastDueDoses => translate('pastDueDoses');
+  String get takeNow => translate('takeNow');
+  String get later => translate('later');
 
   // Swipe
   String get swipeLeft => translate('swipeLeft');
@@ -664,6 +681,7 @@ class AppLocalizations {
   String get medicationDetails => translate('medicationDetails');
   String get deleteMedication => translate('deleteMedication');
   String get deleteMedicationConfirm => translate('deleteMedicationConfirm');
+  String get deleted => translate('deleted');
   String get stockStatus => translate('stockStatus');
   String get daysSupply => translate('daysSupply');
   String get schedule => translate('schedule');
