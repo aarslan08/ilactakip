@@ -7,7 +7,6 @@ import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 
-/// Tinder tarzı ilaç alma ekranı
 class SwipeDoseScreen extends StatefulWidget {
   const SwipeDoseScreen({super.key});
 
@@ -57,28 +56,24 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             return _buildAllDoneState();
           }
 
-          return Column(
-            children: [
-              // Progress göstergesi
-              _buildProgress(provider),
-              const SizedBox(height: 20),
-
-              // Swipe talimatları
-              _buildSwipeHints(),
-              const SizedBox(height: 20),
-
-              // Kart stack
-              Expanded(
-                child: _buildCardStack(pendingDoses),
-              ),
-
-              // Alt butonlar
-              SafeArea(
-                top: false,
-                child: _buildBottomButtons(pendingDoses.first),
-              ),
-              const SizedBox(height: 16),
-            ],
+          return SafeArea(
+            top: false,
+            child: Column(
+              children: [
+                _buildProgress(provider),
+                const SizedBox(height: 12),
+                _buildSwipeHints(),
+                Expanded(
+                  child: Center(
+                    child: _buildCardStack(pendingDoses),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: _buildBottomButtons(pendingDoses.first),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -102,22 +97,19 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             children: [
               Text(
                 l10n.todaysProgress,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: context.textSecondaryClr,
-                ),
+                style: TextStyle(fontSize: 13, color: context.textSecondaryClr),
               ),
               Text(
                 '$completedDoses / $totalDoses',
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                   color: AppTheme.primaryColor,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
@@ -126,7 +118,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
               valueColor: AlwaysStoppedAnimation<Color>(
                 progress == 1.0 ? AppTheme.successColor : AppTheme.primaryColor,
               ),
-              minHeight: 8,
+              minHeight: 6,
             ),
           ),
         ],
@@ -135,46 +127,52 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   }
 
   Widget _buildSwipeHints() {
+    final dragX = _dragOffset.dx;
+    final skipOpacity = dragX < -10 ? math.min(1.0, dragX.abs() / 100) : 0.4;
+    final takenOpacity = dragX > 10 ? math.min(1.0, dragX / 100) : 0.4;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Sola kaydır - Atla
-          Row(
-            children: [
-              Icon(
-                Icons.arrow_back_rounded,
-                color: AppTheme.errorColor.withValues(alpha: 0.7),
-                size: 20,
-              ),
-              const SizedBox(width: 4),
-              Text(
-                l10n.skip,
-                style: TextStyle(
-                  color: AppTheme.errorColor.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w500,
+          AnimatedOpacity(
+            opacity: skipOpacity,
+            duration: const Duration(milliseconds: 100),
+            child: Row(
+              children: [
+                const Icon(Icons.arrow_back_rounded, color: AppTheme.errorColor, size: 18),
+                const SizedBox(width: 4),
+                Text(
+                  l10n.skip.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppTheme.errorColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          // Sağa kaydır - Aldım
-          Row(
-            children: [
-              Text(
-                l10n.taken,
-                style: TextStyle(
-                  color: AppTheme.successColor.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.w500,
+          AnimatedOpacity(
+            opacity: takenOpacity,
+            duration: const Duration(milliseconds: 100),
+            child: Row(
+              children: [
+                Text(
+                  l10n.taken.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppTheme.successColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
-              Icon(
-                Icons.arrow_forward_rounded,
-                color: AppTheme.successColor.withValues(alpha: 0.7),
-                size: 20,
-              ),
-            ],
+                const SizedBox(width: 4),
+                const Icon(Icons.arrow_forward_rounded, color: AppTheme.successColor, size: 18),
+              ],
+            ),
           ),
         ],
       ),
@@ -184,26 +182,22 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   Widget _buildCardStack(List<ScheduledDose> doses) {
     return Stack(
       alignment: Alignment.center,
+      clipBehavior: Clip.none,
       children: [
-        // Arkadaki kartlar (max 2 tane göster)
         for (int i = math.min(2, doses.length - 1); i > 0; i--)
-          Positioned(
-            top: i * 10.0,
+          Transform.translate(
+            offset: Offset(0, i * 8.0),
             child: Transform.scale(
-              scale: 1 - (i * 0.05),
+              scale: 1 - (i * 0.04),
               child: Opacity(
-                opacity: 1 - (i * 0.2),
+                opacity: 1 - (i * 0.15),
                 child: _buildCard(doses[i], isTop: false),
               ),
             ),
           ),
-
-        // En üstteki kart (sürüklenebilir)
         if (doses.isNotEmpty)
           GestureDetector(
-            onPanStart: (_) {
-              setState(() => _isDragging = true);
-            },
+            onPanStart: (_) => setState(() => _isDragging = true),
             onPanUpdate: (details) {
               setState(() {
                 _dragOffset += details.delta;
@@ -236,17 +230,12 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
 
   Widget _buildCard(ScheduledDose dose, {bool isTop = false, bool showOverlay = false}) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     final medication = dose.medication;
-    
-    // Dinamik kart yüksekliği - ekran boyutuna göre
-    final cardHeight = math.min(380.0, screenHeight * 0.45);
-    
-    // Overlay renkleri
+
     Color? overlayColor;
     IconData? overlayIcon;
     String? overlayText;
-    
+
     if (showOverlay && _dragOffset.dx.abs() > 30) {
       if (_dragOffset.dx > 0) {
         overlayColor = AppTheme.successColor;
@@ -260,192 +249,157 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
     }
 
     return Container(
-      width: screenWidth * 0.85,
-      height: cardHeight,
+      width: screenWidth * 0.88,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
       decoration: BoxDecoration(
         color: context.cardBg,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: context.shadowAlpha),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: context.shadowAlpha * 1.5),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
       child: Stack(
         children: [
-          // Kart içeriği - SingleChildScrollView ile taşmayı önle
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // İlaç ikonu
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          AppTheme.primaryColor,
-                          AppTheme.primaryLight,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.medication_rounded,
-                      color: Colors.white,
-                      size: 32,
-                    ),
+          SizedBox(
+            width: double.infinity,
+            child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // İlaç ikonu
+              Container(
+                width: 68,
+                height: 68,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppTheme.primaryColor, AppTheme.primaryLight],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  const SizedBox(height: 16),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.medication_rounded, color: Colors.white, size: 34),
+              ),
+              const SizedBox(height: 20),
 
-                  // İlaç adı
-                  Text(
-                    medication.name,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: context.textPrimaryClr,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 10),
+              // İlaç adı
+              Text(
+                medication.name,
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: context.textPrimaryClr,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 14),
 
-                  // Saat
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppTheme.primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          color: AppTheme.primaryColor,
-                          size: 18,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          dose.scheduledTime,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.primaryColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Aç/Tok bilgisi
-                  if (medication.intakeType != IntakeType.either)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _getIntakeTypeColor(medication.intakeType)
-                            .withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: _getIntakeTypeColor(medication.intakeType)
-                              .withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            medication.intakeType.icon,
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            _getIntakeTypeName(medication.intakeType),
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: _getIntakeTypeColor(medication.intakeType),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  if (medication.intakeType != IntakeType.either)
-                    const SizedBox(height: 12),
-
-                  // Dozaj bilgisi
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _buildInfoChip(
-                        context,
-                        icon: Icons.medication_outlined,
-                        label: '${medication.dosage.pillsPerDose} ${l10n.pills}',
-                      ),
-                      _buildInfoChip(
-                        context,
-                        icon: Icons.inventory_2_outlined,
-                        label: '${medication.currentStock} ${l10n.remaining}',
-                        isWarning: medication.isLowStock,
-                      ),
-                    ],
-                  ),
-
-                  // Gecikti uyarısı
-                  if (dose.isPastDue) ...[
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppTheme.warningColor.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.warning_amber_rounded,
-                            color: AppTheme.warningColor,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            l10n.overdue,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              color: AppTheme.warningColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+              // Saat badge
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.access_time_rounded, color: AppTheme.primaryColor, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      dose.scheduledTime,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 18),
+
+              // Aç/Tok bilgisi
+              if (medication.intakeType != IntakeType.either) ...[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: _getIntakeTypeColor(medication.intakeType).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: _getIntakeTypeColor(medication.intakeType).withValues(alpha: 0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(medication.intakeType.icon, style: const TextStyle(fontSize: 18)),
+                      const SizedBox(width: 6),
+                      Text(
+                        _getIntakeTypeName(medication.intakeType),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: _getIntakeTypeColor(medication.intakeType),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+              ],
+
+              // Bilgi chip'leri
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 8,
+                children: [
+                  _buildInfoChip(
+                    icon: Icons.medication_outlined,
+                    label: '${medication.dosage.pillsPerDose} ${l10n.pills}',
+                  ),
+                  _buildInfoChip(
+                    icon: Icons.inventory_2_outlined,
+                    label: '${medication.currentStock} ${l10n.remaining}',
+                    isWarning: medication.isLowStock,
+                  ),
                 ],
               ),
-            ),
+
+              // Gecikti uyarısı
+              if (dose.isPastDue) ...[
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppTheme.warningColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.warning_amber_rounded, color: AppTheme.warningColor, size: 18),
+                      const SizedBox(width: 6),
+                      Text(
+                        l10n.overdue,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.warningColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
           ),
 
           // Swipe overlay
@@ -453,24 +407,21 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
-                  color: overlayColor.withValues(alpha: 0.9),
-                  borderRadius: BorderRadius.circular(24),
+                  color: overlayColor.withValues(alpha: 0.92),
+                  borderRadius: BorderRadius.circular(28),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      overlayIcon,
-                      color: Colors.white,
-                      size: 80,
-                    ),
-                    const SizedBox(height: 16),
+                    Icon(overlayIcon, color: Colors.white, size: 72),
+                    const SizedBox(height: 12),
                     Text(
                       overlayText!,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 32,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
                       ),
                     ),
                   ],
@@ -482,19 +433,18 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
     );
   }
 
-  Widget _buildInfoChip(
-    BuildContext context, {
+  Widget _buildInfoChip({
     required IconData icon,
     required String label,
     bool isWarning = false,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: isWarning
             ? AppTheme.warningColor.withValues(alpha: 0.1)
             : context.subtleBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -510,10 +460,59 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             style: TextStyle(
               fontSize: 13,
               color: isWarning ? AppTheme.warningColor : context.textSecondaryClr,
-              fontWeight: isWarning ? FontWeight.w600 : FontWeight.normal,
+              fontWeight: isWarning ? FontWeight.w600 : FontWeight.w500,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomButtons(ScheduledDose dose) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildCircleButton(
+          icon: Icons.close_rounded,
+          color: AppTheme.errorColor,
+          onTap: () => _handleSkip(dose),
+          size: 62,
+        ),
+        const SizedBox(width: 48),
+        _buildCircleButton(
+          icon: Icons.check_rounded,
+          color: AppTheme.successColor,
+          onTap: () => _handleTake(dose),
+          size: 72,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCircleButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    double size = 60,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          shape: BoxShape.circle,
+          border: Border.all(color: color, width: 2.5),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.2),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Icon(icon, color: color, size: size * 0.45),
       ),
     );
   }
@@ -538,66 +537,6 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       case IntakeType.either:
         return l10n.anytime;
     }
-  }
-
-  Widget _buildBottomButtons(ScheduledDose dose) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          // Atla butonu
-          _buildCircleButton(
-            icon: Icons.close_rounded,
-            color: AppTheme.errorColor,
-            onTap: () => _handleSkip(dose),
-            size: 64,
-          ),
-          // Aldım butonu
-          _buildCircleButton(
-            icon: Icons.check_rounded,
-            color: AppTheme.successColor,
-            onTap: () => _handleTake(dose),
-            size: 80,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCircleButton({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-    double size = 60,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.1),
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: color,
-            width: 3,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.3),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Icon(
-          icon,
-          color: color,
-          size: size * 0.5,
-        ),
-      ),
-    );
   }
 
   Widget _buildAllDoneState() {
@@ -645,10 +584,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
               icon: const Icon(Icons.arrow_back_rounded),
               label: Text(l10n.backToHome),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 14,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
               ),
             ),
           ],
@@ -668,12 +604,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       }
     }
 
-    // Reset
-    setState(() {
-      _dragOffset = Offset.zero;
-      _rotation = 0;
-      _isDragging = false;
-    });
+    _resetCard();
   }
 
   void _handleTake(ScheduledDose dose) async {
