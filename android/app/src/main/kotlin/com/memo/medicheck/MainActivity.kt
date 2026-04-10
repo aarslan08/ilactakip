@@ -1,4 +1,4 @@
-package com.example.ilac_takip
+package com.memo.medicheck
 
 import io.flutter.embedding.android.FlutterActivity
 
