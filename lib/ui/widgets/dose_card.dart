@@ -55,8 +55,9 @@ class DoseCard extends StatelessWidget {
               
               const SizedBox(width: 8),
               
-              // Sağ taraf - Aksiyon butonları
-              if (scheduledDose.isPending) _buildActionButtons(context, l10n),
+              // Sağ taraf - Aksiyon butonları veya durum badge'i
+              if (scheduledDose.isPending && (onTake != null || onSkip != null))
+                _buildActionButtons(context, l10n),
               if (!scheduledDose.isPending) _buildStatusBadge(l10n),
             ],
           ),

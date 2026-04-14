@@ -435,8 +435,6 @@ class _HomeScreenState extends State<HomeScreen> {
           final dose = doses[index];
           return DoseCard(
             scheduledDose: dose,
-            onTake: () => _handleTakeDose(dose),
-            onSkip: () => _handleSkipDose(dose),
             onTap: () => _navigateToMedicationDetail(dose.medication.id),
           );
         },
@@ -460,50 +458,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (hour < 12) return l10n.goodMorning;
     if (hour < 18) return l10n.goodAfternoon;
     return l10n.goodEvening;
-  }
-
-  void _handleTakeDose(scheduledDose) async {
-    final provider = context.read<MedicationProvider>();
-    final success = await provider.takeDose(scheduledDose);
-    
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 8),
-              Text('${scheduledDose.medication.name} ${l10n.markedAsTaken}'),
-            ],
-          ),
-          backgroundColor: AppTheme.successColor,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
-    }
-  }
-
-  void _handleSkipDose(scheduledDose) async {
-    final provider = context.read<MedicationProvider>();
-    await provider.skipDose(scheduledDose);
-    
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.skip_next, color: Colors.white),
-              const SizedBox(width: 8),
-              Text('${scheduledDose.medication.name} ${l10n.wasSkipped}'),
-            ],
-          ),
-          backgroundColor: context.textSecondaryClr,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-      );
-    }
   }
 
   void _navigateToAddMedication() {
