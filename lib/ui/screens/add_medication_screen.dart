@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/medication.dart';
+import 'package:ilac_takip/models/dosage.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
@@ -36,6 +37,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   int _lowStockThreshold = 5;
   int _firstRunoutWarningDays = 5;
   IntakeType _intakeType = IntakeType.either;
+  FrequencyType _frequencyType = FrequencyType.daily;
+  List<int> _weeklyDays = [];
+  int _monthlyDay = 1;
   
   bool _isLoading = false;
 
@@ -66,6 +70,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       _lowStockThreshold = med.lowStockThreshold;
       _firstRunoutWarningDays = med.firstRunoutWarningDays;
       _intakeType = med.intakeType;
+      _frequencyType = med.dosage.frequencyType;
+      _weeklyDays = List.from(med.dosage.weeklyDays);
+      _monthlyDay = med.dosage.monthlyDay ?? 1;
     }
   }
 
@@ -107,6 +114,18 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             // Stok
             _buildStockField(),
             const SizedBox(height: 24),
+            
+            // Kullanım sıklığı
+            _buildSectionTitle(l10n.frequency),
+            const SizedBox(height: 12),
+            _buildFrequencySelector(),
+            const SizedBox(height: 16),
+            if (_frequencyType == FrequencyType.weekly)
+              _buildWeeklyDaysSelector(),
+            if (_frequencyType == FrequencyType.monthly)
+              _buildMonthlyDaySelector(),
+            if (_frequencyType != FrequencyType.daily)
+              const SizedBox(height: 16),
             
             // Dozaj bilgileri
             _buildSectionTitle(l10n.dosageInfo),
@@ -319,6 +338,262 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFrequencySelector() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.dividerClr),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.event_repeat_rounded, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                l10n.frequency,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryClr,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: FrequencyType.values.map((type) {
+              final isSelected = _frequencyType == type;
+              return Expanded(
+                child: GestureDetector(
+                  onTap: () => setState(() {
+                    _frequencyType = type;
+                    if (type == FrequencyType.weekly && _weeklyDays.isEmpty) {
+                      _weeklyDays = [DateTime.now().weekday];
+                    }
+                  }),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      right: type != FrequencyType.monthly ? 8 : 0,
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppTheme.primaryColor.withValues(
+                              alpha: context.primaryAlpha,
+                            )
+                          : context.subtleBg,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppTheme.primaryColor
+                            : context.dividerClr,
+                        width: isSelected ? 2 : 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          _getFrequencyIcon(type),
+                          size: 24,
+                          color: isSelected
+                              ? AppTheme.primaryColor
+                              : context.textSecondaryClr,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _getFrequencyLabel(type),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
+                                ? AppTheme.primaryColor
+                                : context.textSecondaryClr,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getFrequencyIcon(FrequencyType type) {
+    switch (type) {
+      case FrequencyType.daily:
+        return Icons.today_rounded;
+      case FrequencyType.weekly:
+        return Icons.date_range_rounded;
+      case FrequencyType.monthly:
+        return Icons.calendar_month_rounded;
+    }
+  }
+
+  String _getFrequencyLabel(FrequencyType type) {
+    switch (type) {
+      case FrequencyType.daily:
+        return l10n.frequencyDaily;
+      case FrequencyType.weekly:
+        return l10n.frequencyWeekly;
+      case FrequencyType.monthly:
+        return l10n.frequencyMonthly;
+    }
+  }
+
+  Widget _buildWeeklyDaysSelector() {
+    final dayLabels = [
+      l10n.monday, l10n.tuesday, l10n.wednesday, l10n.thursday,
+      l10n.friday, l10n.saturday, l10n.sunday,
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.dividerClr),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_view_week_rounded, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                l10n.selectDays,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryClr,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(7, (index) {
+              final weekday = index + 1;
+              final isSelected = _weeklyDays.contains(weekday);
+              return FilterChip(
+                label: Text(dayLabels[index]),
+                selected: isSelected,
+                onSelected: (selected) {
+                  setState(() {
+                    if (selected) {
+                      _weeklyDays.add(weekday);
+                      _weeklyDays.sort();
+                    } else if (_weeklyDays.length > 1) {
+                      _weeklyDays.remove(weekday);
+                    }
+                  });
+                },
+                selectedColor: AppTheme.primaryColor.withValues(
+                  alpha: context.primaryAlpha,
+                ),
+                checkmarkColor: AppTheme.primaryColor,
+                labelStyle: TextStyle(
+                  color: isSelected
+                      ? AppTheme.primaryColor
+                      : context.textSecondaryClr,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMonthlyDaySelector() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.dividerClr),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.calendar_month_rounded, color: AppTheme.primaryColor),
+              const SizedBox(width: 8),
+              Text(
+                l10n.dayOfMonth,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryClr,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 50,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 31,
+              itemBuilder: (context, index) {
+                final day = index + 1;
+                final isSelected = _monthlyDay == day;
+                return GestureDetector(
+                  onTap: () => setState(() => _monthlyDay = day),
+                  child: Container(
+                    width: 42,
+                    margin: const EdgeInsets.only(right: 6),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppTheme.primaryColor
+                          : context.subtleBg,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppTheme.primaryColor
+                            : context.dividerClr,
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '$day',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                        color: isSelected
+                            ? Colors.white
+                            : context.textPrimaryClr,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -726,7 +1001,6 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       final notes = _notesController.text.trim();
 
       if (_isEditing) {
-        // Güncelle
         final updatedMedication = widget.medication!.copyWith(
           name: name,
           currentStock: stock,
@@ -734,6 +1008,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             pillsPerDose: pillsPerDose,
             dosesPerDay: dosesPerDay,
             scheduleTimes: _scheduleTimes,
+            frequencyType: _frequencyType,
+            weeklyDays: _weeklyDays,
+            monthlyDay: _frequencyType == FrequencyType.monthly ? _monthlyDay : null,
+            clearMonthlyDay: _frequencyType != FrequencyType.monthly,
           ),
           lowStockThreshold: _lowStockThreshold,
           firstRunoutWarningDays: _firstRunoutWarningDays,
@@ -747,13 +1025,15 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
 
         await provider.updateMedication(updatedMedication);
       } else {
-        // Yeni ekle
         await provider.addMedication(
           name: name,
           currentStock: stock,
           pillsPerDose: pillsPerDose,
           dosesPerDay: dosesPerDay,
           scheduleTimes: _scheduleTimes,
+          frequencyType: _frequencyType,
+          weeklyDays: _weeklyDays,
+          monthlyDay: _frequencyType == FrequencyType.monthly ? _monthlyDay : null,
           lowStockThreshold: _lowStockThreshold,
           firstRunoutWarningDays: _firstRunoutWarningDays,
           perDoseReminders: _perDoseReminders,

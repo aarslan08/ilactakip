@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:ilac_takip/models/medication.dart';
+import 'package:ilac_takip/models/dosage.dart';
 
 /// Bildirim servisi
 class NotificationService {
@@ -89,12 +90,15 @@ class NotificationService {
     }
   }
 
-  /// Günlük tekrarlayan doz hatırlatıcısı programla
-  Future<void> scheduleDailyDoseReminder({
+  /// Frekansa göre tekrarlayan doz hatırlatıcısı programla
+  Future<void> scheduleDoseReminder({
     required Medication medication,
     required int hour,
     required int minute,
     required int notificationId,
+    required FrequencyType frequencyType,
+    int? weekday,
+    int? monthDay,
   }) async {
     if (!medication.perDoseReminders) return;
 
@@ -130,11 +134,38 @@ class NotificationService {
         : '${medication.name} - ${medication.dosage.pillsPerDose} adet almanız gerekiyor';
 
     final now = tz.TZDateTime.now(tz.local);
-    var scheduledDate = tz.TZDateTime(
-      tz.local, now.year, now.month, now.day, hour, minute,
-    );
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+
+    late tz.TZDateTime scheduledDate;
+    late DateTimeComponents matchComponents;
+
+    switch (frequencyType) {
+      case FrequencyType.daily:
+        scheduledDate = tz.TZDateTime(
+          tz.local, now.year, now.month, now.day, hour, minute,
+        );
+        if (scheduledDate.isBefore(now)) {
+          scheduledDate = scheduledDate.add(const Duration(days: 1));
+        }
+        matchComponents = DateTimeComponents.time;
+
+      case FrequencyType.weekly:
+        scheduledDate = _nextWeekday(now, weekday ?? DateTime.monday, hour, minute);
+        matchComponents = DateTimeComponents.dayOfWeekAndTime;
+
+      case FrequencyType.monthly:
+        final day = monthDay ?? 1;
+        scheduledDate = tz.TZDateTime(
+          tz.local, now.year, now.month, day, hour, minute,
+        );
+        if (scheduledDate.isBefore(now)) {
+          scheduledDate = tz.TZDateTime(
+            tz.local, 
+            now.month == 12 ? now.year + 1 : now.year, 
+            now.month == 12 ? 1 : now.month + 1, 
+            day, hour, minute,
+          );
+        }
+        matchComponents = DateTimeComponents.dayOfMonthAndTime;
     }
 
     await _notificationsPlugin.zonedSchedule(
@@ -145,13 +176,39 @@ class NotificationService {
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
+      matchDateTimeComponents: matchComponents,
       payload: 'medication:${medication.id}',
     );
 
     if (kDebugMode) {
-      debugPrint('Daily dose reminder scheduled for ${medication.name} at $hour:$minute');
+      debugPrint('${frequencyType.name} dose reminder scheduled for '
+          '${medication.name} at $hour:$minute');
     }
+  }
+
+  /// Belirtilen haftanın gününe denk gelen bir sonraki TZDateTime
+  tz.TZDateTime _nextWeekday(tz.TZDateTime from, int weekday, int hour, int minute) {
+    var date = tz.TZDateTime(tz.local, from.year, from.month, from.day, hour, minute);
+    while (date.weekday != weekday || date.isBefore(from)) {
+      date = date.add(const Duration(days: 1));
+    }
+    return date;
+  }
+
+  /// Geriye uyumluluk: günlük bildirim programla
+  Future<void> scheduleDailyDoseReminder({
+    required Medication medication,
+    required int hour,
+    required int minute,
+    required int notificationId,
+  }) async {
+    await scheduleDoseReminder(
+      medication: medication,
+      hour: hour,
+      minute: minute,
+      notificationId: notificationId,
+      frequencyType: FrequencyType.daily,
+    );
   }
 
   /// Düşük stok bildirimi gönder
@@ -296,8 +353,9 @@ class NotificationService {
   Future<void> cancelMedicationNotifications(String medicationId) async {
     final baseId = medicationId.hashCode.abs() % 100000;
 
-    for (int i = 0; i < maxDoseTimesPerMedication; i++) {
-      await _notificationsPlugin.cancel(baseId * 10 + i);
+    // Haftalık 7 gün × 8 saat = 56 slot olabilir
+    for (int i = 0; i < maxNotificationSlotsPerMedication; i++) {
+      await _notificationsPlugin.cancel(baseId * 100 + i);
     }
     await _notificationsPlugin.cancel(200000 + baseId);
     await _notificationsPlugin.cancel(300000 + baseId);
@@ -308,11 +366,12 @@ class NotificationService {
   }
 
   static const int maxDoseTimesPerMedication = 8;
+  static const int maxNotificationSlotsPerMedication = 64;
 
   /// Medication + time slot için deterministik bildirim ID'si üret
   static int generateDoseNotificationId(String medicationId, int timeIndex) {
     final baseId = medicationId.hashCode.abs() % 100000;
-    return baseId * 10 + timeIndex;
+    return baseId * 100 + timeIndex;
   }
 
   /// Tüm bildirimleri iptal et

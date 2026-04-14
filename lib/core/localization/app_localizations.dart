@@ -234,6 +234,33 @@ class AppLocalizations {
       'daysRemaining': 'days',
       'dose': 'dose',
       'doses': 'doses',
+
+      // Frequency
+      'frequency': 'Frequency',
+      'frequencyDaily': 'Daily',
+      'frequencyWeekly': 'Weekly',
+      'frequencyMonthly': 'Monthly',
+      'selectDays': 'Select Days',
+      'dayOfMonth': 'Day of Month',
+      'monday': 'Mon',
+      'tuesday': 'Tue',
+      'wednesday': 'Wed',
+      'thursday': 'Thu',
+      'friday': 'Fri',
+      'saturday': 'Sat',
+      'sunday': 'Sun',
+      'mondayFull': 'Monday',
+      'tuesdayFull': 'Tuesday',
+      'wednesdayFull': 'Wednesday',
+      'thursdayFull': 'Thursday',
+      'fridayFull': 'Friday',
+      'saturdayFull': 'Saturday',
+      'sundayFull': 'Sunday',
+      'selectAtLeastOneDay': 'Select at least one day',
+      'dosesOnScheduledDays': 'Doses on scheduled days',
+      'everyDay': 'Every day',
+      'weeklyDaysFormat': 'Weekly',
+      'monthlyDayFormat': 'Monthly - Day',
     },
     'tr': {
       // Genel
@@ -456,6 +483,33 @@ class AppLocalizations {
       'daysRemaining': 'gün',
       'dose': 'doz',
       'doses': 'doz',
+
+      // Frekans
+      'frequency': 'Kullanım Sıklığı',
+      'frequencyDaily': 'Günlük',
+      'frequencyWeekly': 'Haftalık',
+      'frequencyMonthly': 'Aylık',
+      'selectDays': 'Günleri Seçin',
+      'dayOfMonth': 'Ayın Günü',
+      'monday': 'Pzt',
+      'tuesday': 'Sal',
+      'wednesday': 'Çar',
+      'thursday': 'Per',
+      'friday': 'Cum',
+      'saturday': 'Cmt',
+      'sunday': 'Paz',
+      'mondayFull': 'Pazartesi',
+      'tuesdayFull': 'Salı',
+      'wednesdayFull': 'Çarşamba',
+      'thursdayFull': 'Perşembe',
+      'fridayFull': 'Cuma',
+      'saturdayFull': 'Cumartesi',
+      'sundayFull': 'Pazar',
+      'selectAtLeastOneDay': 'En az bir gün seçin',
+      'dosesOnScheduledDays': 'Belirlenen günlerde doz',
+      'everyDay': 'Her gün',
+      'weeklyDaysFormat': 'Haftalık',
+      'monthlyDayFormat': 'Aylık - Gün',
     },
   };
 
@@ -682,6 +736,33 @@ class AppLocalizations {
   String get daysRemaining => translate('daysRemaining');
   String get dose => translate('dose');
   String get doses => translate('doses');
+
+  // Frequency
+  String get frequency => translate('frequency');
+  String get frequencyDaily => translate('frequencyDaily');
+  String get frequencyWeekly => translate('frequencyWeekly');
+  String get frequencyMonthly => translate('frequencyMonthly');
+  String get selectDays => translate('selectDays');
+  String get dayOfMonth => translate('dayOfMonth');
+  String get monday => translate('monday');
+  String get tuesday => translate('tuesday');
+  String get wednesday => translate('wednesday');
+  String get thursday => translate('thursday');
+  String get friday => translate('friday');
+  String get saturday => translate('saturday');
+  String get sunday => translate('sunday');
+  String get mondayFull => translate('mondayFull');
+  String get tuesdayFull => translate('tuesdayFull');
+  String get wednesdayFull => translate('wednesdayFull');
+  String get thursdayFull => translate('thursdayFull');
+  String get fridayFull => translate('fridayFull');
+  String get saturdayFull => translate('saturdayFull');
+  String get sundayFull => translate('sundayFull');
+  String get selectAtLeastOneDay => translate('selectAtLeastOneDay');
+  String get dosesOnScheduledDays => translate('dosesOnScheduledDays');
+  String get everyDay => translate('everyDay');
+  String get weeklyDaysFormat => translate('weeklyDaysFormat');
+  String get monthlyDayFormat => translate('monthlyDayFormat');
 }
 
 class _AppLocalizationsDelegate

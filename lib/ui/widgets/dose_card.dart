@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ilac_takip/models/scheduled_dose.dart';
 import 'package:ilac_takip/models/medication.dart';
+import 'package:ilac_takip/models/dosage.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 
@@ -117,7 +118,26 @@ class DoseCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            // Aç/Tok badge
+            if (medication.dosage.frequencyType != FrequencyType.daily) ...[
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  medication.dosage.frequencyType == FrequencyType.weekly
+                      ? l10n.frequencyWeekly
+                      : l10n.frequencyMonthly,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.primaryColor,
+                  ),
+                ),
+              ),
+            ],
             if (medication.intakeType != IntakeType.either) ...[
               const SizedBox(width: 6),
               Container(

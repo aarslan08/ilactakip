@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/medication.dart';
+import 'package:ilac_takip/models/dosage.dart';
 import 'package:ilac_takip/models/dose_log.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
@@ -306,6 +307,12 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
           ),
           const SizedBox(height: 16),
           _buildInfoRow(
+            Icons.event_repeat_rounded,
+            l10n.frequency,
+            _getFrequencyDisplayText(medication),
+          ),
+          Divider(height: 24, color: context.dividerClr),
+          _buildInfoRow(
             Icons.medication_outlined,
             l10n.pillsPerDose,
             '${medication.dosage.pillsPerDose} ${l10n.units}',
@@ -581,6 +588,23 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
         ),
       ],
     );
+  }
+
+  String _getFrequencyDisplayText(Medication medication) {
+    final dosage = medication.dosage;
+    switch (dosage.frequencyType) {
+      case FrequencyType.daily:
+        return l10n.everyDay;
+      case FrequencyType.weekly:
+        final dayNames = {
+          1: l10n.monday, 2: l10n.tuesday, 3: l10n.wednesday,
+          4: l10n.thursday, 5: l10n.friday, 6: l10n.saturday, 7: l10n.sunday,
+        };
+        final days = dosage.weeklyDays.map((d) => dayNames[d] ?? '').join(', ');
+        return '${l10n.frequencyWeekly} - $days';
+      case FrequencyType.monthly:
+        return '${l10n.frequencyMonthly} - ${dosage.monthlyDay ?? 1}';
+    }
   }
 
   Color _getAdherenceColor(int percentage) {

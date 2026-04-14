@@ -14,7 +14,7 @@ class AppConstants {
   
   // Database
   static const String databaseName = 'ilac_takip.db';
-  static const int databaseVersion = 2;
+  static const int databaseVersion = 3;
   
   // Shared Preferences Keys
   static const String keyOnboardingComplete = 'onboarding_complete';

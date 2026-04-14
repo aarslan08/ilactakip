@@ -62,6 +62,9 @@ class DatabaseHelper {
         expirationDate TEXT,
         lastNotifiedJson TEXT,
         intakeType TEXT DEFAULT 'either',
+        frequencyType TEXT DEFAULT 'daily',
+        weeklyDays TEXT,
+        monthlyDay INTEGER,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL
       )
@@ -105,13 +108,27 @@ class DatabaseHelper {
       debugPrint('Upgrading database from v$oldVersion to v$newVersion');
     }
     
-    // Version 1 -> 2: intakeType kolonu eklendi
     if (oldVersion < 2) {
       await db.execute('''
         ALTER TABLE medications ADD COLUMN intakeType TEXT DEFAULT 'either'
       ''');
       if (kDebugMode) {
         debugPrint('Added intakeType column to medications table');
+      }
+    }
+
+    if (oldVersion < 3) {
+      await db.execute(
+        "ALTER TABLE medications ADD COLUMN frequencyType TEXT DEFAULT 'daily'",
+      );
+      await db.execute(
+        'ALTER TABLE medications ADD COLUMN weeklyDays TEXT',
+      );
+      await db.execute(
+        'ALTER TABLE medications ADD COLUMN monthlyDay INTEGER',
+      );
+      if (kDebugMode) {
+        debugPrint('Added frequency columns to medications table');
       }
     }
   }

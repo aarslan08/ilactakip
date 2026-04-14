@@ -84,13 +84,16 @@ class Medication {
     required this.updatedAt,
   });
 
-  /// Günlük tüketim
-  int get dailyConsumption => dosage.dailyConsumption;
+  /// Günlük tüketim (geriye uyumluluk için, tam sayı olarak)
+  int get dailyConsumption => dosage.perDayConsumption;
+
+  /// Ortalama günlük tüketim hızı (frekansa göre)
+  double get dailyConsumptionRate => dosage.dailyConsumptionRate;
 
   /// Tahmini kalan gün sayısı
   int get estimatedDaysLeft {
-    if (dailyConsumption <= 0) return 999; // Sonsuz
-    return (currentStock / dailyConsumption).floor();
+    if (dailyConsumptionRate <= 0) return 999;
+    return (currentStock / dailyConsumptionRate).floor();
   }
 
   /// Düşük stokta mı
@@ -123,6 +126,9 @@ class Medication {
         'pillsPerDose': map['pillsPerDose'],
         'dosesPerDay': map['dosesPerDay'],
         'scheduleTimes': map['scheduleTimes'],
+        'frequencyType': map['frequencyType'],
+        'weeklyDays': map['weeklyDays'],
+        'monthlyDay': map['monthlyDay'],
       }),
       lowStockThreshold: map['lowStockThreshold'] as int? ?? AppConstants.defaultLowStockThreshold,
       firstRunoutWarningDays: map['firstRunoutWarningDays'] as int? ?? AppConstants.defaultFirstRunoutWarningDays,
@@ -161,6 +167,9 @@ class Medication {
       'pillsPerDose': dosage.pillsPerDose,
       'dosesPerDay': dosage.dosesPerDay,
       'scheduleTimes': jsonEncode(dosage.scheduleTimes),
+      'frequencyType': dosage.frequencyType.name,
+      'weeklyDays': jsonEncode(dosage.weeklyDays),
+      'monthlyDay': dosage.monthlyDay,
       'lowStockThreshold': lowStockThreshold,
       'firstRunoutWarningDays': firstRunoutWarningDays,
       'perDoseReminders': perDoseReminders ? 1 : 0,

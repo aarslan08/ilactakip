@@ -28,6 +28,9 @@ class MedicationService {
     required int pillsPerDose,
     required int dosesPerDay,
     List<String> scheduleTimes = const [],
+    FrequencyType frequencyType = FrequencyType.daily,
+    List<int> weeklyDays = const [],
+    int? monthlyDay,
     int lowStockThreshold = 5,
     int firstRunoutWarningDays = 5,
     bool perDoseReminders = true,
@@ -46,6 +49,9 @@ class MedicationService {
         pillsPerDose: pillsPerDose,
         dosesPerDay: dosesPerDay,
         scheduleTimes: scheduleTimes,
+        frequencyType: frequencyType,
+        weeklyDays: weeklyDays,
+        monthlyDay: monthlyDay,
       ),
       lowStockThreshold: lowStockThreshold,
       firstRunoutWarningDays: firstRunoutWarningDays,
@@ -221,8 +227,9 @@ class MedicationService {
     final scheduledDoses = <ScheduledDose>[];
 
     for (final medication in medications) {
+      if (!medication.dosage.isDueToday(today)) continue;
+
       if (medication.dosage.scheduleTimes.isEmpty) {
-        // Saat belirtilmemişse varsayılan saatler kullan
         final defaultTimes = _generateDefaultTimes(medication.dosage.dosesPerDay);
         for (final time in defaultTimes) {
           final scheduledDose = await _createScheduledDose(medication, time, today);
@@ -236,7 +243,6 @@ class MedicationService {
       }
     }
 
-    // Saate göre sırala
     scheduledDoses.sort((a, b) => a.scheduledTime.compareTo(b.scheduledTime));
 
     return scheduledDoses;
@@ -293,7 +299,7 @@ class MedicationService {
     }
   }
 
-  /// Doz hatırlatıcılarını günlük tekrarlayan olarak programla
+  /// Doz hatırlatıcılarını frekansa göre programla
   Future<void> _scheduleDoseReminders(Medication medication) async {
     if (!medication.perDoseReminders) return;
 
@@ -301,20 +307,63 @@ class MedicationService {
         ? medication.dosage.scheduleTimes
         : _generateDefaultTimes(medication.dosage.dosesPerDay);
 
-    for (int i = 0; i < times.length; i++) {
-      final parsedTime = AppDateUtils.parseTime(times[i]);
-      if (parsedTime == null) continue;
+    final freq = medication.dosage.frequencyType;
 
-      final notificationId = NotificationService.generateDoseNotificationId(
-        medication.id, i,
-      );
+    switch (freq) {
+      case FrequencyType.daily:
+        for (int i = 0; i < times.length; i++) {
+          final parsedTime = AppDateUtils.parseTime(times[i]);
+          if (parsedTime == null) continue;
+          final notificationId = NotificationService.generateDoseNotificationId(
+            medication.id, i,
+          );
+          await _notificationService.scheduleDoseReminder(
+            medication: medication,
+            hour: parsedTime.hour,
+            minute: parsedTime.minute,
+            notificationId: notificationId,
+            frequencyType: FrequencyType.daily,
+          );
+        }
 
-      await _notificationService.scheduleDailyDoseReminder(
-        medication: medication,
-        hour: parsedTime.hour,
-        minute: parsedTime.minute,
-        notificationId: notificationId,
-      );
+      case FrequencyType.weekly:
+        int slotIndex = 0;
+        for (final weekday in medication.dosage.weeklyDays) {
+          for (int i = 0; i < times.length; i++) {
+            final parsedTime = AppDateUtils.parseTime(times[i]);
+            if (parsedTime == null) continue;
+            final notificationId = NotificationService.generateDoseNotificationId(
+              medication.id, slotIndex,
+            );
+            await _notificationService.scheduleDoseReminder(
+              medication: medication,
+              hour: parsedTime.hour,
+              minute: parsedTime.minute,
+              notificationId: notificationId,
+              frequencyType: FrequencyType.weekly,
+              weekday: weekday,
+            );
+            slotIndex++;
+          }
+        }
+
+      case FrequencyType.monthly:
+        final day = medication.dosage.monthlyDay ?? 1;
+        for (int i = 0; i < times.length; i++) {
+          final parsedTime = AppDateUtils.parseTime(times[i]);
+          if (parsedTime == null) continue;
+          final notificationId = NotificationService.generateDoseNotificationId(
+            medication.id, i,
+          );
+          await _notificationService.scheduleDoseReminder(
+            medication: medication,
+            hour: parsedTime.hour,
+            minute: parsedTime.minute,
+            notificationId: notificationId,
+            frequencyType: FrequencyType.monthly,
+            monthDay: day,
+          );
+        }
     }
   }
 
