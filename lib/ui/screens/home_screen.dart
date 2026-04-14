@@ -33,9 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Verileri yükle
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MedicationProvider>().loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final provider = context.read<MedicationProvider>();
+      await provider.loadData();
+      await provider.rescheduleAllNotifications();
     });
   }
 

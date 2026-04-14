@@ -4,7 +4,6 @@ import 'package:ilac_takip/models/models.dart';
 import 'package:ilac_takip/data/repositories/repositories.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
-import 'package:ilac_takip/core/constants/app_constants.dart';
 
 /// İlaç işlemleri servisi
 class MedicationService {
@@ -294,36 +293,42 @@ class MedicationService {
     }
   }
 
-  /// Doz hatırlatıcılarını programla
+  /// Doz hatırlatıcılarını günlük tekrarlayan olarak programla
   Future<void> _scheduleDoseReminders(Medication medication) async {
     if (!medication.perDoseReminders) return;
-    if (medication.dosage.scheduleTimes.isEmpty) return;
 
-    final now = DateTime.now();
-    int notificationId = AppConstants.doseReminderNotificationId + medication.id.hashCode;
+    final times = medication.dosage.scheduleTimes.isNotEmpty
+        ? medication.dosage.scheduleTimes
+        : _generateDefaultTimes(medication.dosage.dosesPerDay);
 
-    for (final time in medication.dosage.scheduleTimes) {
-      final parsedTime = AppDateUtils.parseTime(time);
+    for (int i = 0; i < times.length; i++) {
+      final parsedTime = AppDateUtils.parseTime(times[i]);
       if (parsedTime == null) continue;
 
-      var scheduledDateTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        parsedTime.hour,
-        parsedTime.minute,
+      final notificationId = NotificationService.generateDoseNotificationId(
+        medication.id, i,
       );
 
-      // Eğer zaman geçmişse yarına programla
-      if (scheduledDateTime.isBefore(now)) {
-        scheduledDateTime = scheduledDateTime.add(const Duration(days: 1));
-      }
-
-      await _notificationService.scheduleDoseReminder(
+      await _notificationService.scheduleDailyDoseReminder(
         medication: medication,
-        scheduledTime: scheduledDateTime,
-        notificationId: notificationId++,
+        hour: parsedTime.hour,
+        minute: parsedTime.minute,
+        notificationId: notificationId,
       );
+    }
+  }
+
+  /// Tüm ilaçların bildirimlerini yeniden programla (uygulama açılışında çağrılır)
+  Future<void> rescheduleAllNotifications() async {
+    await _notificationService.cancelAllNotifications();
+
+    final medications = await _medicationRepository.getAllMedications();
+    for (final medication in medications) {
+      await _scheduleDoseReminders(medication);
+    }
+
+    if (kDebugMode) {
+      debugPrint('All notifications rescheduled for ${medications.length} medications');
     }
   }
 

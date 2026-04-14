@@ -4,7 +4,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:ilac_takip/models/medication.dart';
-import 'package:ilac_takip/core/constants/app_constants.dart';
 
 /// Bildirim servisi
 class NotificationService {
@@ -88,20 +87,19 @@ class NotificationService {
     if (kDebugMode) {
       debugPrint('Notification tapped: ${response.payload}');
     }
-    // TODO: Deep link işleme
   }
 
-  /// Doz hatırlatıcısı programla
-  Future<void> scheduleDoseReminder({
+  /// Günlük tekrarlayan doz hatırlatıcısı programla
+  Future<void> scheduleDailyDoseReminder({
     required Medication medication,
-    required DateTime scheduledTime,
+    required int hour,
+    required int minute,
     required int notificationId,
   }) async {
     if (!medication.perDoseReminders) return;
-    if (medication.quietHours.isInQuietHours(scheduledTime)) return;
 
-    final now = DateTime.now();
-    if (scheduledTime.isBefore(now)) return;
+    final testTime = DateTime(2024, 1, 1, hour, minute);
+    if (medication.quietHours.isInQuietHours(testTime)) return;
 
     final androidDetails = AndroidNotificationDetails(
       'dose_reminders',
@@ -131,19 +129,28 @@ class NotificationService {
         ? '${medication.name} - You need to take ${medication.dosage.pillsPerDose} pills'
         : '${medication.name} - ${medication.dosage.pillsPerDose} adet almanız gerekiyor';
 
+    final now = tz.TZDateTime.now(tz.local);
+    var scheduledDate = tz.TZDateTime(
+      tz.local, now.year, now.month, now.day, hour, minute,
+    );
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
     await _notificationsPlugin.zonedSchedule(
       notificationId,
       title,
       body,
-      tz.TZDateTime.from(scheduledTime, tz.local),
+      scheduledDate,
       notificationDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
       payload: 'medication:${medication.id}',
     );
 
     if (kDebugMode) {
-      debugPrint('Dose reminder scheduled for ${medication.name} at $scheduledTime');
+      debugPrint('Daily dose reminder scheduled for ${medication.name} at $hour:$minute');
     }
   }
 
@@ -179,8 +186,9 @@ class NotificationService {
         ? 'Only ${medication.currentStock} units left for ${medication.name}. Time to refill!'
         : '${medication.name} için sadece ${medication.currentStock} adet kaldı. Yenileme zamanı!';
 
+    final notifId = 200000 + medication.id.hashCode.abs() % 100000;
     await _notificationsPlugin.show(
-      AppConstants.lowStockNotificationId + medication.id.hashCode,
+      notifId,
       title,
       body,
       notificationDetails,
@@ -224,8 +232,9 @@ class NotificationService {
         ? '${medication.name} will run out in approximately ${medication.estimatedDaysLeft} days. Plan your refill!'
         : '${medication.name} tahminen ${medication.estimatedDaysLeft} gün içinde bitecek. Yenilemeyi planlayın!';
 
+    final notifId = 300000 + medication.id.hashCode.abs() % 100000;
     await _notificationsPlugin.show(
-      AppConstants.runoutWarningNotificationId + medication.id.hashCode,
+      notifId,
       title,
       body,
       notificationDetails,
@@ -285,16 +294,25 @@ class NotificationService {
 
   /// Belirli bir ilaç için tüm bildirimleri iptal et
   Future<void> cancelMedicationNotifications(String medicationId) async {
-    // Notification ID'leri medication ID'den türetildiği için hesapla
-    final baseId = medicationId.hashCode;
-    
-    await _notificationsPlugin.cancel(AppConstants.doseReminderNotificationId + baseId);
-    await _notificationsPlugin.cancel(AppConstants.lowStockNotificationId + baseId);
-    await _notificationsPlugin.cancel(AppConstants.runoutWarningNotificationId + baseId);
+    final baseId = medicationId.hashCode.abs() % 100000;
+
+    for (int i = 0; i < maxDoseTimesPerMedication; i++) {
+      await _notificationsPlugin.cancel(baseId * 10 + i);
+    }
+    await _notificationsPlugin.cancel(200000 + baseId);
+    await _notificationsPlugin.cancel(300000 + baseId);
 
     if (kDebugMode) {
       debugPrint('Notifications cancelled for medication: $medicationId');
     }
+  }
+
+  static const int maxDoseTimesPerMedication = 8;
+
+  /// Medication + time slot için deterministik bildirim ID'si üret
+  static int generateDoseNotificationId(String medicationId, int timeIndex) {
+    final baseId = medicationId.hashCode.abs() % 100000;
+    return baseId * 10 + timeIndex;
   }
 
   /// Tüm bildirimleri iptal et

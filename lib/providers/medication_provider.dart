@@ -402,6 +402,20 @@ class MedicationProvider extends ChangeNotifier {
     }
   }
 
+  /// Tüm ilaç bildirimlerini yeniden programla
+  Future<void> rescheduleAllNotifications() async {
+    try {
+      await _medicationService.rescheduleAllNotifications();
+      if (kDebugMode) {
+        debugPrint('All medication notifications rescheduled');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error rescheduling notifications: $e');
+      }
+    }
+  }
+
   /// Kaçırılmış dozları kontrol et
   Future<void> checkMissedDoses() async {
     try {
