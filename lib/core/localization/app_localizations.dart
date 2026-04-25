@@ -261,6 +261,9 @@ class AppLocalizations {
       'everyDay': 'Every day',
       'weeklyDaysFormat': 'Weekly',
       'monthlyDayFormat': 'Monthly - Day',
+
+      // Legal
+      'legalLastUpdated': 'Last updated',
     },
     'tr': {
       // Genel
@@ -510,6 +513,9 @@ class AppLocalizations {
       'everyDay': 'Her gün',
       'weeklyDaysFormat': 'Haftalık',
       'monthlyDayFormat': 'Aylık - Gün',
+
+      // Yasal
+      'legalLastUpdated': 'Son güncelleme',
     },
   };
 
@@ -763,6 +769,9 @@ class AppLocalizations {
   String get everyDay => translate('everyDay');
   String get weeklyDaysFormat => translate('weeklyDaysFormat');
   String get monthlyDayFormat => translate('monthlyDayFormat');
+
+  // Legal
+  String get legalLastUpdated => translate('legalLastUpdated');
 }
 
 class _AppLocalizationsDelegate

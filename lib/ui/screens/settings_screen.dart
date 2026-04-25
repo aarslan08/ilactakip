@@ -6,6 +6,7 @@ import 'package:ilac_takip/providers/locale_provider.dart';
 import 'package:ilac_takip/providers/theme_provider.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 import 'package:ilac_takip/ui/screens/main_navigation.dart';
+import 'package:ilac_takip/ui/screens/legal_content_screen.dart';
 
 /// Ayarlar ekranı
 class SettingsScreen extends StatefulWidget {
@@ -445,12 +446,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildActionTile(
                     title: l10n.privacyPolicy,
                     icon: Icons.privacy_tip_outlined,
-                    onTap: () => _showComingSoon(l10n.privacyPolicy),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const LegalContentScreen(
+                          type: LegalContentType.privacy,
+                        ),
+                      ),
+                    ),
                   ),
                   _buildActionTile(
                     title: l10n.termsOfService,
                     icon: Icons.description_outlined,
-                    onTap: () => _showComingSoon(l10n.termsOfService),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const LegalContentScreen(
+                          type: LegalContentType.terms,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

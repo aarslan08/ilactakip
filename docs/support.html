@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destek - İlaç Takip</title>
+  <meta name="description" content="İlaç Takip uygulaması destek merkezi. Sık sorulan sorular ve iletişim bilgileri.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">💊</div>
+        İlaç Takip
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="privacy.html">Gizlilik</a></li>
+        <li><a href="terms.html">Kullanım Koşulları</a></li>
+        <li><a href="support.html">Destek</a></li>
+      </ul>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menü">☰</button>
+    </div>
+  </nav>
+
+  <main class="legal-page">
+    <h1>Destek Merkezi</h1>
+    <p class="legal-meta">Yardıma mı ihtiyacınız var? Doğru yerdesiniz.</p>
+
+    <div class="support-cards">
+      <div class="support-card">
+        <div class="icon">📧</div>
+        <h3>E-posta Desteği</h3>
+        <p>Sorularınızı bize e-posta ile gönderin, en kısa sürede yanıtlayalım.</p>
+        <a href="mailto:destek@ilactakip.app" class="btn btn-primary">E-posta Gönder</a>
+      </div>
+      <div class="support-card">
+        <div class="icon">📖</div>
+        <h3>Uygulama Rehberi</h3>
+        <p>Uygulama içinden Ayarlar &gt; Rehberi Göster seçeneğiyle adım adım turu izleyebilirsiniz.</p>
+        <span class="btn btn-outline" style="cursor: default;">Uygulamayı Açın</span>
+      </div>
+      <div class="support-card">
+        <div class="icon">❓</div>
+        <h3>Sık Sorulan Sorular</h3>
+        <p>En çok sorulan soruların yanıtlarına aşağıdan ulaşabilirsiniz.</p>
+        <a href="#faq" class="btn btn-outline">SSS'ye Git</a>
+      </div>
+    </div>
+
+    <div class="faq-section" id="faq">
+      <div class="section-header" style="margin-top: 0;">
+        <h2>Sık Sorulan Sorular</h2>
+        <p>Merak ettiğiniz konuların yanıtlarını burada bulabilirsiniz</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Uygulama ücretsiz mi?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Evet, İlaç Takip uygulaması tamamen ücretsizdir. Uygulama içi satın alım, abonelik veya reklam bulunmamaktadır. Tüm özellikler sınırsız olarak kullanılabilir.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Verilerim güvende mi?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Evet. Tüm verileriniz yalnızca cihazınızda saklanır. Hiçbir veri internet üzerinden herhangi bir sunucuya gönderilmez. Uygulama internet bağlantısı gerektirmez ve tamamen çevrimdışı çalışır. Detaylar için <a href="privacy.html">Gizlilik Politikamızı</a> inceleyebilirsiniz.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Bildirimler gelmiyor, ne yapmalıyım?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Bildirim sorunları genellikle cihaz ayarlarından kaynaklanır. Şunları kontrol edin: (1) Uygulama Ayarları'ndan bildirimlerin açık olduğundan emin olun. (2) Cihaz Ayarları &gt; Bildirimler bölümünde İlaç Takip'e izin verildiğini kontrol edin. (3) Pil tasarrufu modunun bildirimleri engellemediğinden emin olun. (4) Android'de "Tam Zamanlı Alarm" iznini kontrol edin.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Kaç tane ilaç ekleyebilirim?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Sınırsız sayıda ilaç ekleyebilirsiniz. Her ilaç için ayrı doz programı, stok takibi ve hatırlatma ayarı yapabilirsiniz.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Uygulamayı silersem verilerim ne olur?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Uygulamayı cihazınızdan kaldırdığınızda tüm verileriniz kalıcı olarak silinir. Veriler yalnızca cihazınızda saklandığından, kaldırma işleminden sonra geri getirilemez. Uygulamayı silmeden önce önemli bilgilerinizi not almanızı öneririz.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Birden fazla kişi için ilaç takibi yapabilir miyim?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Şu an için uygulama tek kullanıcılı olarak tasarlanmıştır. Ancak ilaç adlarına kişi ismi ekleyerek (örn: "Anneme - Paracetamol") birden fazla kişinin ilaçlarını takip edebilirsiniz. Çoklu profil desteği gelecek güncellemeler için planlanmaktadır.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Uygulama hangi dilleri destekliyor?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>İlaç Takip şu an Türkçe ve İngilizce dillerini desteklemektedir. Dil tercihini Ayarlar ekranından değiştirebilirsiniz. Yeni dil desteği eklenmesi planlanmaktadır.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Stok takibi nasıl çalışıyor?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>İlaç eklerken mevcut stok miktarınızı ve doz başına kullanım sayısını girersiniz. Her "Aldım" işaretlemenizde stok otomatik olarak düşer. Stok belirlediğiniz eşik değerin altına düştüğünde veya tahmini bitiş tarihine yaklaştığında otomatik uyarı alırsınız.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          İnternet bağlantısı gerekiyor mu?
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <p>Hayır. İlaç Takip tamamen çevrimdışı çalışır. Tüm veriler cihazınızda saklanır ve hiçbir işlev için internet bağlantısı gerekmez.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo" style="color: white;">
+          <div class="logo-icon">💊</div>
+          İlaç Takip
+        </div>
+        <p>Sağlığınızı kontrol altında tutmanızı sağlayan, gizlilik odaklı ilaç takip uygulaması.</p>
+      </div>
+      <div>
+        <h4>Yasal</h4>
+        <ul class="footer-links">
+          <li><a href="privacy.html">Gizlilik Politikası</a></li>
+          <li><a href="terms.html">Kullanım Koşulları</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Destek</h4>
+        <ul class="footer-links">
+          <li><a href="support.html">Yardım Merkezi</a></li>
+          <li><a href="support.html#faq">Sık Sorulan Sorular</a></li>
+          <li><a href="mailto:destek@ilactakip.app">İletişim</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 İlaç Takip. Tüm hakları saklıdır.</span>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Gizlilik</a>
+        <a href="terms.html">Koşullar</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
+    });
+    document.getElementById('mobileToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    function toggleFaq(button) {
+      const item = button.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    }
+  </script>
+</body>
+</html>

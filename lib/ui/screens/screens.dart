@@ -8,3 +8,4 @@ export 'logs_screen.dart';
 export 'main_navigation.dart';
 export 'swipe_dose_screen.dart';
 export 'settings_screen.dart';
+export 'legal_content_screen.dart';
