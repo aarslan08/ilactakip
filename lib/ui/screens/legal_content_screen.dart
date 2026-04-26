@@ -61,7 +61,7 @@ class LegalContentScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
               child: Text(
-                '${l10n.legalLastUpdated}: 21 Nisan 2025',
+                '${l10n.legalLastUpdated}: ${l10n.locale.languageCode == 'tr' ? '21 Nisan 2025' : 'April 21, 2025'}',
                 style: TextStyle(
                   fontSize: 13,
                   color: theme.textTheme.bodySmall?.color,

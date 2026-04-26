@@ -52,15 +52,15 @@ class MyApp extends StatelessWidget {
       child: Consumer2<LocaleProvider, ThemeProvider>(
         builder: (context, localeProvider, themeProvider, child) {
           return MaterialApp(
-            title: 'İlaç Takip',
+            title: 'Medication Tracker',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,
             locale: localeProvider.locale,
             supportedLocales: const [
-              Locale('tr'),
               Locale('en'),
+              Locale('tr'),
             ],
             localizationsDelegates: const [
               AppLocalizations.delegate,

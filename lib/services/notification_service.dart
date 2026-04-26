@@ -11,7 +11,7 @@ class NotificationService {
   static NotificationService? _instance;
   final FlutterLocalNotificationsPlugin _notificationsPlugin;
   bool _isInitialized = false;
-  static String _currentLocale = 'tr';
+  static String _currentLocale = 'en';
 
   NotificationService._() : _notificationsPlugin = FlutterLocalNotificationsPlugin();
 

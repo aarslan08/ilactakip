@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 class AppDateUtils {
   AppDateUtils._();
 
-  static String _currentLocale = 'tr_TR';
+  static String _currentLocale = 'en_US';
 
   static final DateFormat _timeFormat = DateFormat('HH:mm');
 

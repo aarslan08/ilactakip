@@ -738,6 +738,7 @@ class AppLocalizations {
   String get notSet => translate('notSet');
 
   // Medication Card
+  String get pillsPerDayFormat => translate('pillsPerDayFormat');
   String get lowStock => translate('lowStock');
   String get daysRemaining => translate('daysRemaining');
   String get dose => translate('dose');

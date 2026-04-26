@@ -6,7 +6,7 @@ import 'package:ilac_takip/services/notification_service.dart';
 class LocaleProvider extends ChangeNotifier {
   static const String _localeKey = 'selected_locale';
   
-  Locale _locale = const Locale('tr');
+  Locale _locale = const Locale('en');
   
   Locale get locale => _locale;
   
@@ -16,7 +16,7 @@ class LocaleProvider extends ChangeNotifier {
   
   Future<void> _loadLocale() async {
     final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString(_localeKey) ?? 'tr';
+    final languageCode = prefs.getString(_localeKey) ?? 'en';
     _locale = Locale(languageCode);
     _updateDateUtilsLocale();
     notifyListeners();
