@@ -15,7 +15,7 @@ import 'package:ilac_takip/ui/screens/main_navigation.dart';
 import 'package:ilac_takip/ui/screens/onboarding_screen.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await initializeDateFormatting('tr_TR', null);

@@ -278,11 +278,13 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
           // Kart içeriği - SingleChildScrollView ile taşmayı önle
           Padding(
             padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+            child: SizedBox(
+              width: double.infinity,
+              child: SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
                   // İlaç ikonu
                   Container(
                     width: 64,
@@ -446,6 +448,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
                 ],
               ),
             ),
+          ),
           ),
 
           // Swipe overlay
