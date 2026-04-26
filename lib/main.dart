@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,8 @@ import 'package:ilac_takip/ui/screens/main_navigation.dart';
 import 'package:ilac_takip/ui/screens/onboarding_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await initializeDateFormatting('tr_TR', null);
   await initializeDateFormatting('en_US', null);
@@ -30,6 +32,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final onboardingSeen = prefs.getBool('onboarding_seen') ?? false;
 
+  FlutterNativeSplash.remove();
   runApp(MyApp(showOnboarding: !onboardingSeen));
 }
 
