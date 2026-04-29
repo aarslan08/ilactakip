@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Destek - İlaç Takip</title>
-  <meta name="description" content="İlaç Takip uygulaması destek merkezi. Sık sorulan sorular ve iletişim bilgileri.">
+  <title>Support - MedTrack</title>
+  <meta name="description" content="MedTrack app support center. Frequently asked questions and contact information.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,136 +16,140 @@
     <div class="navbar-inner">
       <a href="index.html" class="logo">
         <div class="logo-icon">💊</div>
-        İlaç Takip
+        <span data-i18n="nav.brand">MedTrack</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html">Ana Sayfa</a></li>
-        <li><a href="privacy.html">Gizlilik</a></li>
-        <li><a href="terms.html">Kullanım Koşulları</a></li>
-        <li><a href="support.html">Destek</a></li>
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="privacy.html" data-i18n="nav.privacy">Privacy</a></li>
+        <li><a href="terms.html" data-i18n="nav.terms">Terms of Use</a></li>
+        <li><a href="support.html" data-i18n="nav.support">Support</a></li>
       </ul>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Menü">☰</button>
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="tr" onclick="setLanguage('tr')">TR</button>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">☰</button>
     </div>
   </nav>
 
   <main class="legal-page">
-    <h1>Destek Merkezi</h1>
-    <p class="legal-meta">Yardıma mı ihtiyacınız var? Doğru yerdesiniz.</p>
+    <h1 data-i18n="support.title">Support Center</h1>
+    <p class="legal-meta" data-i18n="support.subtitle">Need help? You're in the right place.</p>
 
     <div class="support-cards">
       <div class="support-card">
         <div class="icon">📧</div>
-        <h3>E-posta Desteği</h3>
-        <p>Sorularınızı bize e-posta ile gönderin, en kısa sürede yanıtlayalım.</p>
-        <a href="mailto:destek@ilactakip.app" class="btn btn-primary">E-posta Gönder</a>
+        <h3 data-i18n="support.email.title">Email Support</h3>
+        <p data-i18n="support.email.desc">Send us your questions via email, and we'll respond as soon as possible.</p>
+        <a href="mailto:destek@ilactakip.app" class="btn btn-primary" data-i18n="support.email.btn">Send Email</a>
       </div>
       <div class="support-card">
         <div class="icon">📖</div>
-        <h3>Uygulama Rehberi</h3>
-        <p>Uygulama içinden Ayarlar &gt; Rehberi Göster seçeneğiyle adım adım turu izleyebilirsiniz.</p>
-        <span class="btn btn-outline" style="cursor: default;">Uygulamayı Açın</span>
+        <h3 data-i18n="support.guide.title">App Guide</h3>
+        <p data-i18n="support.guide.desc">You can watch the step-by-step tour from Settings > Show Guide within the app.</p>
+        <span class="btn btn-outline" style="cursor: default;" data-i18n="support.guide.btn">Open the App</span>
       </div>
       <div class="support-card">
         <div class="icon">❓</div>
-        <h3>Sık Sorulan Sorular</h3>
-        <p>En çok sorulan soruların yanıtlarına aşağıdan ulaşabilirsiniz.</p>
-        <a href="#faq" class="btn btn-outline">SSS'ye Git</a>
+        <h3 data-i18n="support.faq.title">Frequently Asked Questions</h3>
+        <p data-i18n="support.faq.desc">You can find answers to the most asked questions below.</p>
+        <a href="#faq" class="btn btn-outline" data-i18n="support.faq.btn">Go to FAQ</a>
       </div>
     </div>
 
     <div class="faq-section" id="faq">
       <div class="section-header" style="margin-top: 0;">
-        <h2>Sık Sorulan Sorular</h2>
-        <p>Merak ettiğiniz konuların yanıtlarını burada bulabilirsiniz</p>
+        <h2 data-i18n="support.faq.section.title">Frequently Asked Questions</h2>
+        <p data-i18n="support.faq.section.subtitle">Find answers to your questions here</p>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Uygulama ücretsiz mi?
+          <span data-i18n="support.faq.q1">Is the app free?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Evet, İlaç Takip uygulaması tamamen ücretsizdir. Uygulama içi satın alım, abonelik veya reklam bulunmamaktadır. Tüm özellikler sınırsız olarak kullanılabilir.</p>
+          <p data-i18n="support.faq.a1">Yes, MedTrack is completely free. There are no in-app purchases, subscriptions, or ads. All features are available without limits.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Verilerim güvende mi?
+          <span data-i18n="support.faq.q2">Is my data safe?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Evet. Tüm verileriniz yalnızca cihazınızda saklanır. Hiçbir veri internet üzerinden herhangi bir sunucuya gönderilmez. Uygulama internet bağlantısı gerektirmez ve tamamen çevrimdışı çalışır. Detaylar için <a href="privacy.html">Gizlilik Politikamızı</a> inceleyebilirsiniz.</p>
+          <p data-i18n="support.faq.a2">Yes. All your data is stored only on your device. No data is sent to any server over the internet. The app does not require an internet connection and works completely offline. For details, please review our <a href="privacy.html">Privacy Policy</a>.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Bildirimler gelmiyor, ne yapmalıyım?
+          <span data-i18n="support.faq.q3">Notifications aren't coming, what should I do?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Bildirim sorunları genellikle cihaz ayarlarından kaynaklanır. Şunları kontrol edin: (1) Uygulama Ayarları'ndan bildirimlerin açık olduğundan emin olun. (2) Cihaz Ayarları &gt; Bildirimler bölümünde İlaç Takip'e izin verildiğini kontrol edin. (3) Pil tasarrufu modunun bildirimleri engellemediğinden emin olun. (4) Android'de "Tam Zamanlı Alarm" iznini kontrol edin.</p>
+          <p data-i18n="support.faq.a3">Notification issues usually stem from device settings. Check the following: (1) Make sure notifications are enabled in App Settings. (2) Check that MedTrack is allowed in Device Settings > Notifications. (3) Make sure battery saver mode is not blocking notifications. (4) On Android, check the "Exact Alarm" permission.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Kaç tane ilaç ekleyebilirim?
+          <span data-i18n="support.faq.q4">How many medications can I add?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Sınırsız sayıda ilaç ekleyebilirsiniz. Her ilaç için ayrı doz programı, stok takibi ve hatırlatma ayarı yapabilirsiniz.</p>
+          <p data-i18n="support.faq.a4">You can add unlimited medications. You can set separate dose schedules, stock tracking, and reminder settings for each medication.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Uygulamayı silersem verilerim ne olur?
+          <span data-i18n="support.faq.q5">What happens to my data if I delete the app?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Uygulamayı cihazınızdan kaldırdığınızda tüm verileriniz kalıcı olarak silinir. Veriler yalnızca cihazınızda saklandığından, kaldırma işleminden sonra geri getirilemez. Uygulamayı silmeden önce önemli bilgilerinizi not almanızı öneririz.</p>
+          <p data-i18n="support.faq.a5">When you remove the app from your device, all your data is permanently deleted. Since data is stored only on your device, it cannot be recovered after removal. We recommend noting important information before deleting the app.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Birden fazla kişi için ilaç takibi yapabilir miyim?
+          <span data-i18n="support.faq.q6">Can I track medications for multiple people?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Şu an için uygulama tek kullanıcılı olarak tasarlanmıştır. Ancak ilaç adlarına kişi ismi ekleyerek (örn: "Anneme - Paracetamol") birden fazla kişinin ilaçlarını takip edebilirsiniz. Çoklu profil desteği gelecek güncellemeler için planlanmaktadır.</p>
+          <p data-i18n="support.faq.a6">Currently, the app is designed for a single user. However, you can track medications for multiple people by adding the person's name to the medication name (e.g., "Mom - Paracetamol"). Multi-profile support is planned for future updates.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Uygulama hangi dilleri destekliyor?
+          <span data-i18n="support.faq.q7">What languages does the app support?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>İlaç Takip şu an Türkçe ve İngilizce dillerini desteklemektedir. Dil tercihini Ayarlar ekranından değiştirebilirsiniz. Yeni dil desteği eklenmesi planlanmaktadır.</p>
+          <p data-i18n="support.faq.a7">MedTrack currently supports Turkish and English. You can change the language preference from the Settings screen. Additional language support is planned.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Stok takibi nasıl çalışıyor?
+          <span data-i18n="support.faq.q8">How does stock tracking work?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>İlaç eklerken mevcut stok miktarınızı ve doz başına kullanım sayısını girersiniz. Her "Aldım" işaretlemenizde stok otomatik olarak düşer. Stok belirlediğiniz eşik değerin altına düştüğünde veya tahmini bitiş tarihine yaklaştığında otomatik uyarı alırsınız.</p>
+          <p data-i18n="support.faq.a8">When adding a medication, you enter your current stock quantity and doses per use. Each time you mark "Taken," the stock automatically decreases. You'll receive automatic alerts when stock falls below your set threshold or approaches the estimated end date.</p>
         </div>
       </div>
 
       <div class="faq-item">
         <button class="faq-question" onclick="toggleFaq(this)">
-          İnternet bağlantısı gerekiyor mu?
+          <span data-i18n="support.faq.q9">Is an internet connection required?</span>
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>Hayır. İlaç Takip tamamen çevrimdışı çalışır. Tüm veriler cihazınızda saklanır ve hiçbir işlev için internet bağlantısı gerekmez.</p>
+          <p data-i18n="support.faq.a9">No. MedTrack works completely offline. All data is stored on your device, and no function requires an internet connection.</p>
         </div>
       </div>
     </div>
@@ -156,35 +160,36 @@
       <div class="footer-brand">
         <div class="logo" style="color: white;">
           <div class="logo-icon">💊</div>
-          İlaç Takip
+          <span data-i18n="nav.brand">MedTrack</span>
         </div>
-        <p>Sağlığınızı kontrol altında tutmanızı sağlayan, gizlilik odaklı ilaç takip uygulaması.</p>
+        <p data-i18n="footer.desc">A privacy-focused medication tracking app that helps you keep your health under control.</p>
       </div>
       <div>
-        <h4>Yasal</h4>
+        <h4 data-i18n="footer.legal">Legal</h4>
         <ul class="footer-links">
-          <li><a href="privacy.html">Gizlilik Politikası</a></li>
-          <li><a href="terms.html">Kullanım Koşulları</a></li>
+          <li><a href="privacy.html" data-i18n="footer.privacy.link">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.terms.link">Terms of Use</a></li>
         </ul>
       </div>
       <div>
-        <h4>Destek</h4>
+        <h4 data-i18n="footer.support.title">Support</h4>
         <ul class="footer-links">
-          <li><a href="support.html">Yardım Merkezi</a></li>
-          <li><a href="support.html#faq">Sık Sorulan Sorular</a></li>
-          <li><a href="mailto:destek@ilactakip.app">İletişim</a></li>
+          <li><a href="support.html" data-i18n="footer.help">Help Center</a></li>
+          <li><a href="support.html#faq" data-i18n="footer.faq.link">FAQ</a></li>
+          <li><a href="mailto:destek@ilactakip.app" data-i18n="footer.contact">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2025 İlaç Takip. Tüm hakları saklıdır.</span>
+      <span data-i18n="footer.copy">&copy; 2025 MedTrack. All rights reserved.</span>
       <div class="footer-bottom-links">
-        <a href="privacy.html">Gizlilik</a>
-        <a href="terms.html">Koşullar</a>
+        <a href="privacy.html" data-i18n="footer.bottom.privacy">Privacy</a>
+        <a href="terms.html" data-i18n="footer.bottom.terms">Terms</a>
       </div>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script>
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);

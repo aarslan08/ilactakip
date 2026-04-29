@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gizlilik Politikası - İlaç Takip</title>
-  <meta name="description" content="İlaç Takip uygulaması gizlilik politikası. Verilerinizin nasıl korunduğunu öğrenin.">
+  <title>Privacy Policy - MedTrack</title>
+  <meta name="description" content="MedTrack app privacy policy. Learn how your data is protected.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,135 +16,139 @@
     <div class="navbar-inner">
       <a href="index.html" class="logo">
         <div class="logo-icon">💊</div>
-        İlaç Takip
+        <span data-i18n="nav.brand">MedTrack</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html">Ana Sayfa</a></li>
-        <li><a href="privacy.html">Gizlilik</a></li>
-        <li><a href="terms.html">Kullanım Koşulları</a></li>
-        <li><a href="support.html">Destek</a></li>
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="privacy.html" data-i18n="nav.privacy">Privacy</a></li>
+        <li><a href="terms.html" data-i18n="nav.terms">Terms of Use</a></li>
+        <li><a href="support.html" data-i18n="nav.support">Support</a></li>
       </ul>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Menü">☰</button>
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="tr" onclick="setLanguage('tr')">TR</button>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">☰</button>
     </div>
   </nav>
 
   <main class="legal-page">
-    <h1>Gizlilik Politikası</h1>
-    <p class="legal-meta">Son güncelleme: 21 Nisan 2025 &nbsp;|&nbsp; Yürürlük tarihi: 21 Nisan 2025</p>
+    <h1 data-i18n="privacy.title">Privacy Policy</h1>
+    <p class="legal-meta" data-i18n="privacy.meta">Last updated: April 21, 2025 &nbsp;|&nbsp; Effective date: April 21, 2025</p>
 
     <div class="legal-toc">
-      <h3>İçindekiler</h3>
+      <h3 data-i18n="privacy.toc.title">Table of Contents</h3>
       <ol>
-        <li><a href="#genel">Genel Bakış</a></li>
-        <li><a href="#toplanan">Toplanan Veriler</a></li>
-        <li><a href="#kullanim">Verilerin Kullanım Amacı</a></li>
-        <li><a href="#depolama">Veri Depolama ve Güvenlik</a></li>
-        <li><a href="#paylasim">Veri Paylaşımı</a></li>
-        <li><a href="#izinler">Uygulama İzinleri</a></li>
-        <li><a href="#cocuk">Çocukların Gizliliği</a></li>
-        <li><a href="#haklar">Kullanıcı Hakları</a></li>
-        <li><a href="#cerezler">Çerezler ve İzleme</a></li>
-        <li><a href="#degisiklikler">Politika Değişiklikleri</a></li>
-        <li><a href="#iletisim">İletişim</a></li>
+        <li><a href="#genel" data-i18n="privacy.toc.1">Overview</a></li>
+        <li><a href="#toplanan" data-i18n="privacy.toc.2">Data Collected</a></li>
+        <li><a href="#kullanim" data-i18n="privacy.toc.3">Purpose of Data Usage</a></li>
+        <li><a href="#depolama" data-i18n="privacy.toc.4">Data Storage and Security</a></li>
+        <li><a href="#paylasim" data-i18n="privacy.toc.5">Data Sharing</a></li>
+        <li><a href="#izinler" data-i18n="privacy.toc.6">App Permissions</a></li>
+        <li><a href="#cocuk" data-i18n="privacy.toc.7">Children's Privacy</a></li>
+        <li><a href="#haklar" data-i18n="privacy.toc.8">User Rights</a></li>
+        <li><a href="#cerezler" data-i18n="privacy.toc.9">Cookies and Tracking</a></li>
+        <li><a href="#degisiklikler" data-i18n="privacy.toc.10">Policy Changes</a></li>
+        <li><a href="#iletisim" data-i18n="privacy.toc.11">Contact</a></li>
       </ol>
     </div>
 
     <div class="legal-content">
-      <h2 id="genel">1. Genel Bakış</h2>
-      <p>İlaç Takip ("Uygulama"), kullanıcıların ilaç kullanımlarını takip etmelerine yardımcı olmak amacıyla geliştirilmiş bir mobil uygulamadır. Gizliliğiniz bizim için en önemli önceliktir.</p>
-      <p><strong>Temel ilkemiz:</strong> Tüm kişisel verileriniz yalnızca cihazınızda saklanır. Hiçbir veri harici sunuculara, bulut hizmetlerine veya üçüncü taraflara gönderilmez.</p>
+      <h2 id="genel" data-i18n="privacy.s1.title">1. Overview</h2>
+      <p data-i18n="privacy.s1.p1">MedTrack ("App") is a mobile application developed to help users track their medication usage. Your privacy is our top priority.</p>
+      <p data-i18n="privacy.s1.p2"><strong>Our core principle:</strong> All your personal data is stored only on your device. No data is sent to external servers, cloud services, or third parties.</p>
 
-      <h2 id="toplanan">2. Toplanan Veriler</h2>
-      <h3>2.1 Cihazınızda Saklanan Veriler</h3>
-      <p>Uygulama, işlevselliğini sağlamak için aşağıdaki bilgileri <strong>yalnızca cihazınızda</strong> saklar:</p>
+      <h2 id="toplanan" data-i18n="privacy.s2.title">2. Data Collected</h2>
+      <h3 data-i18n="privacy.s2.1.title">2.1 Data Stored on Your Device</h3>
+      <p data-i18n="privacy.s2.1.p">The App stores the following information <strong>only on your device</strong> to provide its functionality:</p>
       <ul>
-        <li><strong>İlaç bilgileri:</strong> İlaç adı, doz miktarı, kullanım sıklığı, stok miktarı, son kullanma tarihi, kullanım talimatları ve notlar</li>
-        <li><strong>Doz kayıtları:</strong> İlaç alım, atlama veya kaçırma kayıtları ile tarihleri</li>
-        <li><strong>Uygulama tercihleri:</strong> Dil, tema, bildirim ayarları ve onboarding durumu</li>
-        <li><strong>Bildirim planları:</strong> Hatırlatma saatleri ve sessiz saat tercihleri</li>
+        <li data-i18n="privacy.s2.1.li1"><strong>Medication info:</strong> Medication name, dose amount, usage frequency, stock quantity, expiry date, usage instructions, and notes</li>
+        <li data-i18n="privacy.s2.1.li2"><strong>Dose records:</strong> Medication taken, skipped, or missed records with dates</li>
+        <li data-i18n="privacy.s2.1.li3"><strong>App preferences:</strong> Language, theme, notification settings, and onboarding status</li>
+        <li data-i18n="privacy.s2.1.li4"><strong>Notification schedules:</strong> Reminder times and quiet hour preferences</li>
       </ul>
 
-      <h3>2.2 Toplanmayan Veriler</h3>
-      <p>Uygulama aşağıdaki verileri <strong>kesinlikle toplamaz:</strong></p>
+      <h3 data-i18n="privacy.s2.2.title">2.2 Data Not Collected</h3>
+      <p data-i18n="privacy.s2.2.p">The App <strong>absolutely does not collect:</strong></p>
       <ul>
-        <li>Ad, soyad, e-posta adresi veya telefon numarası gibi kimlik bilgileri</li>
-        <li>Konum bilgileri</li>
-        <li>Cihaz kimlik bilgileri (IMEI, reklam kimliği vb.)</li>
-        <li>Kullanım analitiği veya davranış verileri</li>
-        <li>Sağlık sigortası veya tıbbi geçmiş bilgileri</li>
-        <li>Fotoğraf, kişiler veya diğer cihaz verileri</li>
+        <li data-i18n="privacy.s2.2.li1">Identity information such as name, surname, email address, or phone number</li>
+        <li data-i18n="privacy.s2.2.li2">Location information</li>
+        <li data-i18n="privacy.s2.2.li3">Device identifiers (IMEI, advertising ID, etc.)</li>
+        <li data-i18n="privacy.s2.2.li4">Usage analytics or behavioral data</li>
+        <li data-i18n="privacy.s2.2.li5">Health insurance or medical history information</li>
+        <li data-i18n="privacy.s2.2.li6">Photos, contacts, or other device data</li>
       </ul>
 
-      <h2 id="kullanim">3. Verilerin Kullanım Amacı</h2>
-      <p>Cihazınızda saklanan veriler yalnızca şu amaçlarla kullanılır:</p>
+      <h2 id="kullanim" data-i18n="privacy.s3.title">3. Purpose of Data Usage</h2>
+      <p data-i18n="privacy.s3.p">Data stored on your device is used only for the following purposes:</p>
       <ul>
-        <li>İlaç kullanım programınızı oluşturmak ve yönetmek</li>
-        <li>Zamanında doz hatırlatmaları göndermek</li>
-        <li>Stok durumu ve düşük stok uyarıları sağlamak</li>
-        <li>İlaç uyum istatistiklerini hesaplamak ve göstermek</li>
-        <li>Doz geçmişi kayıtlarını tutmak</li>
-        <li>Uygulama tercihlerinizi hatırlamak</li>
+        <li data-i18n="privacy.s3.li1">Creating and managing your medication schedule</li>
+        <li data-i18n="privacy.s3.li2">Sending timely dose reminders</li>
+        <li data-i18n="privacy.s3.li3">Providing stock status and low stock alerts</li>
+        <li data-i18n="privacy.s3.li4">Calculating and displaying medication adherence statistics</li>
+        <li data-i18n="privacy.s3.li5">Maintaining dose history records</li>
+        <li data-i18n="privacy.s3.li6">Remembering your app preferences</li>
       </ul>
 
-      <h2 id="depolama">4. Veri Depolama ve Güvenlik</h2>
-      <p>Tüm veriler cihazınızdaki yerel SQLite veritabanında ve SharedPreferences alanında saklanır. Verileriniz:</p>
+      <h2 id="depolama" data-i18n="privacy.s4.title">4. Data Storage and Security</h2>
+      <p data-i18n="privacy.s4.p1">All data is stored in the local SQLite database and SharedPreferences on your device. Your data:</p>
       <ul>
-        <li>Hiçbir zaman internet üzerinden iletilmez</li>
-        <li>Hiçbir sunucuya yedeklenmez</li>
-        <li>Cihazınızın güvenlik mekanizmaları (şifre, biyometrik kilit vb.) tarafından korunur</li>
-        <li>Uygulamayı kaldırdığınızda otomatik olarak silinir</li>
+        <li data-i18n="privacy.s4.li1">Is never transmitted over the internet</li>
+        <li data-i18n="privacy.s4.li2">Is never backed up to any server</li>
+        <li data-i18n="privacy.s4.li3">Is protected by your device's security mechanisms (password, biometric lock, etc.)</li>
+        <li data-i18n="privacy.s4.li4">Is automatically deleted when you uninstall the app</li>
       </ul>
-      <p><strong>Önemli:</strong> Uygulama internet bağlantısı gerektirmez ve çevrimdışı çalışır. Verilerinizin güvenliği, cihazınızın fiziksel güvenliğine bağlıdır.</p>
+      <p data-i18n="privacy.s4.p2"><strong>Important:</strong> The App does not require an internet connection and works offline. The security of your data depends on the physical security of your device.</p>
 
-      <h2 id="paylasim">5. Veri Paylaşımı</h2>
-      <p>İlaç Takip uygulaması:</p>
+      <h2 id="paylasim" data-i18n="privacy.s5.title">5. Data Sharing</h2>
+      <p data-i18n="privacy.s5.p">MedTrack app:</p>
       <ul>
-        <li>Hiçbir veriyi üçüncü taraflarla <strong>paylaşmaz</strong></li>
-        <li>Reklam ağları veya analitik hizmetleri <strong>kullanmaz</strong></li>
-        <li>Veri satışı veya ticareti <strong>yapmaz</strong></li>
-        <li>Sosyal medya entegrasyonu <strong>içermez</strong></li>
-      </ul>
-
-      <h2 id="izinler">6. Uygulama İzinleri</h2>
-      <p>Uygulama yalnızca aşağıdaki izinleri talep eder:</p>
-      <ul>
-        <li><strong>Bildirim İzni:</strong> İlaç hatırlatmaları, düşük stok uyarıları ve kaçırılan doz bildirimleri göndermek için. Bu izin isteğe bağlıdır; reddetseniz bile uygulamayı kullanabilirsiniz.</li>
-        <li><strong>Tam Zamanlı Alarm (Exact Alarm):</strong> Android cihazlarda zamanında bildirim göndermek için gereklidir.</li>
-      </ul>
-      <p>Uygulama; kamera, mikrofon, konum, kişiler, depolama veya diğer hassas izinleri <strong>talep etmez</strong>.</p>
-
-      <h2 id="cocuk">7. Çocukların Gizliliği</h2>
-      <p>İlaç Takip uygulaması herhangi bir yaş kısıtlaması olmaksızın herkes tarafından kullanılabilir. Uygulama hiçbir kişisel bilgi toplamadığından, çocuklara özel ek gizlilik endişesi bulunmamaktadır.</p>
-      <p>Ebeveynler veya veliler, çocuklarının ilaç takibini bu uygulama aracılığıyla güvenle yapabilirler.</p>
-
-      <h2 id="haklar">8. Kullanıcı Hakları</h2>
-      <p>Tüm verileriniz cihazınızda saklandığından, aşağıdaki haklarınızı doğrudan kullanabilirsiniz:</p>
-      <ul>
-        <li><strong>Erişim hakkı:</strong> Uygulama içinden tüm verilerinize erişebilirsiniz</li>
-        <li><strong>Düzeltme hakkı:</strong> İlaç bilgilerinizi ve kayıtlarınızı istediğiniz zaman düzenleyebilirsiniz</li>
-        <li><strong>Silme hakkı:</strong> Tek tek ilaçları veya uygulamayı kaldırarak tüm verileri silebilirsiniz</li>
-        <li><strong>Veri taşınabilirliği:</strong> Verileriniz cihazınızdadır; cihaz yedekleme araçlarını kullanabilirsiniz</li>
+        <li data-i18n="privacy.s5.li1">Does <strong>not share</strong> any data with third parties</li>
+        <li data-i18n="privacy.s5.li2">Does <strong>not use</strong> advertising networks or analytics services</li>
+        <li data-i18n="privacy.s5.li3">Does <strong>not sell</strong> or trade data</li>
+        <li data-i18n="privacy.s5.li4">Does <strong>not include</strong> social media integration</li>
       </ul>
 
-      <h2 id="cerezler">9. Çerezler ve İzleme</h2>
-      <p>İlaç Takip uygulaması:</p>
+      <h2 id="izinler" data-i18n="privacy.s6.title">6. App Permissions</h2>
+      <p data-i18n="privacy.s6.p1">The App only requests the following permissions:</p>
       <ul>
-        <li>Çerez (cookie) <strong>kullanmaz</strong></li>
-        <li>İzleme pikselleri veya web işaretçileri <strong>kullanmaz</strong></li>
-        <li>Parmak izi (fingerprinting) tekniği <strong>uygulamaz</strong></li>
-        <li>Kullanıcı davranışını analiz eden herhangi bir araç <strong>entegre etmez</strong></li>
+        <li data-i18n="privacy.s6.li1"><strong>Notification Permission:</strong> For sending medication reminders, low stock alerts, and missed dose notifications. This permission is optional; you can use the app even if you deny it.</li>
+        <li data-i18n="privacy.s6.li2"><strong>Exact Alarm:</strong> Required for sending timely notifications on Android devices.</li>
+      </ul>
+      <p data-i18n="privacy.s6.p2">The App does <strong>not request</strong> camera, microphone, location, contacts, storage, or other sensitive permissions.</p>
+
+      <h2 id="cocuk" data-i18n="privacy.s7.title">7. Children's Privacy</h2>
+      <p data-i18n="privacy.s7.p1">MedTrack can be used by anyone without any age restriction. Since the App does not collect any personal information, there are no additional privacy concerns specific to children.</p>
+      <p data-i18n="privacy.s7.p2">Parents or guardians can safely track their children's medications through this app.</p>
+
+      <h2 id="haklar" data-i18n="privacy.s8.title">8. User Rights</h2>
+      <p data-i18n="privacy.s8.p">Since all your data is stored on your device, you can directly exercise the following rights:</p>
+      <ul>
+        <li data-i18n="privacy.s8.li1"><strong>Right of access:</strong> You can access all your data within the app</li>
+        <li data-i18n="privacy.s8.li2"><strong>Right of rectification:</strong> You can edit your medication information and records at any time</li>
+        <li data-i18n="privacy.s8.li3"><strong>Right of deletion:</strong> You can delete individual medications or all data by uninstalling the app</li>
+        <li data-i18n="privacy.s8.li4"><strong>Data portability:</strong> Your data is on your device; you can use device backup tools</li>
       </ul>
 
-      <h2 id="degisiklikler">10. Politika Değişiklikleri</h2>
-      <p>Bu Gizlilik Politikası zaman zaman güncellenebilir. Önemli değişiklikler durumunda uygulama içi bildirim veya güncelleme notları aracılığıyla bilgilendirileceksiniz.</p>
-      <p>Politikanın en güncel hali her zaman bu sayfada yayınlanacaktır. Güncelleme tarihini sayfanın üst kısmında bulabilirsiniz.</p>
-
-      <h2 id="iletisim">11. İletişim</h2>
-      <p>Gizlilik politikamız hakkında soru veya endişeleriniz varsa bizimle iletişime geçebilirsiniz:</p>
+      <h2 id="cerezler" data-i18n="privacy.s9.title">9. Cookies and Tracking</h2>
+      <p data-i18n="privacy.s9.p">MedTrack app:</p>
       <ul>
-        <li><strong>E-posta:</strong> <a href="mailto:destek@ilactakip.app">destek@ilactakip.app</a></li>
+        <li data-i18n="privacy.s9.li1">Does <strong>not use</strong> cookies</li>
+        <li data-i18n="privacy.s9.li2">Does <strong>not use</strong> tracking pixels or web beacons</li>
+        <li data-i18n="privacy.s9.li3">Does <strong>not apply</strong> fingerprinting techniques</li>
+        <li data-i18n="privacy.s9.li4">Does <strong>not integrate</strong> any tools that analyze user behavior</li>
       </ul>
-      <p>Tüm gizlilik sorularınıza en kısa sürede yanıt vereceğiz.</p>
+
+      <h2 id="degisiklikler" data-i18n="privacy.s10.title">10. Policy Changes</h2>
+      <p data-i18n="privacy.s10.p1">This Privacy Policy may be updated from time to time. You will be notified of significant changes through in-app notifications or update notes.</p>
+      <p data-i18n="privacy.s10.p2">The most current version of the policy will always be published on this page. You can find the update date at the top of the page.</p>
+
+      <h2 id="iletisim" data-i18n="privacy.s11.title">11. Contact</h2>
+      <p data-i18n="privacy.s11.p1">If you have questions or concerns about our privacy policy, you can contact us:</p>
+      <ul>
+        <li data-i18n="privacy.s11.li1"><strong>Email:</strong> <a href="mailto:destek@ilactakip.app">destek@ilactakip.app</a></li>
+      </ul>
+      <p data-i18n="privacy.s11.p2">We will respond to all your privacy inquiries as soon as possible.</p>
     </div>
   </main>
 
@@ -153,35 +157,36 @@
       <div class="footer-brand">
         <div class="logo" style="color: white;">
           <div class="logo-icon">💊</div>
-          İlaç Takip
+          <span data-i18n="nav.brand">MedTrack</span>
         </div>
-        <p>Sağlığınızı kontrol altında tutmanızı sağlayan, gizlilik odaklı ilaç takip uygulaması.</p>
+        <p data-i18n="footer.desc">A privacy-focused medication tracking app that helps you keep your health under control.</p>
       </div>
       <div>
-        <h4>Yasal</h4>
+        <h4 data-i18n="footer.legal">Legal</h4>
         <ul class="footer-links">
-          <li><a href="privacy.html">Gizlilik Politikası</a></li>
-          <li><a href="terms.html">Kullanım Koşulları</a></li>
+          <li><a href="privacy.html" data-i18n="footer.privacy.link">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.terms.link">Terms of Use</a></li>
         </ul>
       </div>
       <div>
-        <h4>Destek</h4>
+        <h4 data-i18n="footer.support.title">Support</h4>
         <ul class="footer-links">
-          <li><a href="support.html">Yardım Merkezi</a></li>
-          <li><a href="support.html#faq">Sık Sorulan Sorular</a></li>
-          <li><a href="mailto:destek@ilactakip.app">İletişim</a></li>
+          <li><a href="support.html" data-i18n="footer.help">Help Center</a></li>
+          <li><a href="support.html#faq" data-i18n="footer.faq.link">FAQ</a></li>
+          <li><a href="mailto:destek@ilactakip.app" data-i18n="footer.contact">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2025 İlaç Takip. Tüm hakları saklıdır.</span>
+      <span data-i18n="footer.copy">&copy; 2025 MedTrack. All rights reserved.</span>
       <div class="footer-bottom-links">
-        <a href="privacy.html">Gizlilik</a>
-        <a href="terms.html">Koşullar</a>
+        <a href="privacy.html" data-i18n="footer.bottom.privacy">Privacy</a>
+        <a href="terms.html" data-i18n="footer.bottom.terms">Terms</a>
       </div>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script>
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);

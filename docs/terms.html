@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kullanım Koşulları - İlaç Takip</title>
-  <meta name="description" content="İlaç Takip uygulaması kullanım koşulları ve hizmet şartları.">
+  <title>Terms of Use - MedTrack</title>
+  <meta name="description" content="MedTrack app terms of use and service conditions.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,127 +16,131 @@
     <div class="navbar-inner">
       <a href="index.html" class="logo">
         <div class="logo-icon">💊</div>
-        İlaç Takip
+        <span data-i18n="nav.brand">MedTrack</span>
       </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html">Ana Sayfa</a></li>
-        <li><a href="privacy.html">Gizlilik</a></li>
-        <li><a href="terms.html">Kullanım Koşulları</a></li>
-        <li><a href="support.html">Destek</a></li>
+        <li><a href="index.html" data-i18n="nav.home">Home</a></li>
+        <li><a href="privacy.html" data-i18n="nav.privacy">Privacy</a></li>
+        <li><a href="terms.html" data-i18n="nav.terms">Terms of Use</a></li>
+        <li><a href="support.html" data-i18n="nav.support">Support</a></li>
       </ul>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Menü">☰</button>
+      <div class="lang-switcher">
+        <button class="lang-btn" data-lang="en" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" data-lang="tr" onclick="setLanguage('tr')">TR</button>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">☰</button>
     </div>
   </nav>
 
   <main class="legal-page">
-    <h1>Kullanım Koşulları</h1>
-    <p class="legal-meta">Son güncelleme: 21 Nisan 2025 &nbsp;|&nbsp; Yürürlük tarihi: 21 Nisan 2025</p>
+    <h1 data-i18n="terms.title">Terms of Use</h1>
+    <p class="legal-meta" data-i18n="terms.meta">Last updated: April 21, 2025 &nbsp;|&nbsp; Effective date: April 21, 2025</p>
 
     <div class="legal-toc">
-      <h3>İçindekiler</h3>
+      <h3 data-i18n="terms.toc.title">Table of Contents</h3>
       <ol>
-        <li><a href="#kabul">Koşulların Kabulü</a></li>
-        <li><a href="#tanim">Tanımlar</a></li>
-        <li><a href="#hizmet">Hizmet Tanımı</a></li>
-        <li><a href="#kullanici">Kullanıcı Yükümlülükleri</a></li>
-        <li><a href="#tibbi">Tıbbi Sorumluluk Reddi</a></li>
-        <li><a href="#fikri">Fikri Mülkiyet</a></li>
-        <li><a href="#garanti">Garanti Reddi</a></li>
-        <li><a href="#sorumluluk">Sorumluluk Sınırlaması</a></li>
-        <li><a href="#fesih">Fesih</a></li>
-        <li><a href="#degisiklik">Değişiklikler</a></li>
-        <li><a href="#hukuk">Uygulanacak Hukuk</a></li>
-        <li><a href="#iletisim">İletişim</a></li>
+        <li><a href="#kabul" data-i18n="terms.toc.1">Acceptance of Terms</a></li>
+        <li><a href="#tanim" data-i18n="terms.toc.2">Definitions</a></li>
+        <li><a href="#hizmet" data-i18n="terms.toc.3">Service Description</a></li>
+        <li><a href="#kullanici" data-i18n="terms.toc.4">User Obligations</a></li>
+        <li><a href="#tibbi" data-i18n="terms.toc.5">Medical Disclaimer</a></li>
+        <li><a href="#fikri" data-i18n="terms.toc.6">Intellectual Property</a></li>
+        <li><a href="#garanti" data-i18n="terms.toc.7">Disclaimer of Warranty</a></li>
+        <li><a href="#sorumluluk" data-i18n="terms.toc.8">Limitation of Liability</a></li>
+        <li><a href="#fesih" data-i18n="terms.toc.9">Termination</a></li>
+        <li><a href="#degisiklik" data-i18n="terms.toc.10">Changes</a></li>
+        <li><a href="#hukuk" data-i18n="terms.toc.11">Governing Law</a></li>
+        <li><a href="#iletisim" data-i18n="terms.toc.12">Contact</a></li>
       </ol>
     </div>
 
     <div class="legal-content">
-      <h2 id="kabul">1. Koşulların Kabulü</h2>
-      <p>İlaç Takip uygulamasını ("Uygulama") indirerek, yükleyerek veya kullanarak bu Kullanım Koşullarını kabul etmiş olursunuz. Bu koşulları kabul etmiyorsanız, lütfen Uygulamayı kullanmayınız.</p>
+      <h2 id="kabul" data-i18n="terms.s1.title">1. Acceptance of Terms</h2>
+      <p data-i18n="terms.s1.p1">By downloading, installing, or using the MedTrack application ("App"), you agree to these Terms of Use. If you do not agree to these terms, please do not use the App.</p>
 
-      <h2 id="tanim">2. Tanımlar</h2>
+      <h2 id="tanim" data-i18n="terms.s2.title">2. Definitions</h2>
       <ul>
-        <li><strong>"Uygulama":</strong> İlaç Takip mobil uygulamasını ifade eder.</li>
-        <li><strong>"Geliştirici":</strong> Uygulamayı geliştiren ve yayınlayan kişi veya kuruluşu ifade eder.</li>
-        <li><strong>"Kullanıcı" veya "Siz":</strong> Uygulamayı kullanan herhangi bir kişiyi ifade eder.</li>
-        <li><strong>"Hizmet":</strong> Uygulama aracılığıyla sunulan tüm işlevleri ifade eder.</li>
-        <li><strong>"İçerik":</strong> Kullanıcının uygulamaya girdiği tüm verileri (ilaç bilgileri, doz kayıtları vb.) ifade eder.</li>
+        <li data-i18n="terms.s2.li1"><strong>"App":</strong> Refers to the MedTrack mobile application.</li>
+        <li data-i18n="terms.s2.li2"><strong>"Developer":</strong> Refers to the person or organization that develops and publishes the App.</li>
+        <li data-i18n="terms.s2.li3"><strong>"User" or "You":</strong> Refers to any person who uses the App.</li>
+        <li data-i18n="terms.s2.li4"><strong>"Service":</strong> Refers to all functions provided through the App.</li>
+        <li data-i18n="terms.s2.li5"><strong>"Content":</strong> Refers to all data entered by the user into the app (medication information, dose records, etc.).</li>
       </ul>
 
-      <h2 id="hizmet">3. Hizmet Tanımı</h2>
-      <p>İlaç Takip uygulaması aşağıdaki hizmetleri sunar:</p>
+      <h2 id="hizmet" data-i18n="terms.s3.title">3. Service Description</h2>
+      <p data-i18n="terms.s3.p1">MedTrack app offers the following services:</p>
       <ul>
-        <li>İlaç bilgilerinin kaydedilmesi ve yönetilmesi</li>
-        <li>Doz hatırlatıcıları ve zamanlı bildirimler</li>
-        <li>Doz alım kayıtlarının tutulması</li>
-        <li>İlaç stok takibi ve düşük stok uyarıları</li>
-        <li>İlaç uyum istatistiklerinin görüntülenmesi</li>
-        <li>Doz geçmişi kayıtları</li>
+        <li data-i18n="terms.s3.li1">Recording and managing medication information</li>
+        <li data-i18n="terms.s3.li2">Dose reminders and timed notifications</li>
+        <li data-i18n="terms.s3.li3">Maintaining dose intake records</li>
+        <li data-i18n="terms.s3.li4">Medication stock tracking and low stock alerts</li>
+        <li data-i18n="terms.s3.li5">Viewing medication adherence statistics</li>
+        <li data-i18n="terms.s3.li6">Dose history records</li>
       </ul>
-      <p>Uygulama <strong>tamamen ücretsiz</strong> olarak sunulur ve uygulama içi satın alım içermez.</p>
+      <p data-i18n="terms.s3.p2">The App is offered <strong>completely free</strong> and does not contain in-app purchases.</p>
 
-      <h2 id="kullanici">4. Kullanıcı Yükümlülükleri</h2>
-      <p>Uygulamayı kullanırken aşağıdaki yükümlülükleri kabul edersiniz:</p>
+      <h2 id="kullanici" data-i18n="terms.s4.title">4. User Obligations</h2>
+      <p data-i18n="terms.s4.p1">By using the App, you agree to the following obligations:</p>
       <ul>
-        <li>Uygulamaya girdiğiniz ilaç bilgilerinin doğruluğundan siz sorumlusunuz</li>
-        <li>Uygulamayı yalnızca yasal amaçlarla kullanacaksınız</li>
-        <li>Uygulamayı tersine mühendislik, kaynak kodu çözme veya modifiye etme girişiminde bulunmayacaksınız</li>
-        <li>Uygulamayı başka bir uygulama içinde yeniden dağıtmayacaksınız</li>
-        <li>Cihazınızın güvenliğini sağlamak sizin sorumluluğunuzdadır</li>
-      </ul>
-
-      <h2 id="tibbi">5. Tıbbi Sorumluluk Reddi</h2>
-      <p><strong>Bu bölüm çok önemlidir. Lütfen dikkatlice okuyun.</strong></p>
-      <p>İlaç Takip uygulaması:</p>
-      <ul>
-        <li><strong>Tıbbi bir cihaz değildir</strong> ve tıbbi cihaz olarak onaylanmamıştır</li>
-        <li><strong>Tıbbi tavsiye sağlamaz.</strong> Uygulama yalnızca bir hatırlatma ve takip aracıdır</li>
-        <li><strong>Doktor veya eczacı yerine geçmez.</strong> İlaç kullanımı ile ilgili tüm kararlar sağlık profesyonelleri ile birlikte alınmalıdır</li>
-        <li><strong>Doğruluk garantisi vermez.</strong> Hatırlatmaların zamanında ulaşmaması, stok hesaplamalarındaki olası hatalar veya diğer teknik aksaklıklardan dolayı sorumluluk kabul edilmez</li>
-      </ul>
-      <p><strong>Acil durumlarda:</strong> Sağlık acil durumlarında Uygulamaya değil, derhal 112 veya en yakın sağlık kuruluşuna başvurun.</p>
-      <p>İlaçlarınızla ilgili herhangi bir değişiklik yapmadan önce mutlaka doktorunuza danışın. Uygulama, doktor tarafından reçete edilen tedavi planınızın yerine geçmez.</p>
-
-      <h2 id="fikri">6. Fikri Mülkiyet</h2>
-      <p>Uygulama ve içeriği (tasarım, kod, grafikler, simgeler ve metin dahil) Geliştiricinin fikri mülkiyetidir ve telif hakkı yasaları ile korunmaktadır.</p>
-      <p>Kullanıcıya, Uygulamayı kişisel ve ticari olmayan amaçlarla kullanmak üzere sınırlı, devredilemez, münhasır olmayan bir lisans verilir.</p>
-
-      <h2 id="garanti">7. Garanti Reddi</h2>
-      <p>Uygulama <strong>"olduğu gibi"</strong> ve <strong>"mevcut haliyle"</strong> sunulmaktadır. Geliştirici:</p>
-      <ul>
-        <li>Uygulamanın kesintisiz veya hatasız çalışacağını garanti etmez</li>
-        <li>Bildirimlerin her zaman zamanında teslim edileceğini garanti etmez (bu, işletim sistemi ve cihaz ayarlarına bağlıdır)</li>
-        <li>Belirli bir amaca uygunluk garantisi vermez</li>
-        <li>Veri kaybına karşı garanti vermez</li>
+        <li data-i18n="terms.s4.li1">You are responsible for the accuracy of medication information you enter into the App</li>
+        <li data-i18n="terms.s4.li2">You will use the App only for lawful purposes</li>
+        <li data-i18n="terms.s4.li3">You will not attempt to reverse engineer, decompile, or modify the App</li>
+        <li data-i18n="terms.s4.li4">You will not redistribute the App within another application</li>
+        <li data-i18n="terms.s4.li5">Ensuring the security of your device is your responsibility</li>
       </ul>
 
-      <h2 id="sorumluluk">8. Sorumluluk Sınırlaması</h2>
-      <p>Yürürlükteki yasaların izin verdiği azami ölçüde, Geliştirici aşağıdaki durumlardan kaynaklanan doğrudan, dolaylı, arızi, özel veya sonuç olarak ortaya çıkan zararlardan sorumlu tutulamaz:</p>
+      <h2 id="tibbi" data-i18n="terms.s5.title">5. Medical Disclaimer</h2>
+      <p data-i18n="terms.s5.p1"><strong>This section is very important. Please read carefully.</strong></p>
+      <p data-i18n="terms.s5.p2">MedTrack app:</p>
       <ul>
-        <li>Uygulamanın kullanımı veya kullanılamaması</li>
-        <li>Bildirimlerin gecikmesi veya ulaşmaması</li>
-        <li>Hatalı veri girişi veya hesaplama</li>
-        <li>Veri kaybı</li>
-        <li>Cihaz uyumsuzluğu veya işletim sistemi güncellemeleri</li>
-        <li>İlaç kullanımından kaynaklanan sağlık sorunları</li>
+        <li data-i18n="terms.s5.li1"><strong>Is not a medical device</strong> and has not been approved as a medical device</li>
+        <li data-i18n="terms.s5.li2"><strong>Does not provide medical advice.</strong> The App is only a reminder and tracking tool</li>
+        <li data-i18n="terms.s5.li3"><strong>Does not replace a doctor or pharmacist.</strong> All decisions regarding medication use should be made in consultation with healthcare professionals</li>
+        <li data-i18n="terms.s5.li4"><strong>Does not guarantee accuracy.</strong> No liability is accepted for late delivery of reminders, possible errors in stock calculations, or other technical issues</li>
+      </ul>
+      <p data-i18n="terms.s5.p3"><strong>In emergencies:</strong> In health emergencies, do not rely on the App; immediately contact 112 or the nearest healthcare facility.</p>
+      <p data-i18n="terms.s5.p4">Always consult your doctor before making any changes to your medications. The App does not replace your treatment plan prescribed by your doctor.</p>
+
+      <h2 id="fikri" data-i18n="terms.s6.title">6. Intellectual Property</h2>
+      <p data-i18n="terms.s6.p1">The App and its content (including design, code, graphics, icons, and text) are the intellectual property of the Developer and are protected by copyright laws.</p>
+      <p data-i18n="terms.s6.p2">The User is granted a limited, non-transferable, non-exclusive license to use the App for personal and non-commercial purposes.</p>
+
+      <h2 id="garanti" data-i18n="terms.s7.title">7. Disclaimer of Warranty</h2>
+      <p data-i18n="terms.s7.p1">The App is provided <strong>"as is"</strong> and <strong>"as available."</strong> The Developer:</p>
+      <ul>
+        <li data-i18n="terms.s7.li1">Does not guarantee that the App will work without interruption or errors</li>
+        <li data-i18n="terms.s7.li2">Does not guarantee that notifications will always be delivered on time (this depends on the operating system and device settings)</li>
+        <li data-i18n="terms.s7.li3">Does not provide warranty of fitness for a particular purpose</li>
+        <li data-i18n="terms.s7.li4">Does not guarantee against data loss</li>
       </ul>
 
-      <h2 id="fesih">9. Fesih</h2>
-      <p>Bu koşulları ihlal etmeniz durumunda, Uygulamayı kullanma hakkınız otomatik olarak sona erer.</p>
-      <p>Uygulamayı istediğiniz zaman cihazınızdan kaldırarak kullanımı sonlandırabilirsiniz. Kaldırma işlemiyle birlikte tüm yerel verileriniz silinir.</p>
-
-      <h2 id="degisiklik">10. Değişiklikler</h2>
-      <p>Bu Kullanım Koşulları zaman zaman güncellenebilir. Önemli değişiklikler durumunda uygulama güncellemesi veya uygulama içi bildirim aracılığıyla bilgilendirileceksiniz.</p>
-      <p>Değişikliklerden sonra Uygulamayı kullanmaya devam etmeniz, güncellenmiş koşulları kabul ettiğiniz anlamına gelir.</p>
-
-      <h2 id="hukuk">11. Uygulanacak Hukuk</h2>
-      <p>Bu Kullanım Koşulları, Türkiye Cumhuriyeti yasalarına tabi olup, bu yasalara göre yorumlanacaktır. Bu koşullardan kaynaklanan herhangi bir uyuşmazlıkta Türkiye Cumhuriyeti mahkemeleri yetkilidir.</p>
-      <p>Uygulama, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) ve ilgili mevzuata uygun olarak geliştirilmiştir.</p>
-
-      <h2 id="iletisim">12. İletişim</h2>
-      <p>Bu Kullanım Koşulları hakkında sorularınız için:</p>
+      <h2 id="sorumluluk" data-i18n="terms.s8.title">8. Limitation of Liability</h2>
+      <p data-i18n="terms.s8.p1">To the maximum extent permitted by applicable law, the Developer shall not be liable for direct, indirect, incidental, special, or consequential damages arising from:</p>
       <ul>
-        <li><strong>E-posta:</strong> <a href="mailto:destek@ilactakip.app">destek@ilactakip.app</a></li>
+        <li data-i18n="terms.s8.li1">Use or inability to use the App</li>
+        <li data-i18n="terms.s8.li2">Delayed or undelivered notifications</li>
+        <li data-i18n="terms.s8.li3">Incorrect data entry or calculation</li>
+        <li data-i18n="terms.s8.li4">Data loss</li>
+        <li data-i18n="terms.s8.li5">Device incompatibility or operating system updates</li>
+        <li data-i18n="terms.s8.li6">Health issues arising from medication use</li>
+      </ul>
+
+      <h2 id="fesih" data-i18n="terms.s9.title">9. Termination</h2>
+      <p data-i18n="terms.s9.p1">If you violate these terms, your right to use the App will automatically terminate.</p>
+      <p data-i18n="terms.s9.p2">You can terminate your use at any time by removing the App from your device. All local data will be deleted upon removal.</p>
+
+      <h2 id="degisiklik" data-i18n="terms.s10.title">10. Changes</h2>
+      <p data-i18n="terms.s10.p1">These Terms of Use may be updated from time to time. You will be notified of significant changes through app updates or in-app notifications.</p>
+      <p data-i18n="terms.s10.p2">Continuing to use the App after changes means you accept the updated terms.</p>
+
+      <h2 id="hukuk" data-i18n="terms.s11.title">11. Governing Law</h2>
+      <p data-i18n="terms.s11.p1">These Terms of Use are governed by and construed in accordance with the laws of the Republic of Turkey. Turkish courts shall have jurisdiction in any dispute arising from these terms.</p>
+      <p data-i18n="terms.s11.p2">The App has been developed in compliance with the Personal Data Protection Law (KVKK) No. 6698 and related legislation.</p>
+
+      <h2 id="iletisim" data-i18n="terms.s12.title">12. Contact</h2>
+      <p data-i18n="terms.s12.p1">For questions about these Terms of Use:</p>
+      <ul>
+        <li data-i18n="terms.s12.li1"><strong>Email:</strong> <a href="mailto:destek@ilactakip.app">destek@ilactakip.app</a></li>
       </ul>
     </div>
   </main>
@@ -146,35 +150,36 @@
       <div class="footer-brand">
         <div class="logo" style="color: white;">
           <div class="logo-icon">💊</div>
-          İlaç Takip
+          <span data-i18n="nav.brand">MedTrack</span>
         </div>
-        <p>Sağlığınızı kontrol altında tutmanızı sağlayan, gizlilik odaklı ilaç takip uygulaması.</p>
+        <p data-i18n="footer.desc">A privacy-focused medication tracking app that helps you keep your health under control.</p>
       </div>
       <div>
-        <h4>Yasal</h4>
+        <h4 data-i18n="footer.legal">Legal</h4>
         <ul class="footer-links">
-          <li><a href="privacy.html">Gizlilik Politikası</a></li>
-          <li><a href="terms.html">Kullanım Koşulları</a></li>
+          <li><a href="privacy.html" data-i18n="footer.privacy.link">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.terms.link">Terms of Use</a></li>
         </ul>
       </div>
       <div>
-        <h4>Destek</h4>
+        <h4 data-i18n="footer.support.title">Support</h4>
         <ul class="footer-links">
-          <li><a href="support.html">Yardım Merkezi</a></li>
-          <li><a href="support.html#faq">Sık Sorulan Sorular</a></li>
-          <li><a href="mailto:destek@ilactakip.app">İletişim</a></li>
+          <li><a href="support.html" data-i18n="footer.help">Help Center</a></li>
+          <li><a href="support.html#faq" data-i18n="footer.faq.link">FAQ</a></li>
+          <li><a href="mailto:destek@ilactakip.app" data-i18n="footer.contact">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2025 İlaç Takip. Tüm hakları saklıdır.</span>
+      <span data-i18n="footer.copy">&copy; 2025 MedTrack. All rights reserved.</span>
       <div class="footer-bottom-links">
-        <a href="privacy.html">Gizlilik</a>
-        <a href="terms.html">Koşullar</a>
+        <a href="privacy.html" data-i18n="footer.bottom.privacy">Privacy</a>
+        <a href="terms.html" data-i18n="footer.bottom.terms">Terms</a>
       </div>
     </div>
   </footer>
 
+  <script src="js/i18n.js"></script>
   <script>
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10);
