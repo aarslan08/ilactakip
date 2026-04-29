@@ -1,0 +1,2 @@
+NSUserNotificationsUsageDescription = "Allow us to send notifications to remind you of your medication doses.";
+CFBundleDisplayName = "DoseTrack";

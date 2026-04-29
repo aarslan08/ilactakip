@@ -45,9 +45,8 @@
 		<true/>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
-		<!-- Bildirim izni açıklaması -->
 		<key>NSUserNotificationsUsageDescription</key>
-		<string>İlaç dozlarınızı hatırlatmak için bildirim göndermemize izin verin.</string>
+		<string>Allow us to send notifications to remind you of your medication doses.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>
