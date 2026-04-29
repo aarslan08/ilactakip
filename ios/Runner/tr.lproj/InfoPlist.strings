@@ -1,2 +1,2 @@
 NSUserNotificationsUsageDescription = "İlaç dozlarınızı hatırlatmak için bildirim göndermemize izin verin.";
-CFBundleDisplayName = "İlaç Takip";
+CFBundleDisplayName = "DoseTrack";
