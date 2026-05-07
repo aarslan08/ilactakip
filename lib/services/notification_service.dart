@@ -94,6 +94,9 @@ class NotificationService {
   }
 
   /// Frekansa göre tekrarlayan doz hatırlatıcısı programla
+  ///
+  /// [forceNextOccurrence] true ise bugünkü zamanı atlayıp
+  /// bir sonraki tekrar için planlar (doz alındıktan sonra kullanılır).
   Future<void> scheduleDoseReminder({
     required Medication medication,
     required int hour,
@@ -102,6 +105,7 @@ class NotificationService {
     required FrequencyType frequencyType,
     int? weekday,
     int? monthDay,
+    bool forceNextOccurrence = false,
   }) async {
     if (!medication.perDoseReminders) return;
 
@@ -146,13 +150,17 @@ class NotificationService {
         scheduledDate = tz.TZDateTime(
           tz.local, now.year, now.month, now.day, hour, minute,
         );
-        if (scheduledDate.isBefore(now)) {
+        if (forceNextOccurrence || scheduledDate.isBefore(now)) {
           scheduledDate = scheduledDate.add(const Duration(days: 1));
         }
         matchComponents = DateTimeComponents.time;
 
       case FrequencyType.weekly:
         scheduledDate = _nextWeekday(now, weekday ?? DateTime.monday, hour, minute);
+        if (forceNextOccurrence && scheduledDate.day == now.day &&
+            scheduledDate.month == now.month && scheduledDate.year == now.year) {
+          scheduledDate = scheduledDate.add(const Duration(days: 7));
+        }
         matchComponents = DateTimeComponents.dayOfWeekAndTime;
 
       case FrequencyType.monthly:
@@ -160,7 +168,7 @@ class NotificationService {
         scheduledDate = tz.TZDateTime(
           tz.local, now.year, now.month, day, hour, minute,
         );
-        if (scheduledDate.isBefore(now)) {
+        if (forceNextOccurrence || scheduledDate.isBefore(now)) {
           scheduledDate = tz.TZDateTime(
             tz.local, 
             now.month == 12 ? now.year + 1 : now.year, 
@@ -349,6 +357,15 @@ class NotificationService {
 
     if (kDebugMode) {
       debugPrint('Missed dose notification shown for ${medication.name}');
+    }
+  }
+
+  /// Tek bir bildirimi iptal et
+  Future<void> cancelNotification(int notificationId) async {
+    await _notificationsPlugin.cancel(notificationId);
+
+    if (kDebugMode) {
+      debugPrint('Notification cancelled: $notificationId');
     }
   }
 

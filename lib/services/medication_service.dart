@@ -125,6 +125,12 @@ class MedicationService {
 
     await _doseLogRepository.insertDoseLog(doseLog);
 
+    // Doz alındı, bu zaman diliminin bildirimini iptal et ve sonrakine planla
+    await _cancelAndRescheduleDoseNotification(
+      medication: medication,
+      scheduledTime: scheduledTime,
+    );
+
     // Stoğu azalt
     final newStock = medication.currentStock - medication.dosage.pillsPerDose;
     final updatedMedication = await _medicationRepository.updateStock(
@@ -172,6 +178,12 @@ class MedicationService {
     );
 
     await _doseLogRepository.insertDoseLog(doseLog);
+
+    // Doz atlandı, bu zaman diliminin bildirimini iptal et ve sonrakine planla
+    await _cancelAndRescheduleDoseNotification(
+      medication: medication,
+      scheduledTime: scheduledTime,
+    );
 
     if (kDebugMode) {
       debugPrint('Dose skipped for ${medication.name}');
@@ -296,6 +308,66 @@ class MedicationService {
           times.add('${hour.toString().padLeft(2, '0')}:00');
         }
         return times;
+    }
+  }
+
+  /// Doz alındığında/atlandığında ilgili bildirimi iptal edip bir sonraki
+  /// tekrar için yeniden planlar. Böylece alınmış doz için bildirim gitmez.
+  Future<void> _cancelAndRescheduleDoseNotification({
+    required Medication medication,
+    required String scheduledTime,
+  }) async {
+    if (!medication.perDoseReminders) return;
+
+    final times = medication.dosage.scheduleTimes.isNotEmpty
+        ? medication.dosage.scheduleTimes
+        : _generateDefaultTimes(medication.dosage.dosesPerDay);
+
+    final timeIndex = times.indexOf(scheduledTime);
+    if (timeIndex == -1) return;
+
+    final freq = medication.dosage.frequencyType;
+    int notificationSlotIndex;
+
+    switch (freq) {
+      case FrequencyType.daily:
+      case FrequencyType.monthly:
+        notificationSlotIndex = timeIndex;
+      case FrequencyType.weekly:
+        final today = DateTime.now().weekday;
+        final weekdayIndex = medication.dosage.weeklyDays.indexOf(today);
+        if (weekdayIndex == -1) return;
+        notificationSlotIndex = weekdayIndex * times.length + timeIndex;
+    }
+
+    final notificationId = NotificationService.generateDoseNotificationId(
+      medication.id,
+      notificationSlotIndex,
+    );
+
+    await _notificationService.cancelNotification(notificationId);
+
+    final parsedTime = AppDateUtils.parseTime(scheduledTime);
+    if (parsedTime == null) return;
+
+    await _notificationService.scheduleDoseReminder(
+      medication: medication,
+      hour: parsedTime.hour,
+      minute: parsedTime.minute,
+      notificationId: notificationId,
+      frequencyType: freq,
+      weekday: freq == FrequencyType.weekly ? DateTime.now().weekday : null,
+      monthDay: freq == FrequencyType.monthly
+          ? (medication.dosage.monthlyDay ?? 1)
+          : null,
+      forceNextOccurrence: true,
+    );
+
+    if (kDebugMode) {
+      debugPrint(
+        'Dose notification cancelled & rescheduled for next occurrence: '
+        '${medication.name} at $scheduledTime',
+      );
     }
   }
 
