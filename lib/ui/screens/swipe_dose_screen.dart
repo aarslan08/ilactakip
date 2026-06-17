@@ -7,6 +7,7 @@ import 'package:ilac_takip/models/scheduled_dose.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
+import 'package:ilac_takip/ui/screens/main_navigation.dart';
 
 /// Tinder tarzı ilaç alma ekranı
 class SwipeDoseScreen extends StatefulWidget {
@@ -653,7 +654,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
             ),
             const SizedBox(height: 40),
             ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => _navigateToHome(context),
               icon: const Icon(Icons.arrow_back_rounded),
               label: Text(l10n.backToHome),
               style: ElevatedButton.styleFrom(
@@ -748,5 +749,12 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       _rotation = 0;
       _isDragging = false;
     });
+  }
+
+  void _navigateToHome(BuildContext context) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const MainNavigation()),
+      (route) => false,
+    );
   }
 }

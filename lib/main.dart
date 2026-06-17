@@ -14,7 +14,7 @@ import 'package:ilac_takip/providers/theme_provider.dart';
 import 'package:ilac_takip/core/navigation/app_navigator.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 import 'package:ilac_takip/services/background_service.dart';
-import 'package:ilac_takip/ui/screens/main_navigation.dart';
+import 'package:ilac_takip/ui/screens/launch_router.dart';
 import 'package:ilac_takip/ui/screens/onboarding_screen.dart';
 
 void main() async {
@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
             ],
             home: showOnboarding
                 ? _OnboardingWrapper()
-                : const MainNavigation(),
+                : const LaunchRouter(),
           );
         },
       ),
@@ -103,7 +103,7 @@ class _OnboardingWrapper extends StatelessWidget {
         if (context.mounted) {
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (_) => const MainNavigation(showCoachMarks: true),
+              builder: (_) => const LaunchRouter(showCoachMarks: true),
             ),
           );
         }

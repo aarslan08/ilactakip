@@ -53,6 +53,13 @@ class AppLocalizations {
       'pendingDoses': 'pending doses',
       'start': 'Start',
 
+      // Quick Start
+      'quickStartTitle': "Today's First Dose",
+      'quickStartSubtitle': 'Which medication would you like to start with?',
+      'goToHome': 'Go to Home',
+      'takeThisDose': 'Take This Dose',
+      'startWithThis': 'Start with this',
+
       // Swipe Screen
       'swipeLeft': 'Skip',
       'swipeRight': 'Taken',
@@ -321,6 +328,13 @@ class AppLocalizations {
       'medicationTime': 'İlaç Zamanı!',
       'pendingDoses': 'bekleyen doz var',
       'start': 'Başla',
+
+      // Hızlı Başlangıç
+      'quickStartTitle': 'Bugünkü İlk Dozun',
+      'quickStartSubtitle': 'Hangi ilaçla başlamak istersin?',
+      'goToHome': 'Ana Sayfaya Git',
+      'takeThisDose': 'Bu Dozu Al',
+      'startWithThis': 'Bununla başla',
 
       // Swipe Ekranı
       'swipeLeft': 'Atla',
@@ -595,6 +609,11 @@ class AppLocalizations {
   String get medicationTime => translate('medicationTime');
   String get pendingDoses => translate('pendingDoses');
   String get start => translate('start');
+  String get quickStartTitle => translate('quickStartTitle');
+  String get quickStartSubtitle => translate('quickStartSubtitle');
+  String get goToHome => translate('goToHome');
+  String get takeThisDose => translate('takeThisDose');
+  String get startWithThis => translate('startWithThis');
 
   // Swipe
   String get swipeLeft => translate('swipeLeft');
