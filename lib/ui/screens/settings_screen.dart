@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/providers/locale_provider.dart';
@@ -25,6 +27,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$feature ${l10n.comingSoon}'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Future<void> _sendFeedback() async {
+    final subject = Uri.encodeComponent(l10n.feedbackEmailSubject);
+    final body = Uri.encodeComponent(l10n.feedbackEmailBody);
+    final uri = Uri.parse('mailto:feedback@ilactakip.app?subject=$subject&body=$body');
+    await _launchUrl(uri);
+  }
+
+  Future<void> _rateApp() async {
+    late final Uri uri;
+    if (Platform.isAndroid) {
+      uri = Uri.parse('https://play.google.com/store/apps/details?id=com.example.ilac_takip');
+    } else if (Platform.isIOS) {
+      uri = Uri.parse('https://apps.apple.com/app/id1234567890');
+    } else {
+      _showComingSoon(l10n.rateApp);
+      return;
+    }
+    await _launchUrl(uri);
+  }
+
+  Future<void> _launchUrl(Uri uri) async {
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        _showErrorSnackbar(l10n.couldNotLaunch);
+      }
+    }
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppTheme.errorColor,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         duration: const Duration(seconds: 2),
@@ -485,12 +529,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   _buildActionTile(
                     title: l10n.sendFeedback,
                     icon: Icons.feedback_outlined,
-                    onTap: () => _showComingSoon(l10n.sendFeedback),
+                    onTap: _sendFeedback,
                   ),
                   _buildActionTile(
                     title: l10n.rateApp,
                     icon: Icons.star_outline_rounded,
-                    onTap: () => _showComingSoon(l10n.rateApp),
+                    onTap: _rateApp,
                   ),
                 ],
               ),

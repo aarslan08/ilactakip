@@ -371,8 +371,13 @@ class MedicationService {
     }
   }
 
-  /// Doz hatırlatıcılarını frekansa göre programla
-  Future<void> _scheduleDoseReminders(Medication medication) async {
+  /// Doz hatırlatıcılarını frekansa göre programla.
+  /// [loggedTimesToday]: bugün zaten alınmış/atlanmış olan "HH:mm" saatleri.
+  /// Bu saatler için bildirim bir sonraki güne/haftaya/aya ertelenir.
+  Future<void> _scheduleDoseReminders(
+    Medication medication, {
+    Set<String> loggedTimesToday = const {},
+  }) async {
     if (!medication.perDoseReminders) return;
 
     final times = medication.dosage.scheduleTimes.isNotEmpty
@@ -395,6 +400,7 @@ class MedicationService {
             minute: parsedTime.minute,
             notificationId: notificationId,
             frequencyType: FrequencyType.daily,
+            forceNextOccurrence: loggedTimesToday.contains(times[i]),
           );
         }
 
@@ -414,6 +420,7 @@ class MedicationService {
               notificationId: notificationId,
               frequencyType: FrequencyType.weekly,
               weekday: weekday,
+              forceNextOccurrence: loggedTimesToday.contains(times[i]),
             );
             slotIndex++;
           }
@@ -434,18 +441,34 @@ class MedicationService {
             notificationId: notificationId,
             frequencyType: FrequencyType.monthly,
             monthDay: day,
+            forceNextOccurrence: loggedTimesToday.contains(times[i]),
           );
         }
     }
   }
 
-  /// Tüm ilaçların bildirimlerini yeniden programla (uygulama açılışında çağrılır)
+  /// Tüm ilaçların bildirimlerini yeniden programla (uygulama açılışında çağrılır).
+  /// Bugün zaten alınmış/atlanmış dozlar için bildirim bir sonraki periyoda ertelenir.
   Future<void> rescheduleAllNotifications() async {
     await _notificationService.cancelAllNotifications();
 
     final medications = await _medicationRepository.getAllMedications();
+    final today = DateTime.now();
+
     for (final medication in medications) {
-      await _scheduleDoseReminders(medication);
+      final todayLogs = await _doseLogRepository.getDoseLogsByMedicationAndDate(
+        medication.id,
+        today,
+      );
+      final loggedTimes = todayLogs
+          .where((log) => log.scheduledTime != null)
+          .map((log) {
+            final t = log.scheduledTime!;
+            return '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+          })
+          .toSet();
+
+      await _scheduleDoseReminders(medication, loggedTimesToday: loggedTimes);
     }
 
     if (kDebugMode) {
@@ -459,7 +482,7 @@ class MedicationService {
     final lastNotified = medication.lastNotified;
 
     // 5 gün kala uyarısı
-    if (medication.estimatedDaysLeft == medication.firstRunoutWarningDays) {
+    if (medication.estimatedDaysLeft <= medication.firstRunoutWarningDays && medication.estimatedDaysLeft > 0) {
       final lastRunoutNotified = lastNotified.runout5daysAt;
       if (lastRunoutNotified == null ||
           AppDateUtils.daysBetween(lastRunoutNotified, now) >= 1) {

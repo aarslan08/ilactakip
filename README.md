@@ -9,6 +9,8 @@ Modern ve kullanıcı dostu bir ilaç takip uygulaması. İlaçlarınızı takip
 - 📊 **Stok Yönetimi**: Mevcut stok ve tahmini bitme süresini görüntüleyin
 - 🔔 **Akıllı Bildirimler**: Doz saatlerinde, düşük stokta ve ilaç bitmeden önce uyarılar
 - 📈 **Uyum Takibi**: Doz alma uyumunuzu (adherence) takip edin
+- 🌙 **Karanlık Mod**: Sistem temasına uyumlu karanlık tema desteği
+- 🌍 **Çoklu Dil Desteği**: Türkçe ve İngilizce arayüz desteği
 
 ### Bildirim Sistemi
 1. **Doz Hatırlatıcıları**: Belirlenen saatlerde bildirim
@@ -18,10 +20,14 @@ Modern ve kullanıcı dostu bir ilaç takip uygulaması. İlaçlarınızı takip
 
 ### Ekranlar
 - 🏠 **Ana Sayfa**: Bugünkü dozlar ve hızlı istatistikler
-- 💊 **İlaçlarım**: Tüm ilaçların listesi
+- 💊 **İlaçlarım**: Tüm ilaçların listesi (arama desteği ile)
 - 📋 **İlaç Detayı**: Detaylı bilgi, stok güncelleme, geçmiş
 - ➕ **İlaç Ekle/Düzenle**: Kapsamlı form ile ilaç yönetimi
-- 📜 **Geçmiş**: Doz kayıtları ve uyum analizi
+- 📜 **Geçmiş**: Doz kayıtları ve filtreleme ile uyum analizi
+- 📊 **İstatistikler**: Haftalık/aylık uyum grafikleri
+- ⚙️ **Ayarlar**: Tema, dil, bildirim ve destek bağlantıları
+- 👆 **Hızlı Doz**: Kaydırarak doz alma/atlatma ekranı
+- 🚀 **Onboarding**: İlk kullanım rehberi
 
 ## 🛠 Teknik Detaylar
 
@@ -99,6 +105,8 @@ lib/
 ├── core/
 │   ├── constants/
 │   │   └── app_constants.dart
+│   ├── localization/
+│   │   └── app_localizations.dart
 │   ├── theme/
 │   │   └── app_theme.dart
 │   └── utils/
@@ -117,7 +125,9 @@ lib/
 │   ├── last_notified.dart
 │   └── scheduled_dose.dart
 ├── providers/
-│   └── medication_provider.dart
+│   ├── medication_provider.dart
+│   ├── theme_provider.dart
+│   └── locale_provider.dart
 ├── services/
 │   ├── notification_service.dart
 │   └── medication_service.dart
@@ -128,12 +138,18 @@ lib/
 │   │   ├── medication_detail_screen.dart
 │   │   ├── add_medication_screen.dart
 │   │   ├── logs_screen.dart
+│   │   ├── statistics_screen.dart
+│   │   ├── settings_screen.dart
+│   │   ├── swipe_dose_screen.dart
+│   │   ├── onboarding_screen.dart
+│   │   ├── legal_content_screen.dart
 │   │   └── main_navigation.dart
 │   └── widgets/
 │       ├── dose_card.dart
 │       ├── medication_card.dart
 │       ├── empty_state.dart
-│       └── stats_card.dart
+│       ├── stats_card.dart
+│       └── coach_mark_overlay.dart
 └── main.dart
 ```
 
@@ -147,8 +163,6 @@ lib/
 
 ## 📋 Gelecek Özellikler
 
-- [ ] Karanlık mod
-- [ ] Çoklu dil desteği
 - [ ] Cloud sync (Firebase)
 - [ ] Aile üyesi hesapları
 - [ ] İlaç etkileşim uyarıları

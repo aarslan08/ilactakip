@@ -8,6 +8,8 @@ import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
+import 'package:ilac_takip/ui/screens/swipe_dose_screen.dart';
+import 'package:ilac_takip/ui/screens/logs_screen.dart';
 
 /// İlaç detay ekranı
 class MedicationDetailScreen extends StatefulWidget {
@@ -469,9 +471,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {
-                  // Tüm geçmişi gör
-                },
+                onPressed: () => _navigateToMedicationLogs(),
                 child: Text(l10n.viewAll),
               ),
             ],
@@ -561,8 +561,33 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
   }
 
   Widget _buildActions(Medication medication, MedicationProvider provider) {
+    final hasPendingDose = provider.pendingDoses.any((d) => d.medication.id == medication.id);
+
     return Column(
       children: [
+        if (hasPendingDose) ...[
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => SwipeDoseScreen(
+                    initialMedicationId: medication.id,
+                  ),
+                ),
+              ),
+              icon: const Icon(Icons.medication_rounded),
+              label: Text(l10n.takeDose),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -723,6 +748,15 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => AddMedicationScreen(medication: medication),
+      ),
+    );
+  }
+
+  void _navigateToMedicationLogs() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LogsScreen(medicationId: widget.medicationId),
       ),
     );
   }

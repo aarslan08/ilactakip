@@ -110,6 +110,8 @@ class AppLocalizations {
       'estimatedDays': 'Estimated days',
       'noMedications': 'No Medications Yet',
       'addFirstMedication': 'Add your first medication to start tracking. Never miss a dose!',
+      'searchMedicationsHint': 'Search medications...',
+      'noSearchResults': 'No medications found matching your search.',
       
       // Intake Type
       'whenToTake': 'When to Take?',
@@ -137,6 +139,9 @@ class AppLocalizations {
       'sendFeedback': 'Send Feedback',
       'rateApp': 'Rate App',
       'languageChanged': 'Language changed',
+      'feedbackEmailSubject': 'Medication Tracker Feedback',
+      'feedbackEmailBody': 'Please write your feedback here...',
+      'couldNotLaunch': 'Could not open link',
 
       // Theme
       'theme': 'Theme',
@@ -203,6 +208,16 @@ class AppLocalizations {
       'unknownMedication': 'Unknown Medication',
       'todayLabel': 'Today',
       'yesterdayLabel': 'Yesterday',
+      'filterTitle': 'Filter History',
+      'startDate': 'Start Date',
+      'endDate': 'End Date',
+      'selectMedication': 'Select Medication',
+      'allMedications': 'All Medications',
+      'status': 'Status',
+      'allStatuses': 'All',
+      'apply': 'Apply',
+      'resetFilters': 'Reset Filters',
+      'activeFilters': 'Active Filters',
       
       // Progress
       'todaysProgress': 'Today\'s Progress',
@@ -212,6 +227,7 @@ class AppLocalizations {
       'overdue': 'Overdue!',
       
       // Medication Detail
+      'takeDose': 'Take Dose',
       'medicationDetails': 'Medication Details',
       'deleteMedication': 'Delete Medication',
       'deleteMedicationConfirm': 'Are you sure you want to delete this medication? This action cannot be undone.',
@@ -362,7 +378,9 @@ class AppLocalizations {
       'estimatedDays': 'Tahmini gün',
       'noMedications': 'İlaç Takibine Başlayın',
       'addFirstMedication': 'İlk ilacınızı ekleyerek düzenli ilaç takibine başlayın. Dozlarınızı asla kaçırmayın!',
-
+      'searchMedicationsHint': 'İlaç ara...',
+      'noSearchResults': 'Aramanızla eşleşen ilaç bulunamadı.',
+      
       // Alım Türü
       'whenToTake': 'Ne Zaman Alınmalı?',
       'onEmptyStomach': 'Aç Karnına',
@@ -389,6 +407,9 @@ class AppLocalizations {
       'sendFeedback': 'Geri Bildirim Gönder',
       'rateApp': 'Uygulamayı Değerlendir',
       'languageChanged': 'Dil değiştirildi',
+      'feedbackEmailSubject': 'İlaç Takip Geri Bildirimi',
+      'feedbackEmailBody': 'Lütfen geri bildiriminizi buraya yazın...',
+      'couldNotLaunch': 'Bağlantı açılamadı',
 
       // Tema
       'theme': 'Tema',
@@ -455,6 +476,16 @@ class AppLocalizations {
       'unknownMedication': 'Bilinmeyen İlaç',
       'todayLabel': 'Bugün',
       'yesterdayLabel': 'Dün',
+      'filterTitle': 'Geçmişi Filtrele',
+      'startDate': 'Başlangıç Tarihi',
+      'endDate': 'Bitiş Tarihi',
+      'selectMedication': 'İlaç Seç',
+      'allMedications': 'Tüm İlaçlar',
+      'status': 'Durum',
+      'allStatuses': 'Tümü',
+      'apply': 'Uygula',
+      'resetFilters': 'Filtreleri Sıfırla',
+      'activeFilters': 'Aktif Filtreler',
       
       // İlerleme
       'todaysProgress': 'Bugünkü İlerlemen',
@@ -464,6 +495,7 @@ class AppLocalizations {
       'overdue': 'Gecikti!',
       
       // İlaç Detayı
+      'takeDose': 'Doz Al',
       'medicationDetails': 'İlaç Detayları',
       'deleteMedication': 'İlacı Sil',
       'deleteMedicationConfirm': 'Bu ilacı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
@@ -619,6 +651,8 @@ class AppLocalizations {
   String get estimatedDays => translate('estimatedDays');
   String get noMedications => translate('noMedications');
   String get addFirstMedication => translate('addFirstMedication');
+  String get searchMedicationsHint => translate('searchMedicationsHint');
+  String get noSearchResults => translate('noSearchResults');
 
   // Intake Type
   String get whenToTake => translate('whenToTake');
@@ -646,6 +680,9 @@ class AppLocalizations {
   String get sendFeedback => translate('sendFeedback');
   String get rateApp => translate('rateApp');
   String get languageChanged => translate('languageChanged');
+  String get feedbackEmailSubject => translate('feedbackEmailSubject');
+  String get feedbackEmailBody => translate('feedbackEmailBody');
+  String get couldNotLaunch => translate('couldNotLaunch');
 
   // Theme
   String get theme => translate('theme');
@@ -712,6 +749,16 @@ class AppLocalizations {
   String get unknownMedication => translate('unknownMedication');
   String get todayLabel => translate('todayLabel');
   String get yesterdayLabel => translate('yesterdayLabel');
+  String get filterTitle => translate('filterTitle');
+  String get startDate => translate('startDate');
+  String get endDate => translate('endDate');
+  String get selectMedication => translate('selectMedication');
+  String get allMedications => translate('allMedications');
+  String get status => translate('status');
+  String get allStatuses => translate('allStatuses');
+  String get apply => translate('apply');
+  String get resetFilters => translate('resetFilters');
+  String get activeFilters => translate('activeFilters');
 
   // Progress
   String get todaysProgress => translate('todaysProgress');
@@ -721,6 +768,7 @@ class AppLocalizations {
   String get overdue => translate('overdue');
 
   // Medication Detail
+  String get takeDose => translate('takeDose');
   String get medicationDetails => translate('medicationDetails');
   String get deleteMedication => translate('deleteMedication');
   String get deleteMedicationConfirm => translate('deleteMedicationConfirm');

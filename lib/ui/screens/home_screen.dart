@@ -9,6 +9,7 @@ import 'package:ilac_takip/ui/screens/add_medication_screen.dart';
 import 'package:ilac_takip/ui/screens/medication_detail_screen.dart';
 import 'package:ilac_takip/ui/screens/swipe_dose_screen.dart';
 import 'package:ilac_takip/ui/screens/statistics_screen.dart';
+import 'package:ilac_takip/ui/screens/logs_screen.dart';
 
 /// Ana ekran - Bugünkü dozlar
 class HomeScreen extends StatefulWidget {
@@ -226,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: GestureDetector(
-        onTap: () => _navigateToSwipeDose(),
+        onTap: () => _navigateToSwipeDose(initialMedicationId: null),
         child: Container(
           key: widget.quickActionKey,
           padding: const EdgeInsets.all(20),
@@ -391,9 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const Spacer(),
           TextButton(
-            onPressed: () {
-              // Tümünü gör
-            },
+            onPressed: () => _navigateToLogs(),
             child: Text(l10n.viewAll),
           ),
         ],
@@ -435,7 +434,9 @@ class _HomeScreenState extends State<HomeScreen> {
           final dose = doses[index];
           return DoseCard(
             scheduledDose: dose,
-            onTap: () => _navigateToMedicationDetail(dose.medication.id),
+            onTap: () => dose.isPending
+                ? _navigateToSwipeDose(initialMedicationId: dose.medication.id)
+                : _navigateToMedicationDetail(dose.medication.id),
           );
         },
         childCount: doses.length,
@@ -467,6 +468,13 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _navigateToLogs() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LogsScreen()),
+    );
+  }
+
   void _navigateToMedicationDetail(String id) {
     Navigator.push(
       context,
@@ -474,10 +482,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _navigateToSwipeDose() {
+  void _navigateToSwipeDose({String? initialMedicationId}) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const SwipeDoseScreen()),
+      MaterialPageRoute(
+        builder: (context) => SwipeDoseScreen(initialMedicationId: initialMedicationId),
+      ),
     );
   }
 }

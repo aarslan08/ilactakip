@@ -9,7 +9,9 @@ import 'package:ilac_takip/core/localization/app_localizations.dart';
 
 /// Tinder tarzı ilaç alma ekranı
 class SwipeDoseScreen extends StatefulWidget {
-  const SwipeDoseScreen({super.key});
+  final String? initialMedicationId;
+
+  const SwipeDoseScreen({super.key, this.initialMedicationId});
 
   @override
   State<SwipeDoseScreen> createState() => _SwipeDoseScreenState();
@@ -51,7 +53,13 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
       ),
       body: Consumer<MedicationProvider>(
         builder: (context, provider, child) {
-          final pendingDoses = provider.pendingDoses;
+          final pending = provider.pendingDoses;
+          final pendingDoses = widget.initialMedicationId == null
+              ? pending
+              : [
+                  ...pending.where((d) => d.medication.id == widget.initialMedicationId),
+                  ...pending.where((d) => d.medication.id != widget.initialMedicationId),
+                ];
 
           if (pendingDoses.isEmpty) {
             return _buildAllDoneState();
