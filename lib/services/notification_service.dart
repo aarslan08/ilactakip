@@ -1,11 +1,14 @@
-import 'dart:ui' show Color;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
+import 'package:ilac_takip/core/navigation/app_navigator.dart';
+import 'package:ilac_takip/data/repositories/medication_repository.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/models/dosage.dart';
+import 'package:ilac_takip/ui/screens/medication_detail_screen.dart';
 
 /// Bildirim servisi
 class NotificationService {
@@ -38,13 +41,25 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings(
+    final iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
+      notificationCategories: [
+        DarwinNotificationCategory(
+          'dose_reminder_category',
+          actions: [
+            DarwinNotificationAction.plain(
+              'snooze',
+              '15 dk Ertele',
+              options: <DarwinNotificationActionOption>{},
+            ),
+          ],
+        ),
+      ],
     );
 
-    const initSettings = InitializationSettings(
+    final initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );
@@ -86,10 +101,68 @@ class NotificationService {
     return false;
   }
 
-  /// Bildirime tıklandığında
+  /// Bildirime tıklandığında veya bir aksiyon seçildiğinde
   void _onNotificationTapped(NotificationResponse response) {
     if (kDebugMode) {
-      debugPrint('Notification tapped: ${response.payload}');
+      debugPrint('Notification tapped: ${response.payload}, action: ${response.actionId}');
+    }
+
+    final payload = response.payload;
+    if (payload == null || !payload.startsWith('medication:')) return;
+
+    final medicationId = payload.substring('medication:'.length);
+    if (medicationId.isEmpty) return;
+
+    // Snooze aksiyonu
+    if (response.actionId == 'snooze') {
+      _handleSnoozeAction(medicationId);
+      return;
+    }
+
+    // Normal tıklama: ilaç detayına yönlendir
+    final navigator = appNavigatorKey.currentState;
+    if (navigator == null) return;
+
+    final currentRoute = ModalRoute.of(navigator.context);
+    if (currentRoute != null &&
+        currentRoute.settings.name == '/medication-detail/$medicationId') {
+      return;
+    }
+
+    navigator.push(
+      MaterialPageRoute(
+        settings: RouteSettings(name: '/medication-detail/$medicationId'),
+        builder: (_) => MedicationDetailScreen(medicationId: medicationId),
+      ),
+    );
+  }
+
+  /// Snooze aksiyonunu işle: 15 dakika sonra tekrar bildirim planla
+  Future<void> _handleSnoozeAction(String medicationId) async {
+    final medication = await _getMedicationById(medicationId);
+    if (medication == null) return;
+
+    await scheduleSnoozeNotification(medication: medication);
+
+    if (kDebugMode) {
+      debugPrint('Snoozed notification for ${medication.name}');
+    }
+  }
+
+  /// İlaç getir (bildirim servisi içinde yardımcı)
+  Future<Medication?> _getMedicationById(String medicationId) async {
+    // Repository'yi doğrudan oluşturmak yerine basit bir lookup yap
+    // Not: Workmanager/background context'te provider erişilemeyebilir
+    try {
+      // Burada repository instance'ı oluşturulabilir çünkü notification_service
+      // singleton ve uygulama başlatıldıktan sonra çalışır
+      final repository = MedicationRepository();
+      return await repository.getMedicationById(medicationId);
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error getting medication for snooze: $e');
+      }
+      return null;
     }
   }
 
@@ -122,12 +195,20 @@ class NotificationService {
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
       color: const Color(0xFF2E7D6B),
+      actions: [
+        const AndroidNotificationAction(
+          'snooze',
+          '15 dk Ertele',
+          showsUserInterface: false,
+        ),
+      ],
     );
 
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      categoryIdentifier: 'dose_reminder_category',
     );
 
     final notificationDetails = NotificationDetails(
@@ -400,6 +481,65 @@ class NotificationService {
 
     if (kDebugMode) {
       debugPrint('All notifications cancelled');
+    }
+  }
+
+  /// Bildirimi 15 dakika ertele
+  Future<void> scheduleSnoozeNotification({
+    required Medication medication,
+  }) async {
+    final androidDetails = AndroidNotificationDetails(
+      'dose_reminders',
+      _isEnglish ? 'Dose Reminders' : 'Doz Hatırlatıcıları',
+      channelDescription: _isEnglish
+          ? 'Reminders for your medication doses'
+          : 'İlaç dozlarınız için hatırlatmalar',
+      importance: Importance.high,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+      color: const Color(0xFF2E7D6B),
+      actions: [
+        const AndroidNotificationAction(
+          'snooze',
+          '15 dk Ertele',
+          showsUserInterface: false,
+        ),
+      ],
+    );
+
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+      categoryIdentifier: 'dose_reminder_category',
+    );
+
+    final notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: iosDetails,
+    );
+
+    final title = _isEnglish ? '⏰ Medication Reminder' : '⏰ İlaç Hatırlatıcısı';
+    final body = _isEnglish
+        ? '${medication.name} - You need to take ${medication.dosage.pillsPerDose} pills'
+        : '${medication.name} - ${medication.dosage.pillsPerDose} adet almanız gerekiyor';
+
+    final scheduledDate = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 15));
+    final notificationId = 400000 + medication.id.hashCode.abs() % 100000;
+
+    await _notificationsPlugin.zonedSchedule(
+      notificationId,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      payload: 'medication:${medication.id}',
+    );
+
+    if (kDebugMode) {
+      debugPrint('Snooze notification scheduled for ${medication.name} at $scheduledDate');
     }
   }
 

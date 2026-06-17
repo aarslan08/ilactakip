@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ilac_takip/models/scheduled_dose.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/models/dosage.dart';
@@ -25,7 +26,9 @@ class DoseCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeInOut,
         margin: const EdgeInsets.only(bottom: 12),
         decoration: BoxDecoration(
           color: _getBackgroundColor(context),
@@ -201,7 +204,10 @@ class DoseCard extends StatelessWidget {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: onSkip,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onSkip?.call();
+            },
             borderRadius: BorderRadius.circular(8),
             child: Container(
               padding: const EdgeInsets.all(6),
@@ -219,7 +225,10 @@ class DoseCard extends StatelessWidget {
           color: AppTheme.primaryColor,
           borderRadius: BorderRadius.circular(10),
           child: InkWell(
-            onTap: onTake,
+            onTap: () {
+              HapticFeedback.mediumImpact();
+              onTake?.call();
+            },
             borderRadius: BorderRadius.circular(10),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

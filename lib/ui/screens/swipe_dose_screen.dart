@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/scheduled_dose.dart';
@@ -688,6 +689,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   }
 
   void _handleTake(ScheduledDose dose) async {
+    HapticFeedback.mediumImpact();
     final provider = context.read<MedicationProvider>();
     final success = await provider.takeDose(dose);
 
@@ -703,6 +705,7 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   }
 
   void _handleSkip(ScheduledDose dose) async {
+    HapticFeedback.lightImpact();
     final provider = context.read<MedicationProvider>();
     await provider.skipDose(dose);
 

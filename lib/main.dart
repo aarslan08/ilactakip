@@ -10,6 +10,7 @@ import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/providers/locale_provider.dart';
 import 'package:ilac_takip/providers/theme_provider.dart';
+import 'package:ilac_takip/core/navigation/app_navigator.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 import 'package:ilac_takip/services/background_service.dart';
 import 'package:ilac_takip/ui/screens/main_navigation.dart';
@@ -56,7 +57,8 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer2<LocaleProvider, ThemeProvider>(
         builder: (context, localeProvider, themeProvider, child) {
-          return MaterialApp(
+            return MaterialApp(
+            navigatorKey: appNavigatorKey,
             title: 'Medication Tracker',
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,

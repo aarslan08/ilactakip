@@ -63,6 +63,7 @@ class AppLocalizations {
       'missedStatus': 'Missed',
       'pendingStatus': 'Pending',
       'lateStatus': 'Late',
+      'snooze15Min': 'Snooze 15 min',
       'yourProgress': 'Your Progress',
       'allDone': 'All Done!',
       'greatJob': 'Great! 🎉',
@@ -331,6 +332,7 @@ class AppLocalizations {
       'missedStatus': 'Kaçırıldı',
       'pendingStatus': 'Bekliyor',
       'lateStatus': 'Gecikti',
+      'snooze15Min': '15 dk Ertele',
       'yourProgress': 'Bugünkü İlerlemen',
       'allDone': 'Tamamlandı!',
       'greatJob': 'Harika! 🎉',
@@ -604,6 +606,7 @@ class AppLocalizations {
   String get missedStatus => translate('missedStatus');
   String get pendingStatus => translate('pendingStatus');
   String get lateStatus => translate('lateStatus');
+  String get snooze15Min => translate('snooze15Min');
   String get yourProgress => translate('yourProgress');
   String get allDone => translate('allDone');
   String get greatJob => translate('greatJob');
