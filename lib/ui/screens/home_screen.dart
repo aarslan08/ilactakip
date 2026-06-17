@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ilac_takip/providers/medication_provider.dart';
+import 'package:ilac_takip/models/scheduled_dose.dart';
+import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
@@ -184,39 +186,141 @@ class _HomeScreenState extends State<HomeScreen> {
     final totalDoses = provider.todayScheduledDoses.length;
     final takenDoses = provider.takenDoses.length;
     final adherencePercent = (provider.todayAdherenceRate * 100).round();
+    final progress = totalDoses > 0 ? takenDoses / totalDoses : 0.0;
+    final streak = provider.currentStreak;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          Expanded(
-            child: StatsCard(
-              key: widget.dosesCardKey,
-              title: l10n.todaysDoses,
-              value: '$takenDoses/$totalDoses',
-              icon: Icons.check_circle_outline_rounded,
-              color: AppTheme.primaryColor,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: StatsCard(
-              key: widget.statsCardKey,
-              title: l10n.adherenceRate,
-              value: '%$adherencePercent',
-              icon: Icons.trending_up_rounded,
-              color: adherencePercent >= 80
-                  ? AppTheme.successColor
-                  : adherencePercent >= 50
-                      ? AppTheme.warningColor
-                      : AppTheme.errorColor,
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+      child: GestureDetector(
+        key: widget.dosesCardKey,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const StatisticsScreen()),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            color: context.cardBg,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: context.shadowAlpha),
+                blurRadius: 24,
+                offset: const Offset(0, 12),
               ),
-            ),
+            ],
           ),
-        ],
+          child: Row(
+            children: [
+              // Dairesel ilerleme halkası
+              SizedBox(
+                width: 104,
+                height: 104,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 104,
+                      height: 104,
+                      child: CircularProgressIndicator(
+                        value: progress,
+                        strokeWidth: 10,
+                        strokeCap: StrokeCap.round,
+                        backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.12),
+                        valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$takenDoses/$totalDoses',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: context.textPrimaryClr,
+                            height: 1,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.dosesTaken,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                            color: context.textSecondaryClr,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 22),
+              // Uyum + seri
+              Expanded(
+                child: Column(
+                  key: widget.statsCardKey,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.todaysAdherence,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: context.textSecondaryClr,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '%$adherencePercent',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(height: 1, color: context.dividerClr),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.local_fire_department_rounded,
+                          size: 20,
+                          color: AppTheme.accentColor,
+                        ),
+                        const SizedBox(width: 8),
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: '$streak',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: context.textPrimaryClr,
+                                ),
+                              ),
+                              TextSpan(
+                                text: ' ${l10n.dayStreak}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: context.textSecondaryClr,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -432,14 +536,210 @@ class _HomeScreenState extends State<HomeScreen> {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final dose = doses[index];
-          return DoseCard(
-            scheduledDose: dose,
-            onTap: () => dose.isPending
-                ? _navigateToSwipeDose(initialMedicationId: dose.medication.id)
-                : _navigateToMedicationDetail(dose.medication.id),
+          return _buildTimelineDose(
+            provider,
+            dose,
+            isLast: index == doses.length - 1,
           );
         },
         childCount: doses.length,
+      ),
+    );
+  }
+
+  // İlaç başına renkli ikon paleti (görsel çeşitlilik için)
+  static const List<(Color, Color, IconData)> _iconPalette = [
+    (Color(0xFFE9F4F0), AppTheme.primaryColor, Icons.medication_rounded),
+    (Color(0xFFFFF4E2), Color(0xFFF0A030), Icons.water_drop_rounded),
+    (Color(0xFFEDEAFB), Color(0xFF7C6FE0), Icons.grain_rounded),
+    (Color(0xFFE3F0FA), Color(0xFF3B8AD9), Icons.healing_rounded),
+    (Color(0xFFEAF6F1), AppTheme.primaryColor, Icons.medication_liquid_rounded),
+  ];
+
+  (Color, Color, IconData) _paletteFor(String medId) {
+    return _iconPalette[medId.hashCode.abs() % _iconPalette.length];
+  }
+
+  Widget _buildTimelineDose(
+    MedicationProvider provider,
+    ScheduledDose dose, {
+    required bool isLast,
+  }) {
+    final medication = dose.medication;
+    final isDone = !dose.isPending;
+    final isPastDue = dose.isPending && dose.isPastDue;
+
+    // Zaman çizelgesi nokta rengi
+    final Color dotColor;
+    final Color dotBorder;
+    if (isDone) {
+      dotColor = AppTheme.primaryColor;
+      dotBorder = AppTheme.primaryColor;
+    } else if (isPastDue) {
+      dotColor = context.cardBg;
+      dotBorder = AppTheme.warningColor;
+    } else {
+      dotColor = context.cardBg;
+      dotBorder = context.dividerClr;
+    }
+
+    final (iconBg, iconFg, iconData) = isDone
+        ? (AppTheme.primaryColor.withValues(alpha: 0.1), AppTheme.primaryColor, Icons.medication_rounded)
+        : _paletteFor(medication.id);
+
+    final timeFaded = !isDone && !isPastDue;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Saat sütunu
+          SizedBox(
+            width: 46,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Text(
+                dose.scheduledTime,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: timeFaded ? context.textLightClr : context.textPrimaryClr,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Zaman çizelgesi nokta + çizgi
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 18),
+                child: Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: dotColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: dotBorder, width: 3),
+                  ),
+                ),
+              ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 2,
+                    color: context.dividerClr,
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 12),
+          // Doz kartı
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: GestureDetector(
+                onTap: () => dose.isPending
+                    ? _navigateToSwipeDose(initialMedicationId: medication.id)
+                    : _navigateToMedicationDetail(medication.id),
+                child: Container(
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: context.cardBg,
+                    borderRadius: BorderRadius.circular(18),
+                    border: isPastDue
+                        ? Border.all(color: AppTheme.warningColor.withValues(alpha: 0.4), width: 1.5)
+                        : null,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: context.shadowAlpha),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: iconBg,
+                          borderRadius: BorderRadius.circular(13),
+                        ),
+                        child: Icon(iconData, size: 22, color: iconFg),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              medication.name,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: context.textPrimaryClr,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${medication.dosage.pillsPerDose} ${l10n.pills}'
+                              '${medication.intakeType != IntakeType.either ? ' · ${medication.intakeType.icon}' : ''}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: context.textLightClr,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      _buildDoseTrailing(provider, dose),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDoseTrailing(MedicationProvider provider, ScheduledDose dose) {
+    if (dose.isTaken) {
+      return const Icon(Icons.check_circle_rounded, size: 28, color: AppTheme.primaryColor);
+    }
+    if (dose.isMissed) {
+      return const Icon(Icons.cancel_rounded, size: 26, color: AppTheme.errorColor);
+    }
+    if (dose.isSkipped) {
+      return Icon(Icons.skip_next_rounded, size: 26, color: context.textLightClr);
+    }
+    // Pending → "Al" butonu
+    return GestureDetector(
+      onTap: () => provider.takeDose(dose),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+        decoration: BoxDecoration(
+          color: AppTheme.primaryColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          l10n.take,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

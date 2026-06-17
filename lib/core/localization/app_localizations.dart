@@ -46,6 +46,17 @@ class AppLocalizations {
       'adherenceRate': 'Adherence Rate',
       'todaysSchedule': 'Today\'s Schedule',
       'viewAll': 'View All',
+      'dosesTaken': 'doses taken',
+      'todaysAdherence': 'Today\'s adherence',
+      'dayStreak': 'day streak',
+      'take': 'Take',
+      'daysShort': 'days',
+      'daysLeftShort': 'days left',
+      'unlimited': 'unlimited',
+      'filterAll': 'All',
+      'filterLowStock': 'Low stock',
+      'decreaseStock': 'Decrease',
+      'addStock': 'Add Stock',
       'noDosesScheduled': 'No doses scheduled for today',
       'lowStockWarning': 'Low Stock Warning',
       'medicationsLowStock': 'medications are running low',
@@ -322,6 +333,17 @@ class AppLocalizations {
       'adherenceRate': 'Uyum Oranı',
       'todaysSchedule': 'Bugünkü Program',
       'viewAll': 'Tümü',
+      'dosesTaken': 'doz alındı',
+      'todaysAdherence': 'Bugünkü uyum',
+      'dayStreak': 'günlük seri',
+      'take': 'Al',
+      'daysShort': 'gün',
+      'daysLeftShort': 'gün kaldı',
+      'unlimited': 'sınırsız',
+      'filterAll': 'Tümü',
+      'filterLowStock': 'Düşük stok',
+      'decreaseStock': 'Azalt',
+      'addStock': 'Stok Ekle',
       'noDosesScheduled': 'Bugün için planlanmış doz yok',
       'lowStockWarning': 'Düşük Stok Uyarısı',
       'medicationsLowStock': 'ilacın stoğu azaldı',
@@ -603,6 +625,17 @@ class AppLocalizations {
   String get adherenceRate => translate('adherenceRate');
   String get todaysSchedule => translate('todaysSchedule');
   String get viewAll => translate('viewAll');
+  String get dosesTaken => translate('dosesTaken');
+  String get todaysAdherence => translate('todaysAdherence');
+  String get dayStreak => translate('dayStreak');
+  String get take => translate('take');
+  String get daysShort => translate('daysShort');
+  String get daysLeftShort => translate('daysLeftShort');
+  String get unlimited => translate('unlimited');
+  String get filterAll => translate('filterAll');
+  String get filterLowStock => translate('filterLowStock');
+  String get decreaseStock => translate('decreaseStock');
+  String get addStock => translate('addStock');
   String get noDosesScheduled => translate('noDosesScheduled');
   String get lowStockWarning => translate('lowStockWarning');
   String get medicationsLowStock => translate('medicationsLowStock');

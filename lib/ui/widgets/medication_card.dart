@@ -18,207 +18,141 @@ class MedicationCard extends StatelessWidget {
     this.onDelete,
   });
 
+  // İlaç başına renkli ikon paleti
+  static const List<(Color, Color, IconData)> _palette = [
+    (Color(0xFFE9F4F0), AppTheme.primaryColor, Icons.medication_rounded),
+    (Color(0xFFFFF4E2), Color(0xFFF0A030), Icons.water_drop_rounded),
+    (Color(0xFFEDEAFB), Color(0xFF7C6FE0), Icons.grain_rounded),
+    (Color(0xFFE3F0FA), Color(0xFF3B8AD9), Icons.healing_rounded),
+    (Color(0xFFEAF6F1), AppTheme.primaryColor, Icons.medication_liquid_rounded),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+    final isLowStock = medication.isLowStock;
+    final (iconBg, iconFg, iconData) = isLowStock
+        ? (const Color(0xFFFFECEC), AppTheme.accentColor, Icons.warning_amber_rounded)
+        : _palette[medication.id.hashCode.abs() % _palette.length];
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: context.cardBg,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(20),
+          border: isLowStock
+              ? Border.all(color: AppTheme.accentColor.withValues(alpha: 0.35), width: 1.5)
+              : null,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: context.shadowAlpha),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: Column(
+        child: Row(
           children: [
-            // Üst kısım - Ana bilgiler
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  // İlaç ikonu
-                  _buildIcon(),
-                  const SizedBox(width: 16),
-                  
-                  // İlaç bilgileri
-                  Expanded(child: _buildInfo(context, l10n)),
-                  
-                  // Ok ikonu
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: context.textLightClr,
-                  ),
-                ],
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: iconBg,
+                borderRadius: BorderRadius.circular(15),
               ),
+              child: Icon(iconData, color: iconFg, size: 26),
             ),
-            
-            // Alt kısım - Stok ve uyarılar
-            _buildBottomSection(context, l10n),
+            const SizedBox(width: 14),
+            Expanded(child: _buildInfo(context, l10n)),
+            const SizedBox(width: 6),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: context.textLightClr,
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildIcon() {
-    return Container(
-      width: 56,
-      height: 56,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.primaryColor.withValues(alpha: 0.8),
-            AppTheme.primaryLight,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: const Icon(
-        Icons.medication_rounded,
-        color: Colors.white,
-        size: 28,
       ),
     );
   }
 
   Widget _buildInfo(BuildContext context, AppLocalizations l10n) {
     final dosesText = medication.dosage.dosesPerDay == 1 ? l10n.dose : l10n.doses;
-    
+    final isLowStock = medication.isLowStock;
+    final daysLeft = medication.estimatedDaysLeft;
+    final unlimited = daysLeft >= 999;
+
+    // Rozet metni
+    final String badgeText;
+    if (isLowStock) {
+      badgeText = '${medication.currentStock} ${l10n.units} · $daysLeft ${l10n.daysLeftShort}';
+    } else if (unlimited) {
+      badgeText = '${medication.currentStock} ${l10n.units} · ${l10n.unlimited}';
+    } else {
+      badgeText = '${medication.currentStock} ${l10n.units} · $daysLeft ${l10n.daysShort}';
+    }
+
+    final badgeColor = isLowStock ? AppTheme.accentColor : AppTheme.primaryColor;
+    final badgeBg = isLowStock
+        ? const Color(0xFFFFECEC)
+        : AppTheme.primaryColor.withValues(alpha: 0.1);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           medication.name,
           style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
             color: context.textPrimaryClr,
           ),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 3),
         Text(
-          '${medication.dosage.pillsPerDose} ${l10n.pills} × ${l10n.daily} ${medication.dosage.dosesPerDay} $dosesText',
+          '${medication.dosage.pillsPerDose} ${l10n.pills} · ${l10n.daily} ${medication.dosage.dosesPerDay} $dosesText',
           style: TextStyle(
-            fontSize: 13,
-            color: context.textSecondaryClr,
-          ),
-        ),
-        if (medication.dosage.scheduleTimes.isNotEmpty) ...[
-          const SizedBox(height: 4),
-          Text(
-            medication.dosage.scheduleTimes.join(' • '),
-            style: TextStyle(
-              fontSize: 12,
-              color: AppTheme.primaryColor.withValues(alpha: 0.8),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildBottomSection(BuildContext context, AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: _getBottomSectionColor(context),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-      ),
-      child: Row(
-        children: [
-          // Stok bilgisi
-          _buildStockInfo(context, l10n),
-          const Spacer(),
-          // Kalan gün bilgisi
-          _buildDaysLeftInfo(context, l10n),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStockInfo(BuildContext context, AppLocalizations l10n) {
-    return Row(
-      children: [
-        Icon(
-          Icons.inventory_2_outlined,
-          size: 18,
-          color: medication.isLowStock ? AppTheme.warningColor : context.textSecondaryClr,
-        ),
-        const SizedBox(width: 6),
-        Text(
-          '${medication.currentStock} ${l10n.units}',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: medication.isLowStock ? AppTheme.warningColor : context.textPrimaryClr,
-          ),
-        ),
-        if (medication.isLowStock) ...[
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: AppTheme.warningColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              l10n.lowStock,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.warningColor,
-              ),
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildDaysLeftInfo(BuildContext context, AppLocalizations l10n) {
-    final daysLeft = medication.estimatedDaysLeft;
-    final isLow = daysLeft <= medication.firstRunoutWarningDays;
-    
-    return Row(
-      children: [
-        Icon(
-          Icons.calendar_today_outlined,
-          size: 16,
-          color: isLow ? AppTheme.accentColor : context.textSecondaryClr,
-        ),
-        const SizedBox(width: 6),
-        Text(
-          daysLeft >= 999 ? '∞' : '~$daysLeft ${l10n.daysRemaining}',
-          style: TextStyle(
-            fontSize: 13,
+            fontSize: 12.5,
             fontWeight: FontWeight.w500,
-            color: isLow ? AppTheme.accentColor : context.textSecondaryClr,
+            color: context.textLightClr,
+          ),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+          decoration: BoxDecoration(
+            color: badgeBg,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                isLowStock
+                    ? Icons.warning_amber_rounded
+                    : (unlimited ? Icons.all_inclusive_rounded : Icons.inventory_2_rounded),
+                size: 14,
+                color: badgeColor,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                badgeText,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: badgeColor,
+                ),
+              ),
+            ],
           ),
         ),
       ],
     );
-  }
-
-  Color _getBottomSectionColor(BuildContext context) {
-    if (medication.isOutOfStock) return AppTheme.errorColor.withValues(alpha: 0.08);
-    if (medication.isCriticalStock) return AppTheme.accentColor.withValues(alpha: 0.08);
-    if (medication.isLowStock) return AppTheme.warningColor.withValues(alpha: 0.08);
-    return context.scaffoldBg;
   }
 }

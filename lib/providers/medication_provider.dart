@@ -12,6 +12,7 @@ class MedicationProvider extends ChangeNotifier {
   List<Medication> _medications = [];
   List<ScheduledDose> _todayScheduledDoses = [];
   List<DoseLog> _recentLogs = [];
+  int _currentStreak = 0;
   bool _isLoading = false;
   String? _error;
 
@@ -27,6 +28,7 @@ class MedicationProvider extends ChangeNotifier {
   List<Medication> get medications => _medications;
   List<ScheduledDose> get todayScheduledDoses => _todayScheduledDoses;
   List<DoseLog> get recentLogs => _recentLogs;
+  int get currentStreak => _currentStreak;
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasMedications => _medications.isNotEmpty;
@@ -69,7 +71,8 @@ class MedicationProvider extends ChangeNotifier {
       _medications = await _medicationRepository.getAllMedications();
       _todayScheduledDoses = await _medicationService.getTodayScheduledDoses();
       _recentLogs = await _doseLogRepository.getDoseLogsByDate(DateTime.now());
-      
+      _currentStreak = await _calculateStreak();
+
       if (kDebugMode) {
         debugPrint('Loaded ${_medications.length} medications, ${_todayScheduledDoses.length} scheduled doses');
       }
@@ -435,10 +438,71 @@ class MedicationProvider extends ChangeNotifier {
     }
   }
 
+  /// Günlük seriyi hesapla: bugünden geriye doğru, dozu olan ve hiç
+  /// kaçırılmamış/atlanmamış (tümü alınmış) ardışık gün sayısı.
+  /// Bugün henüz tamamlanmamışsa bugünü seriyi bozmadan atlar.
+  Future<int> _calculateStreak() async {
+    try {
+      final now = DateTime.now();
+      final start = now.subtract(const Duration(days: 60));
+      final logs = await _doseLogRepository.getDoseLogsByDateRange(start, now);
+
+      // Gün bazında grupla: {gün: {taken, total}}
+      final Map<DateTime, ({int taken, int total})> perDay = {};
+      for (final log in logs) {
+        final day = DateTime(log.createdAt.year, log.createdAt.month, log.createdAt.day);
+        final current = perDay[day] ?? (taken: 0, total: 0);
+        perDay[day] = (
+          taken: current.taken + (log.isTaken ? 1 : 0),
+          total: current.total + 1,
+        );
+      }
+
+      int streak = 0;
+      var day = DateTime(now.year, now.month, now.day);
+      bool isToday = true;
+
+      while (true) {
+        final data = perDay[day];
+        if (data == null || data.total == 0) {
+          // Bugün için henüz kayıt yoksa seriyi bozmadan dünden devam et
+          if (isToday) {
+            day = day.subtract(const Duration(days: 1));
+            isToday = false;
+            continue;
+          }
+          break; // Önceki bir günde hiç doz yoksa seri biter
+        }
+
+        if (data.taken == data.total) {
+          streak++;
+        } else {
+          // Bugün kısmen alınmışsa seriyi bozma, sadece say
+          if (isToday && data.taken > 0) {
+            streak++;
+          } else {
+            break;
+          }
+        }
+
+        day = day.subtract(const Duration(days: 1));
+        isToday = false;
+      }
+
+      return streak;
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error calculating streak: $e');
+      }
+      return 0;
+    }
+  }
+
   /// Bugünkü programı yenile
   Future<void> _refreshTodaySchedule() async {
     _todayScheduledDoses = await _medicationService.getTodayScheduledDoses();
     _recentLogs = await _doseLogRepository.getDoseLogsByDate(DateTime.now());
+    _currentStreak = await _calculateStreak();
   }
 
   /// Yükleme durumunu ayarla

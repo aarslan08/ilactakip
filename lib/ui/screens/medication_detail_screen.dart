@@ -220,7 +220,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () => _showStockDialog(medication, false),
                   icon: const Icon(Icons.remove_rounded),
-                  label: Text(l10n.delete),
+                  label: Text(l10n.decreaseStock),
                 ),
               ),
               const SizedBox(width: 12),
@@ -228,7 +228,7 @@ class _MedicationDetailScreenState extends State<MedicationDetailScreen> {
                 child: ElevatedButton.icon(
                   onPressed: () => _showStockDialog(medication, true),
                   icon: const Icon(Icons.add_rounded),
-                  label: Text(l10n.add),
+                  label: Text(l10n.addStock),
                 ),
               ),
             ],
