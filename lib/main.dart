@@ -11,6 +11,7 @@ import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/providers/locale_provider.dart';
 import 'package:ilac_takip/providers/theme_provider.dart';
 import 'package:ilac_takip/services/notification_service.dart';
+import 'package:ilac_takip/services/background_service.dart';
 import 'package:ilac_takip/ui/screens/main_navigation.dart';
 import 'package:ilac_takip/ui/screens/onboarding_screen.dart';
 
@@ -23,6 +24,10 @@ void main() async {
 
   await NotificationService.instance.initialize();
   await NotificationService.instance.requestPermissions();
+
+  // Arka plan kaçırılmış doz kontrolü
+  await BackgroundService.instance.initialize();
+  await BackgroundService.instance.scheduleMissedDoseCheck();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

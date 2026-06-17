@@ -1,6 +1,7 @@
 import UIKit
 import Flutter
 import flutter_local_notifications
+import workmanager
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -11,6 +12,11 @@ import flutter_local_notifications
     
     // Local notifications setup
     FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+      GeneratedPluginRegistrant.register(with: registry)
+    }
+    
+    // Background tasks setup
+    WorkmanagerPlugin.setPluginRegistrantCallback { (registry) in
       GeneratedPluginRegistrant.register(with: registry)
     }
     
