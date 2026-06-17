@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +28,14 @@ void main() async {
   await NotificationService.instance.requestPermissions();
 
   // Arka plan kaçırılmış doz kontrolü
-  await BackgroundService.instance.initialize();
-  await BackgroundService.instance.scheduleMissedDoseCheck();
+  try {
+    await BackgroundService.instance.initialize();
+    await BackgroundService.instance.scheduleMissedDoseCheck();
+  } catch (e) {
+    if (kDebugMode) {
+      debugPrint('Background service initialization failed: $e');
+    }
+  }
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
