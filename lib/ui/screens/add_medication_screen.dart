@@ -7,6 +7,7 @@ import 'package:ilac_takip/models/dosage.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/utils/date_utils.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
+import 'package:ilac_takip/core/constants/med_palette.dart';
 
 /// İlaç ekleme/düzenleme ekranı
 class AddMedicationScreen extends StatefulWidget {
@@ -40,7 +41,9 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
   FrequencyType _frequencyType = FrequencyType.daily;
   List<int> _weeklyDays = [];
   int _monthlyDay = 1;
-  
+  int _selectedColorIndex = MedPalette.defaultColorIndex;
+  int _selectedIconIndex = MedPalette.defaultIconIndex;
+
   bool _isLoading = false;
 
   bool get _isEditing => widget.medication != null;
@@ -73,6 +76,10 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
       _frequencyType = med.dosage.frequencyType;
       _weeklyDays = List.from(med.dosage.weeklyDays);
       _monthlyDay = med.dosage.monthlyDay ?? 1;
+      _selectedColorIndex = MedPalette.colors.indexWhere(
+        (c) => c.toARGB32() == med.colorValue,
+      ).clamp(0, MedPalette.colors.length - 1);
+      _selectedIconIndex = med.iconIndex.clamp(0, MedPalette.icons.length - 1);
     }
   }
 
@@ -110,7 +117,11 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             const SizedBox(height: 12),
             _buildNameField(),
             const SizedBox(height: 16),
-            
+
+            // Renk + ikon
+            _buildAppearanceSection(),
+            const SizedBox(height: 16),
+
             // Stok
             _buildStockField(),
             const SizedBox(height: 24),
@@ -168,6 +179,134 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
             const SizedBox(height: 40),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildAppearanceSection() {
+    final selectedColor = MedPalette.colors[_selectedColorIndex];
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.dividerClr),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              // Önizleme
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: selectedColor,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(
+                  MedPalette.icons[_selectedIconIndex],
+                  color: Colors.white,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Text(
+                l10n.appearance,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: context.textPrimaryClr,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          // İkon seçimi
+          Text(
+            l10n.icon,
+            style: TextStyle(fontSize: 12, color: context.textSecondaryClr),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List.generate(MedPalette.icons.length, (i) {
+              final isSelected = i == _selectedIconIndex;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedIconIndex = i),
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? selectedColor
+                        : selectedColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(12),
+                    border: isSelected
+                        ? null
+                        : Border.all(color: context.dividerClr),
+                  ),
+                  child: Icon(
+                    MedPalette.icons[i],
+                    color: isSelected ? Colors.white : selectedColor,
+                    size: 22,
+                  ),
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 14),
+          // Renk seçimi
+          Text(
+            l10n.color,
+            style: TextStyle(fontSize: 12, color: context.textSecondaryClr),
+          ),
+          const SizedBox(height: 8),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              childAspectRatio: 1,
+            ),
+            itemCount: MedPalette.colors.length,
+            itemBuilder: (_, i) {
+              final isSelected = i == _selectedColorIndex;
+              return GestureDetector(
+                onTap: () => setState(() => _selectedColorIndex = i),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: MedPalette.colors[i],
+                    shape: BoxShape.circle,
+                    border: isSelected
+                        ? Border.all(
+                            color: context.textPrimaryClr,
+                            width: 2.5,
+                          )
+                        : null,
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: MedPalette.colors[i].withValues(alpha: 0.5),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            )
+                          ]
+                        : null,
+                  ),
+                  child: isSelected
+                      ? const Icon(Icons.check_rounded,
+                          color: Colors.white, size: 18)
+                      : null,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -1019,6 +1158,8 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
           notes: notes.isNotEmpty ? notes : null,
           expirationDate: _expirationDate,
           intakeType: _intakeType,
+          colorValue: MedPalette.colors[_selectedColorIndex].toARGB32(),
+          iconIndex: _selectedIconIndex,
           clearNotes: notes.isEmpty,
           clearExpirationDate: _expirationDate == null && widget.medication!.expirationDate != null,
         );
@@ -1040,6 +1181,8 @@ class _AddMedicationScreenState extends State<AddMedicationScreen> {
           notes: notes.isNotEmpty ? notes : null,
           expirationDate: _expirationDate,
           intakeType: _intakeType,
+          colorValue: MedPalette.colors[_selectedColorIndex].toARGB32(),
+          iconIndex: _selectedIconIndex,
         );
       }
 

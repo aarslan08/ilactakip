@@ -6,6 +6,9 @@ import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/logs_screen.dart';
+import 'package:ilac_takip/ui/widgets/calendar_heatmap.dart';
+
+enum _Period { weekly, monthly, calendar }
 
 class StatisticsScreen extends StatefulWidget {
   /// Alt bar sekmesi olarak gömülü kullanılıyorsa geri butonu gösterilmez.
@@ -18,13 +21,21 @@ class StatisticsScreen extends StatefulWidget {
 }
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
-  bool _isWeekly = true;
+  _Period _period = _Period.weekly;
   bool _isLoading = true;
 
+  // Haftalık / aylık veri
   Map<DateTime, double> _adherenceData = {};
   List<({Medication medication, double adherenceRate, int taken, int total})> _breakdown = [];
   ({int totalTaken, int totalMissed, int totalSkipped, double overallRate}) _summary =
       (totalTaken: 0, totalMissed: 0, totalSkipped: 0, overallRate: 0.0);
+
+  // Takvim verisi
+  DateTime _calendarMonth = () {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month);
+  }();
+  Map<DateTime, double> _calendarData = {};
 
   AppLocalizations get l10n => AppLocalizations.of(context)!;
 
@@ -37,10 +48,15 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
 
-    final provider = context.read<MedicationProvider>();
-    final days = _isWeekly ? 7 : 30;
+    if (_period == _Period.calendar) {
+      await _loadCalendarData();
+      return;
+    }
 
-    final adherence = _isWeekly
+    final provider = context.read<MedicationProvider>();
+    final days = _period == _Period.weekly ? 7 : 30;
+
+    final adherence = _period == _Period.weekly
         ? await provider.getWeeklyAdherence()
         : await provider.getMonthlyAdherence();
     final breakdown = await provider.getMedicationAdherenceBreakdown(days: days);
@@ -54,6 +70,25 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _loadCalendarData() async {
+    final provider = context.read<MedicationProvider>();
+    final firstDay = DateTime(_calendarMonth.year, _calendarMonth.month, 1);
+    final lastDay = DateTime(_calendarMonth.year, _calendarMonth.month + 1, 0);
+    final data = await provider.getAdherenceForRange(firstDay, lastDay);
+    if (mounted) {
+      setState(() {
+        _calendarData = data;
+        _isLoading = false;
+      });
+    }
+  }
+
+  double get _calendarOverallRate {
+    if (_calendarData.isEmpty) return 0.0;
+    final vals = _calendarData.values.toList();
+    return vals.reduce((a, b) => a + b) / vals.length;
   }
 
   @override
@@ -87,11 +122,15 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                   const SizedBox(height: 20),
                   _buildToggle(),
                   const SizedBox(height: 20),
-                  _buildChartCard(),
-                  const SizedBox(height: 20),
-                  _buildSummaryRow(),
-                  const SizedBox(height: 20),
-                  _buildBreakdownSection(),
+                  if (_period == _Period.calendar)
+                    _buildCalendarCard()
+                  else ...[
+                    _buildChartCard(),
+                    const SizedBox(height: 20),
+                    _buildSummaryRow(),
+                    const SizedBox(height: 20),
+                    _buildBreakdownSection(),
+                  ],
                   const SizedBox(height: 40),
                 ],
               ),
@@ -100,7 +139,22 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   }
 
   Widget _buildOverallCard() {
-    final percent = (_summary.overallRate * 100).round();
+    final double rate = _period == _Period.calendar
+        ? _calendarOverallRate
+        : _summary.overallRate;
+    final percent = (rate * 100).round();
+
+    String subtitle;
+    if (_period == _Period.calendar) {
+      final locale = Localizations.localeOf(context).languageCode;
+      subtitle = _monthLabel(_calendarMonth, locale);
+    } else {
+      final total =
+          _summary.totalTaken + _summary.totalMissed + _summary.totalSkipped;
+      final periodLabel =
+          _period == _Period.weekly ? l10n.weeklyView : l10n.monthlyView;
+      subtitle = '$periodLabel — $total ${l10n.dosesCount}';
+    }
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -139,7 +193,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '${_isWeekly ? l10n.weeklyView : l10n.monthlyView} — ${_summary.totalTaken + _summary.totalMissed + _summary.totalSkipped} ${l10n.dosesCount}',
+            subtitle,
             style: TextStyle(
               fontSize: 14,
               color: Colors.white.withValues(alpha: 0.8),
@@ -165,15 +219,21 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       ),
       child: Row(
         children: [
-          _buildToggleButton(l10n.weeklyView, _isWeekly, () {
-            if (!_isWeekly) {
-              setState(() => _isWeekly = true);
+          _buildToggleButton(l10n.weeklyView, _period == _Period.weekly, () {
+            if (_period != _Period.weekly) {
+              setState(() => _period = _Period.weekly);
               _loadData();
             }
           }),
-          _buildToggleButton(l10n.monthlyView, !_isWeekly, () {
-            if (_isWeekly) {
-              setState(() => _isWeekly = false);
+          _buildToggleButton(l10n.monthlyView, _period == _Period.monthly, () {
+            if (_period != _Period.monthly) {
+              setState(() => _period = _Period.monthly);
+              _loadData();
+            }
+          }),
+          _buildToggleButton(l10n.calendarView, _period == _Period.calendar, () {
+            if (_period != _Period.calendar) {
+              setState(() => _period = _Period.calendar);
               _loadData();
             }
           }),
@@ -189,16 +249,14 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: isActive
-                ? AppTheme.primaryColor
-                : Colors.transparent,
+            color: isActive ? AppTheme.primaryColor : Colors.transparent,
             borderRadius: BorderRadius.circular(16),
           ),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: FontWeight.w600,
               color: isActive ? Colors.white : context.textSecondaryClr,
             ),
@@ -207,6 +265,155 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       ),
     );
   }
+
+  // ─── Takvim kartı ────────────────────────────────────────────────────────────
+
+  Widget _buildCalendarCard() {
+    final now = DateTime.now();
+    final currentMonth = DateTime(now.year, now.month);
+    final isCurrentMonth = _calendarMonth == currentMonth;
+    final locale = Localizations.localeOf(context).languageCode;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: context.cardBg,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: context.shadowAlpha),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Ay navigasyonu
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left_rounded),
+                onPressed: () {
+                  setState(() {
+                    _calendarMonth = DateTime(
+                      _calendarMonth.year,
+                      _calendarMonth.month - 1,
+                    );
+                  });
+                  _loadCalendarData();
+                },
+              ),
+              Text(
+                _monthLabel(_calendarMonth, locale),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: context.textPrimaryClr,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.chevron_right_rounded,
+                  color: isCurrentMonth
+                      ? context.textLightClr
+                      : context.textPrimaryClr,
+                ),
+                onPressed: isCurrentMonth
+                    ? null
+                    : () {
+                        setState(() {
+                          _calendarMonth = DateTime(
+                            _calendarMonth.year,
+                            _calendarMonth.month + 1,
+                          );
+                        });
+                        _loadCalendarData();
+                      },
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Heatmap
+          CalendarHeatmap(
+            month: _calendarMonth,
+            adherenceMap: _calendarData,
+            onDayTap: (date) => _onDayTapped(date),
+          ),
+          const SizedBox(height: 20),
+          // Renk göstergesi
+          _buildLegend(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLegend() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _legendDot(AppTheme.primaryColor, l10n.calendarLegendGood),
+        const SizedBox(width: 12),
+        _legendDot(const Color(0xFFFFB74D), l10n.calendarLegendPartial),
+        const SizedBox(width: 12),
+        _legendDot(AppTheme.errorColor, l10n.calendarLegendMissed),
+        const SizedBox(width: 12),
+        _legendDot(context.subtleBg, l10n.calendarLegendNone, border: true),
+      ],
+    );
+  }
+
+  Widget _legendDot(Color color, String label, {bool border = false}) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+            border: border
+                ? Border.all(color: context.dividerClr)
+                : null,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 11,
+            color: context.textSecondaryClr,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onDayTapped(DateTime date) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => LogsScreen(initialDate: date),
+      ),
+    );
+  }
+
+  String _monthLabel(DateTime month, String locale) {
+    final trMonths = [
+      'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+      'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık',
+    ];
+    final enMonths = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December',
+    ];
+    final names = locale == 'tr' ? trMonths : enMonths;
+    return '${names[month.month - 1]} ${month.year}';
+  }
+
+  // ─── Grafik kartı (Haftalık / Aylık) ────────────────────────────────────────
 
   Widget _buildChartCard() {
     return Container(
@@ -236,7 +443,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
           const SizedBox(height: 20),
           SizedBox(
             height: 200,
-            child: _isWeekly ? _buildBarChart() : _buildLineChart(),
+            child: _period == _Period.weekly ? _buildBarChart() : _buildLineChart(),
           ),
         ],
       ),

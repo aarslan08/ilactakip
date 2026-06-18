@@ -8,6 +8,7 @@ import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/main_navigation.dart';
+import 'package:ilac_takip/ui/widgets/note_bottom_sheet.dart';
 
 /// Tinder tarzı ilaç alma ekranı
 class SwipeDoseScreen extends StatefulWidget {
@@ -692,17 +693,22 @@ class _SwipeDoseScreenState extends State<SwipeDoseScreen>
   void _handleTake(ScheduledDose dose) async {
     HapticFeedback.mediumImpact();
     final provider = context.read<MedicationProvider>();
-    final success = await provider.takeDose(dose);
+    final log = await provider.takeDose(dose);
 
-    if (success && mounted) {
+    if (log != null && mounted) {
       _showFeedback(
         message: '${dose.medication.name} ${l10n.markedAsTaken}',
         color: AppTheme.successColor,
         icon: Icons.check_circle_rounded,
       );
+      _resetCard();
+      final note = await showNoteBottomSheet(context);
+      if (note != null && note.trim().isNotEmpty && mounted) {
+        await provider.updateDoseNote(log.id, note);
+      }
+    } else {
+      _resetCard();
     }
-
-    _resetCard();
   }
 
   void _handleSkip(ScheduledDose dose) async {

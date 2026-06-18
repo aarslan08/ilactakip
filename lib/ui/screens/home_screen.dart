@@ -547,19 +547,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // İlaç başına renkli ikon paleti (görsel çeşitlilik için)
-  static const List<(Color, Color, IconData)> _iconPalette = [
-    (Color(0xFFE9F4F0), AppTheme.primaryColor, Icons.medication_rounded),
-    (Color(0xFFFFF4E2), Color(0xFFF0A030), Icons.water_drop_rounded),
-    (Color(0xFFEDEAFB), Color(0xFF7C6FE0), Icons.grain_rounded),
-    (Color(0xFFE3F0FA), Color(0xFF3B8AD9), Icons.healing_rounded),
-    (Color(0xFFEAF6F1), AppTheme.primaryColor, Icons.medication_liquid_rounded),
-  ];
-
-  (Color, Color, IconData) _paletteFor(String medId) {
-    return _iconPalette[medId.hashCode.abs() % _iconPalette.length];
-  }
-
   Widget _buildTimelineDose(
     MedicationProvider provider,
     ScheduledDose dose, {
@@ -583,9 +570,12 @@ class _HomeScreenState extends State<HomeScreen> {
       dotBorder = context.dividerClr;
     }
 
-    final (iconBg, iconFg, iconData) = isDone
-        ? (AppTheme.primaryColor.withValues(alpha: 0.1), AppTheme.primaryColor, Icons.medication_rounded)
-        : _paletteFor(medication.id);
+    final medColor = medication.displayColor;
+    final iconBg = isDone
+        ? medColor.withValues(alpha: 0.12)
+        : medColor.withValues(alpha: 0.15);
+    final iconFg = medColor;
+    final iconData = medication.displayIcon;
 
     final timeFaded = !isDone && !isPastDue;
 
@@ -725,7 +715,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const Icon(Icons.cancel_rounded, size: 22, color: AppTheme.errorColor),
           const SizedBox(width: 6),
           GestureDetector(
-            onTap: () => provider.takeDose(dose),
+            onTap: () => _takeDoseWithNote(provider, dose),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
@@ -754,7 +744,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     // Pending → "Al" butonu
     return GestureDetector(
-      onTap: () => provider.takeDose(dose),
+      onTap: () => _takeDoseWithNote(provider, dose),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
         decoration: BoxDecoration(
@@ -771,6 +761,16 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _takeDoseWithNote(
+      MedicationProvider provider, ScheduledDose dose) async {
+    final log = await provider.takeDose(dose);
+    if (log == null || !mounted) return;
+    final note = await showNoteBottomSheet(context);
+    if (note != null && note.trim().isNotEmpty) {
+      await provider.updateDoseNote(log.id, note);
+    }
   }
 
   Widget _buildFab() {

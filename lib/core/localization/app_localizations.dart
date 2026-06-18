@@ -189,6 +189,15 @@ class AppLocalizations {
       'onboardingKicker2': 'Never miss a dose',
       'onboardingKicker3': 'Stay on track',
 
+      // Medication appearance
+      'appearance': 'Appearance',
+      'icon': 'Icon',
+      'color': 'Color',
+
+      // Dose notes
+      'addNote': 'Add Note',
+      'noteHint': 'How did you feel? (optional)',
+
       // Coach Marks
       'coachAdherenceTitle': 'Adherence Rate',
       'coachAdherenceDesc': 'See your daily adherence rate here. Tap for detailed statistics.',
@@ -215,6 +224,7 @@ class AppLocalizations {
       'statisticsTitle': 'Statistics',
       'weeklyView': 'Weekly',
       'monthlyView': 'Monthly',
+      'calendarView': 'Calendar',
       'adherenceByMedication': 'By Medication',
       'totalDosesTaken': 'Taken',
       'totalDosesMissed': 'Missed',
@@ -223,6 +233,11 @@ class AppLocalizations {
       'noDataYet': 'No data available yet',
       'tapForDetails': 'Tap for details',
       'dosesCount': 'doses',
+      'noDataForDay': 'No records for this day',
+      'calendarLegendGood': 'Good',
+      'calendarLegendPartial': 'Partial',
+      'calendarLegendMissed': 'Missed',
+      'calendarLegendNone': 'No dose',
 
       // History / Logs
       'doseHistory': 'Dose History',
@@ -481,6 +496,15 @@ class AppLocalizations {
       'onboardingKicker2': 'Asla kaçırmayın',
       'onboardingKicker3': 'Kontrol sizde',
 
+      // İlaç görünüm
+      'appearance': 'Görünüm',
+      'icon': 'İkon',
+      'color': 'Renk',
+
+      // Doz notu
+      'addNote': 'Not Ekle',
+      'noteHint': 'Nasıl hissettiniz? (isteğe bağlı)',
+
       // Coach Marks
       'coachAdherenceTitle': 'Uyum Oranı',
       'coachAdherenceDesc': 'Günlük uyum oranınızı burada görün. Detaylı istatistikler için dokunun.',
@@ -507,6 +531,7 @@ class AppLocalizations {
       'statisticsTitle': 'İstatistikler',
       'weeklyView': 'Haftalık',
       'monthlyView': 'Aylık',
+      'calendarView': 'Takvim',
       'adherenceByMedication': 'İlaç Bazlı',
       'totalDosesTaken': 'Alınan',
       'totalDosesMissed': 'Kaçırılan',
@@ -515,6 +540,11 @@ class AppLocalizations {
       'noDataYet': 'Henüz veri yok',
       'tapForDetails': 'Detaylar için dokunun',
       'dosesCount': 'doz',
+      'noDataForDay': 'Bu gün için kayıt yok',
+      'calendarLegendGood': 'İyi',
+      'calendarLegendPartial': 'Kısmen',
+      'calendarLegendMissed': 'Kaçırıldı',
+      'calendarLegendNone': 'Doz yok',
 
       // Geçmiş / Loglar
       'doseHistory': 'Doz Geçmişi',
@@ -776,6 +806,15 @@ class AppLocalizations {
   String get onboardingKicker2 => translate('onboardingKicker2');
   String get onboardingKicker3 => translate('onboardingKicker3');
 
+  // Medication appearance
+  String get appearance => translate('appearance');
+  String get icon => translate('icon');
+  String get color => translate('color');
+
+  // Dose notes
+  String get addNote => translate('addNote');
+  String get noteHint => translate('noteHint');
+
   // Coach Marks
   String get coachAdherenceTitle => translate('coachAdherenceTitle');
   String get coachAdherenceDesc => translate('coachAdherenceDesc');
@@ -802,6 +841,7 @@ class AppLocalizations {
   String get statisticsTitle => translate('statisticsTitle');
   String get weeklyView => translate('weeklyView');
   String get monthlyView => translate('monthlyView');
+  String get calendarView => translate('calendarView');
   String get adherenceByMedication => translate('adherenceByMedication');
   String get totalDosesTaken => translate('totalDosesTaken');
   String get totalDosesMissed => translate('totalDosesMissed');
@@ -810,6 +850,11 @@ class AppLocalizations {
   String get noDataYet => translate('noDataYet');
   String get tapForDetails => translate('tapForDetails');
   String get dosesCount => translate('dosesCount');
+  String get noDataForDay => translate('noDataForDay');
+  String get calendarLegendGood => translate('calendarLegendGood');
+  String get calendarLegendPartial => translate('calendarLegendPartial');
+  String get calendarLegendMissed => translate('calendarLegendMissed');
+  String get calendarLegendNone => translate('calendarLegendNone');
 
   // History
   String get doseHistory => translate('doseHistory');

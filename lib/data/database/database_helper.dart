@@ -65,6 +65,8 @@ class DatabaseHelper {
         frequencyType TEXT DEFAULT 'daily',
         weeklyDays TEXT,
         monthlyDay INTEGER,
+        colorValue INTEGER DEFAULT ${0xFF2E7D6B},
+        iconIndex INTEGER DEFAULT 0,
         createdAt TEXT NOT NULL,
         updatedAt TEXT NOT NULL
       )
@@ -129,6 +131,18 @@ class DatabaseHelper {
       );
       if (kDebugMode) {
         debugPrint('Added frequency columns to medications table');
+      }
+    }
+
+    if (oldVersion < 4) {
+      await db.execute(
+        'ALTER TABLE medications ADD COLUMN colorValue INTEGER DEFAULT ${0xFF2E7D6B}',
+      );
+      await db.execute(
+        'ALTER TABLE medications ADD COLUMN iconIndex INTEGER DEFAULT 0',
+      );
+      if (kDebugMode) {
+        debugPrint('Added colorValue and iconIndex columns to medications table');
       }
     }
   }

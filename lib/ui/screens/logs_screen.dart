@@ -11,10 +11,13 @@ import 'package:ilac_takip/ui/widgets/widgets.dart';
 /// Geçmiş kayıtlar ekranı
 class LogsScreen extends StatefulWidget {
   final String? medicationId;
+  /// Takvimden açılınca bu güne otomatik filtre uygulanır.
+  final DateTime? initialDate;
 
   const LogsScreen({
     super.key,
     this.medicationId,
+    this.initialDate,
   });
 
   @override
@@ -39,6 +42,11 @@ class _LogsScreenState extends State<LogsScreen> {
   void initState() {
     super.initState();
     _selectedMedicationId = widget.medicationId;
+    if (widget.initialDate != null) {
+      final d = widget.initialDate!;
+      _startDate = DateTime(d.year, d.month, d.day);
+      _endDate = DateTime(d.year, d.month, d.day);
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) => _loadLogs());
   }
 
@@ -671,6 +679,29 @@ class _LogsScreenState extends State<LogsScreen> {
                     ],
                   ],
                 ),
+                if (log.notes != null && log.notes!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.edit_note_rounded,
+                          size: 14,
+                          color: context.textLightClr),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          log.notes!,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: context.textLightClr,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

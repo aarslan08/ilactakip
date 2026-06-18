@@ -102,6 +102,8 @@ class MedicationProvider extends ChangeNotifier {
     String? notes,
     DateTime? expirationDate,
     IntakeType intakeType = IntakeType.either,
+    int colorValue = 0xFF2E7D6B,
+    int iconIndex = 0,
   }) async {
     _setLoading(true);
     _error = null;
@@ -122,6 +124,8 @@ class MedicationProvider extends ChangeNotifier {
         notes: notes,
         expirationDate: expirationDate,
         intakeType: intakeType,
+        colorValue: colorValue,
+        iconIndex: iconIndex,
       );
 
       _medications.add(medication);
@@ -190,10 +194,10 @@ class MedicationProvider extends ChangeNotifier {
     }
   }
 
-  /// Dozu al
-  Future<bool> takeDose(ScheduledDose scheduledDose) async {
+  /// Dozu al — başarılı olursa DoseLog döner (not eklemek için ID gerekli)
+  Future<DoseLog?> takeDose(ScheduledDose scheduledDose) async {
     try {
-      await _medicationService.takeDose(
+      final log = await _medicationService.takeDose(
         medication: scheduledDose.medication,
         scheduledTime: scheduledDose.scheduledTime,
       );
@@ -213,13 +217,27 @@ class MedicationProvider extends ChangeNotifier {
 
       await _refreshTodaySchedule();
       notifyListeners();
-      return true;
+      return log;
     } catch (e) {
       _error = 'Doz alınırken hata oluştu: $e';
       if (kDebugMode) {
         debugPrint('Error taking dose: $e');
       }
-      return false;
+      return null;
+    }
+  }
+
+  /// Alınan doza sonradan not ekle
+  Future<void> updateDoseNote(String logId, String note) async {
+    try {
+      final logs = await _doseLogRepository.getDoseLogById(logId);
+      if (logs == null) return;
+      final updated = logs.copyWith(notes: note.trim().isEmpty ? null : note.trim());
+      await _doseLogRepository.updateDoseLog(updated);
+      _recentLogs = await _doseLogRepository.getDoseLogsByDate(DateTime.now());
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) debugPrint('Error updating dose note: $e');
     }
   }
 

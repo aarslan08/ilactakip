@@ -37,9 +37,11 @@ class MedicationService {
     String? notes,
     DateTime? expirationDate,
     IntakeType intakeType = IntakeType.either,
+    int colorValue = 0xFF2E7D6B,
+    int iconIndex = 0,
   }) async {
     final now = DateTime.now();
-    
+
     final medication = Medication(
       id: _uuid.v4(),
       name: name,
@@ -59,6 +61,8 @@ class MedicationService {
       notes: notes,
       expirationDate: expirationDate,
       intakeType: intakeType,
+      colorValue: colorValue,
+      iconIndex: iconIndex,
       createdAt: now,
       updatedAt: now,
     );
@@ -111,19 +115,29 @@ class MedicationService {
       int.parse(timeParts[1]),
     );
 
-    // Doz kaydı oluştur
+    // Bu doz için zaten bir kayıt varsa (kaçırıldı/atlandı) onu güncelle,
+    // yoksa yeni kayıt oluştur. Aksi halde aynı doz için birden çok kayıt oluşur.
+    final existingLog = await _doseLogRepository.findDoseLogByScheduledTime(
+      medication.id,
+      scheduledDateTime,
+    );
+
     final doseLog = DoseLog(
-      id: _uuid.v4(),
+      id: existingLog?.id ?? _uuid.v4(),
       medicationId: medication.id,
       scheduledTime: scheduledDateTime,
       takenTime: now,
       status: DoseStatus.taken,
       pillsTaken: medication.dosage.pillsPerDose,
       notes: notes,
-      createdAt: now,
+      createdAt: existingLog?.createdAt ?? now,
     );
 
-    await _doseLogRepository.insertDoseLog(doseLog);
+    if (existingLog != null) {
+      await _doseLogRepository.updateDoseLog(doseLog);
+    } else {
+      await _doseLogRepository.insertDoseLog(doseLog);
+    }
 
     // Doz alındı, bu zaman diliminin bildirimini iptal et ve sonrakine planla
     await _cancelAndRescheduleDoseNotification(
@@ -167,17 +181,26 @@ class MedicationService {
       int.parse(timeParts[1]),
     );
 
+    final existingLog = await _doseLogRepository.findDoseLogByScheduledTime(
+      medication.id,
+      scheduledDateTime,
+    );
+
     final doseLog = DoseLog(
-      id: _uuid.v4(),
+      id: existingLog?.id ?? _uuid.v4(),
       medicationId: medication.id,
       scheduledTime: scheduledDateTime,
       status: DoseStatus.skipped,
       pillsTaken: 0,
       notes: notes,
-      createdAt: now,
+      createdAt: existingLog?.createdAt ?? now,
     );
 
-    await _doseLogRepository.insertDoseLog(doseLog);
+    if (existingLog != null) {
+      await _doseLogRepository.updateDoseLog(doseLog);
+    } else {
+      await _doseLogRepository.insertDoseLog(doseLog);
+    }
 
     // Doz atlandı, bu zaman diliminin bildirimini iptal et ve sonrakine planla
     await _cancelAndRescheduleDoseNotification(
