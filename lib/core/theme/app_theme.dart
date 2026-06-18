@@ -9,8 +9,8 @@ extension ThemeContext on BuildContext {
   Color get textSecondaryClr => isDark ? AppTheme.darkTextSecondary : AppTheme.textSecondary;
   Color get textLightClr => isDark ? AppTheme.darkTextLight : AppTheme.textLight;
   Color get iconClr => isDark ? AppTheme.primaryLight : AppTheme.primaryColor;
-  Color get dividerClr => isDark ? const Color(0xFF404040) : const Color(0xFFE5E7EB);
-  Color get subtleBg => isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF9FAFB);
+  Color get dividerClr => isDark ? const Color(0xFF243D32) : const Color(0xFFE5E7EB);
+  Color get subtleBg => isDark ? const Color(0xFF1A3028) : const Color(0xFFF9FAFB);
   double get shadowAlpha => isDark ? 0.3 : 0.06;
   double get primaryAlpha => isDark ? 0.2 : 0.1;
 }
@@ -34,20 +34,20 @@ class AppTheme {
   static const Color surfaceColor = Color(0xFFFFFFFF);
   static const Color cardColor = Color(0xFFFFFFFF);
   
-  // Koyu tema arka plan renkleri
-  static const Color darkBackgroundColor = Color(0xFF121212);
-  static const Color darkSurfaceColor = Color(0xFF1E1E1E);
-  static const Color darkCardColor = Color(0xFF2C2C2C);
+  // Koyu tema arka plan renkleri (yeşil-tonlu)
+  static const Color darkBackgroundColor = Color(0xFF0D1A15);
+  static const Color darkSurfaceColor = Color(0xFF162820);
+  static const Color darkCardColor = Color(0xFF162820);
   
   // Metin renkleri
   static const Color textPrimary = Color(0xFF1A1F2C);
   static const Color textSecondary = Color(0xFF6B7280);
   static const Color textLight = Color(0xFF9CA3AF);
   
-  // Koyu tema metin renkleri
-  static const Color darkTextPrimary = Color(0xFFE8E8E8);
-  static const Color darkTextSecondary = Color(0xFFA0A0A0);
-  static const Color darkTextLight = Color(0xFF6B6B6B);
+  // Koyu tema metin renkleri (yeşil-tonlu)
+  static const Color darkTextPrimary = Color(0xFFDFF2EC);
+  static const Color darkTextSecondary = Color(0xFF7A9089);
+  static const Color darkTextLight = Color(0xFF4A6B5E);
   
   // Durum renkleri
   static const Color takenColor = Color(0xFF4CAF50);
@@ -286,7 +286,7 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF2A2A2A),
+        fillColor: const Color(0xFF162820),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -294,7 +294,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF404040)),
+          borderSide: const BorderSide(color: Color(0xFF243D32)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -320,7 +320,7 @@ class AppTheme {
         elevation: 8,
       ),
       dividerTheme: const DividerThemeData(
-        color: Color(0xFF3A3A3A),
+        color: Color(0xFF243D32),
         thickness: 1,
       ),
       textTheme: const TextTheme(

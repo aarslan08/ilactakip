@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:ilac_takip/core/constants/app_constants.dart';
+import 'package:ilac_takip/core/constants/med_palette.dart';
 import 'package:ilac_takip/models/dosage.dart';
 import 'package:ilac_takip/models/quiet_hours.dart';
 import 'package:ilac_takip/models/last_notified.dart';
@@ -62,6 +64,8 @@ class Medication {
   final DateTime? expirationDate;
   final LastNotified lastNotified;
   final IntakeType intakeType;
+  final int colorValue;
+  final int iconIndex;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -80,9 +84,14 @@ class Medication {
     this.expirationDate,
     this.lastNotified = const LastNotified(),
     this.intakeType = IntakeType.either,
+    this.colorValue = 0xFF2E7D6B,
+    this.iconIndex = 0,
     required this.createdAt,
     required this.updatedAt,
   });
+
+  Color get displayColor => Color(colorValue);
+  IconData get displayIcon => MedPalette.icons[iconIndex.clamp(0, MedPalette.icons.length - 1)];
 
   /// Günlük tüketim (geriye uyumluluk için, tam sayı olarak)
   int get dailyConsumption => dosage.perDayConsumption;
@@ -151,6 +160,8 @@ class Medication {
         (e) => e.name == (map['intakeType'] as String? ?? 'either'),
         orElse: () => IntakeType.either,
       ),
+      colorValue: map['colorValue'] as int? ?? 0xFF2E7D6B,
+      iconIndex: map['iconIndex'] as int? ?? 0,
       createdAt: DateTime.parse(map['createdAt'] as String),
       updatedAt: DateTime.parse(map['updatedAt'] as String),
     );
@@ -180,6 +191,8 @@ class Medication {
       'expirationDate': expirationDate?.toIso8601String(),
       'lastNotifiedJson': jsonEncode(lastNotified.toJson()),
       'intakeType': intakeType.name,
+      'colorValue': colorValue,
+      'iconIndex': iconIndex,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
     };
@@ -201,6 +214,8 @@ class Medication {
     DateTime? expirationDate,
     LastNotified? lastNotified,
     IntakeType? intakeType,
+    int? colorValue,
+    int? iconIndex,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool clearNotes = false,
@@ -221,6 +236,8 @@ class Medication {
       expirationDate: clearExpirationDate ? null : (expirationDate ?? this.expirationDate),
       lastNotified: lastNotified ?? this.lastNotified,
       intakeType: intakeType ?? this.intakeType,
+      colorValue: colorValue ?? this.colorValue,
+      iconIndex: iconIndex ?? this.iconIndex,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
     );

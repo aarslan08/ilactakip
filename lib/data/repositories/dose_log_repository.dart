@@ -134,6 +134,7 @@ class DoseLogRepository {
           startOfDay.toIso8601String(),
           endOfDay.toIso8601String(),
         ],
+        orderBy: 'createdAt DESC',
         limit: 1,
       );
       
@@ -163,6 +164,24 @@ class DoseLogRepository {
         debugPrint('Error inserting dose log: $e');
       }
       rethrow;
+    }
+  }
+
+  /// ID ile doz kaydı getir
+  Future<DoseLog?> getDoseLogById(String id) async {
+    try {
+      final db = await _databaseHelper.database;
+      final maps = await db.query(
+        'dose_logs',
+        where: 'id = ?',
+        whereArgs: [id],
+        limit: 1,
+      );
+      if (maps.isEmpty) return null;
+      return DoseLog.fromMap(maps.first);
+    } catch (e) {
+      if (kDebugMode) debugPrint('Error getting dose log by id: $e');
+      return null;
     }
   }
 

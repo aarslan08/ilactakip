@@ -1,7 +1,7 @@
 name: ilac_takip
 description: Medication Tracker - İlaç Takip Uygulaması
 publish_to: 'none'
-version: 1.0.0+2
+version: 1.1.0+3
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -43,15 +43,11 @@ dependencies:
   url_launcher: ^6.3.1
 
 flutter_native_splash:
-  image: assets/images/Adsız tasarım-3.png
-  color: "#FFFFFF"
-  color_dark: "#121212"
-  image_dark: assets/images/Adsız tasarım-3.png
+  color: "#060F0B"
+  color_dark: "#060F0B"
   android_12:
-    image: assets/images/Adsız tasarım-3.png
-    color: "#FFFFFF"
-    image_dark: assets/images/Adsız tasarım-3.png
-    color_dark: "#121212"
+    color: "#060F0B"
+    color_dark: "#060F0B"
 
 dev_dependencies:
   flutter_test:
