@@ -4,7 +4,7 @@ import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
 import 'package:ilac_takip/ui/screens/home_screen.dart';
 import 'package:ilac_takip/ui/screens/medications_screen.dart';
-import 'package:ilac_takip/ui/screens/logs_screen.dart';
+import 'package:ilac_takip/ui/screens/statistics_screen.dart';
 import 'package:ilac_takip/ui/screens/settings_screen.dart';
 import 'package:ilac_takip/ui/widgets/coach_mark_overlay.dart';
 
@@ -44,7 +44,7 @@ class MainNavigationState extends State<MainNavigation> {
         scheduleKey: _scheduleKey,
       ),
       const MedicationsScreen(),
-      const LogsScreen(),
+      const StatisticsScreen(embedded: true),
       const SettingsScreen(),
     ];
 
@@ -125,9 +125,9 @@ class MainNavigationState extends State<MainNavigation> {
                 _buildNavItem(
                   context,
                   index: 2,
-                  icon: Icons.history_outlined,
-                  activeIcon: Icons.history_rounded,
-                  label: l10n.history,
+                  icon: Icons.insights_outlined,
+                  activeIcon: Icons.insights_rounded,
+                  label: l10n.statisticsShort,
                   itemKey: _navHistoryKey,
                 ),
                 _buildNavItem(
@@ -182,7 +182,7 @@ class MainNavigationState extends State<MainNavigation> {
         targetKey: _navHistoryKey,
         title: l10n.coachHistoryTitle,
         description: l10n.coachHistoryDesc,
-        icon: Icons.history_rounded,
+        icon: Icons.insights_rounded,
       ),
       CoachMarkStep(
         targetKey: _navSettingsKey,

@@ -15,7 +15,6 @@ import 'package:ilac_takip/core/navigation/app_navigator.dart';
 import 'package:ilac_takip/services/notification_service.dart';
 import 'package:ilac_takip/services/background_service.dart';
 import 'package:ilac_takip/ui/screens/launch_router.dart';
-import 'package:ilac_takip/ui/screens/onboarding_screen.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +24,9 @@ void main() async {
   await initializeDateFormatting('en_US', null);
 
   await NotificationService.instance.initialize();
-  await NotificationService.instance.requestPermissions();
+  // İzin isteğini bloklamadan başlat: splash hemen görünsün,
+  // sistem izin diyaloğu üstte açılsın.
+  NotificationService.instance.requestPermissions();
 
   // Arka plan kaçırılmış doz kontrolü
   try {
@@ -82,32 +83,10 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            home: showOnboarding
-                ? _OnboardingWrapper()
-                : const LaunchRouter(),
+            home: LaunchRouter(showOnboarding: showOnboarding),
           );
         },
       ),
-    );
-  }
-}
-
-class _OnboardingWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return OnboardingScreen(
-      onComplete: () async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('onboarding_seen', true);
-
-        if (context.mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => const LaunchRouter(showCoachMarks: true),
-            ),
-          );
-        }
-      },
     );
   }
 }

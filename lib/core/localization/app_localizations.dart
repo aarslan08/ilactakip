@@ -57,6 +57,7 @@ class AppLocalizations {
       'filterLowStock': 'Low stock',
       'decreaseStock': 'Decrease',
       'addStock': 'Add Stock',
+      'statisticsShort': 'Stats',
       'noDosesScheduled': 'No doses scheduled for today',
       'lowStockWarning': 'Low Stock Warning',
       'medicationsLowStock': 'medications are running low',
@@ -183,6 +184,10 @@ class AppLocalizations {
       'onboardingGetStarted': 'Get Started',
       'onboardingSkip': 'Skip',
       'onboardingNext': 'Next',
+      'onboardingContinue': 'Continue',
+      'onboardingKicker1': 'All in one place',
+      'onboardingKicker2': 'Never miss a dose',
+      'onboardingKicker3': 'Stay on track',
 
       // Coach Marks
       'coachAdherenceTitle': 'Adherence Rate',
@@ -195,8 +200,8 @@ class AppLocalizations {
       'coachScheduleDesc': 'Your daily dose cards. Tap Take or Skip for each one.',
       'coachMedicationsTitle': 'My Medications',
       'coachMedicationsDesc': 'Manage your medications, add new ones or update stock.',
-      'coachHistoryTitle': 'History',
-      'coachHistoryDesc': 'Review your past dose history day by day.',
+      'coachHistoryTitle': 'Statistics',
+      'coachHistoryDesc': 'Track your adherence rate, charts and per-medication breakdown.',
       'coachSettingsTitle': 'Settings',
       'coachSettingsDesc': 'Change language, theme and notification preferences.',
       'coachGotIt': 'Got it',
@@ -344,6 +349,7 @@ class AppLocalizations {
       'filterLowStock': 'Düşük stok',
       'decreaseStock': 'Azalt',
       'addStock': 'Stok Ekle',
+      'statisticsShort': 'İstatistik',
       'noDosesScheduled': 'Bugün için planlanmış doz yok',
       'lowStockWarning': 'Düşük Stok Uyarısı',
       'medicationsLowStock': 'ilacın stoğu azaldı',
@@ -470,6 +476,10 @@ class AppLocalizations {
       'onboardingGetStarted': 'Başlayalım',
       'onboardingSkip': 'Atla',
       'onboardingNext': 'İleri',
+      'onboardingContinue': 'Devam',
+      'onboardingKicker1': 'Tüm ilaçlarınız bir yerde',
+      'onboardingKicker2': 'Asla kaçırmayın',
+      'onboardingKicker3': 'Kontrol sizde',
 
       // Coach Marks
       'coachAdherenceTitle': 'Uyum Oranı',
@@ -482,8 +492,8 @@ class AppLocalizations {
       'coachScheduleDesc': 'Günlük doz kartlarınız. Her biri için Al veya Atla seçin.',
       'coachMedicationsTitle': 'İlaçlarım',
       'coachMedicationsDesc': 'İlaçlarınızı yönetin, yeni ilaç ekleyin veya stok güncelleyin.',
-      'coachHistoryTitle': 'Geçmiş',
-      'coachHistoryDesc': 'Geçmiş doz kayıtlarınızı günlük olarak inceleyin.',
+      'coachHistoryTitle': 'İstatistikler',
+      'coachHistoryDesc': 'Uyum oranınızı, grafikleri ve ilaç bazlı kırılımı takip edin.',
       'coachSettingsTitle': 'Ayarlar',
       'coachSettingsDesc': 'Dil, tema ve bildirim tercihlerinizi buradan değiştirin.',
       'coachGotIt': 'Anladım',
@@ -636,6 +646,7 @@ class AppLocalizations {
   String get filterLowStock => translate('filterLowStock');
   String get decreaseStock => translate('decreaseStock');
   String get addStock => translate('addStock');
+  String get statisticsShort => translate('statisticsShort');
   String get noDosesScheduled => translate('noDosesScheduled');
   String get lowStockWarning => translate('lowStockWarning');
   String get medicationsLowStock => translate('medicationsLowStock');
@@ -760,6 +771,10 @@ class AppLocalizations {
   String get onboardingGetStarted => translate('onboardingGetStarted');
   String get onboardingSkip => translate('onboardingSkip');
   String get onboardingNext => translate('onboardingNext');
+  String get onboardingContinue => translate('onboardingContinue');
+  String get onboardingKicker1 => translate('onboardingKicker1');
+  String get onboardingKicker2 => translate('onboardingKicker2');
+  String get onboardingKicker3 => translate('onboardingKicker3');
 
   // Coach Marks
   String get coachAdherenceTitle => translate('coachAdherenceTitle');

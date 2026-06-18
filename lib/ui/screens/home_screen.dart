@@ -718,7 +718,36 @@ class _HomeScreenState extends State<HomeScreen> {
       return const Icon(Icons.check_circle_rounded, size: 28, color: AppTheme.primaryColor);
     }
     if (dose.isMissed) {
-      return const Icon(Icons.cancel_rounded, size: 26, color: AppTheme.errorColor);
+      // Kaçırılan doz: X ikonu + geç alma butonu
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.cancel_rounded, size: 22, color: AppTheme.errorColor),
+          const SizedBox(width: 6),
+          GestureDetector(
+            onTap: () => provider.takeDose(dose),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: AppTheme.primaryColor.withValues(alpha: 0.4),
+                  width: 1,
+                ),
+              ),
+              child: Text(
+                l10n.take,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.primaryColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
     }
     if (dose.isSkipped) {
       return Icon(Icons.skip_next_rounded, size: 26, color: context.textLightClr);

@@ -5,9 +5,13 @@ import 'package:ilac_takip/providers/medication_provider.dart';
 import 'package:ilac_takip/models/medication.dart';
 import 'package:ilac_takip/core/theme/app_theme.dart';
 import 'package:ilac_takip/core/localization/app_localizations.dart';
+import 'package:ilac_takip/ui/screens/logs_screen.dart';
 
 class StatisticsScreen extends StatefulWidget {
-  const StatisticsScreen({super.key});
+  /// Alt bar sekmesi olarak gömülü kullanılıyorsa geri butonu gösterilmez.
+  final bool embedded;
+
+  const StatisticsScreen({super.key, this.embedded = false});
 
   @override
   State<StatisticsScreen> createState() => _StatisticsScreenState();
@@ -58,6 +62,18 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
       backgroundColor: context.scaffoldBg,
       appBar: AppBar(
         title: Text(l10n.statisticsTitle),
+        automaticallyImplyLeading: !widget.embedded,
+        centerTitle: !widget.embedded,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history_rounded),
+            tooltip: l10n.history,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LogsScreen()),
+            ),
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor))
